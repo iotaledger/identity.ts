@@ -1,0 +1,30 @@
+{
+  "name": "identity.ts",
+  "version": "1.0.0",
+  "description": "Digital Identity implementation",
+  "main": "./out/src/index",
+  "scripts": {
+    "test": "mocha -r ts-node/register test/**.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iotaledger/identity.ts.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/iotaledger/identity.ts/issues"
+  },
+  "homepage": "https://github.com/iotaledger/identity.ts#readme",
+  "dependencies": {
+    "crypto": "^1.0.1"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^12.6.9",
+    "chai": "^4.2.0",
+    "mocha": "^6.2.0",
+    "ts-node": "^8.3.0",
+    "typescript": "^3.5.3"
+  }
+}

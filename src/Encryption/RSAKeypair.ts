@@ -11,23 +11,28 @@ export class RSAKeypair extends BaseKeypair {
         this.privateKey = (privateKey)?privateKey:"";
     }
     
-    public async PublicEncrypt(message: string): Promise<string> {
-        return crypto.publicEncrypt({key: this.publicKey, padding: crypto.constants.RSA_PKCS1_PADDING}, new Buffer(message)).toString();
+    public async PublicEncrypt(message: string): Promise<Buffer> {
+        return crypto.publicEncrypt({key: this.publicKey, padding: crypto.constants.RSA_PKCS1_PADDING}, new Buffer(message));
     }   
 
     public async PublicDecrypt(input: string): Promise<string> {
         return crypto.publicDecrypt({key : this.publicKey, padding: crypto.constants.RSA_PKCS1_PADDING}, new Buffer(input)).toString();
     }
 
-    public async PrivateEncrypt(message: string): Promise<string> {
-        if(!this.privateKey)
-            return "";
-        return crypto.privateEncrypt({key: this.privateKey, passphrase: passphrase, padding: crypto.constants.RSA_PKCS1_PADDING}, new Buffer(message)).toString();
+    public async PrivateEncrypt(message: string): Promise<Buffer> {
+        if(!this.privateKey) {
+            console.log("Warning: Encryption with private key called, without a private key accessible\n");
+            return new Buffer("");
+        }
+            
+        return crypto.privateEncrypt({key: this.privateKey, passphrase: passphrase, padding: crypto.constants.RSA_PKCS1_PADDING}, new Buffer(message));
     }
 
     public async PrivateDecrypt(input: string): Promise<string> {
-        if(!this.privateKey)
+        if(!this.privateKey) {
+            console.log("Warning: Decryption with private key called, without a private key accessible\n");
             return "";
+        }
         return crypto.privateDecrypt({key: this.privateKey, passphrase: passphrase, padding: crypto.constants.RSA_PKCS1_PADDING}, new Buffer(input)).toString();
     }
     

@@ -7,9 +7,9 @@ export abstract class BaseKeypair {
         this.privateKey = "";
     }
 
-    abstract PublicEncrypt(message : string) : Promise<string>;
+    abstract PublicEncrypt(message : string) : Promise<Buffer>;
     abstract PublicDecrypt(input: string) : Promise<string>;
-    abstract PrivateEncrypt(message: string) : Promise<string>;
+    abstract PrivateEncrypt(message: string) : Promise<Buffer>;
     abstract PrivateDecrypt(input: string) : Promise<string>;
     abstract Sign(dataToSign : string) : string;
     abstract Verify(dataToCheck : string, signatureToVerify : string) : boolean;

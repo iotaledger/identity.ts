@@ -1,6 +1,6 @@
 export class DID {
     private urlScheme : string = "did";
-    private didMethod : string = "iota";
+    private didMethod : string = "IOTA";
     private network : string = "main";
     private uuid : string;
 

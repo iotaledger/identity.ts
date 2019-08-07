@@ -1,11 +1,11 @@
+import { DID } from "../DID/DID";
+
+
 export abstract class BaseKeypair {
     protected publicKey : string;
     protected privateKey : string;
 
-    constructor() {
-        this.publicKey = "";
-        this.privateKey = "";
-    }
+    constructor() {}
 
     abstract PublicEncrypt(message : string) : Promise<Buffer>;
     abstract PublicDecrypt(input: string) : Promise<string>;
@@ -13,6 +13,7 @@ export abstract class BaseKeypair {
     abstract PrivateDecrypt(input: string) : Promise<string>;
     abstract Sign(dataToSign : string) : string;
     abstract Verify(dataToCheck : string, signatureToVerify : string) : boolean;
+    abstract GetKeyType() : string;
 
     public GetPublicKey(): string {
         return this.publicKey;

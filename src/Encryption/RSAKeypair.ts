@@ -1,5 +1,6 @@
 import { BaseKeypair } from './BaseKeypair';
 import * as crypto from 'crypto';
+import { DID } from '../DID/DID';
 
 export const passphrase : string = 'Semantic Market runs on IOTA! @(^_^)@';
 
@@ -8,7 +9,9 @@ export class RSAKeypair extends BaseKeypair {
     constructor(publicKey : string, privateKey ?: string) {
         super();
         this.publicKey = publicKey;
-        this.privateKey = (privateKey)?privateKey:"";
+        this.publicKey = this.publicKey.replace(/\r?\n|\r/g, "");
+        this.privateKey = (privateKey)?privateKey:undefined;
+        this.privateKey = this.privateKey.replace(/\r?\n|\r/g, "");
     }
     
     public async PublicEncrypt(message: string): Promise<Buffer> {
@@ -51,4 +54,8 @@ export class RSAKeypair extends BaseKeypair {
         verifier.end();
         return verifier.verify(this.publicKey, signatureToVerify);
     }
+
+    public GetKeyType(): string {
+        return "RsaVerificationKey2018";
+    };
 }

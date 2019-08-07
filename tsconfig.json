@@ -3,6 +3,7 @@
         "lib": ["dom", "es2015"],
         "noImplicitThis": true,
         "strict": true,
+        "strictNullChecks": false,
         "outDir": "out",
         "declaration": true,
         "declarationDir": "typings",

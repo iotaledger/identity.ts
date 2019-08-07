@@ -6,9 +6,11 @@ import { Hash } from "../Encryption/Hash";
 
 export function CreateRandomDID() : Promise<DIDDocument> {
     return new Promise<DIDDocument>((resolve, reject) => {
-        GenerateRSAKeypair()
+        GenerateRSAKeypair("keys-1")
         .then((keypair : RSAKeypair) => {
-            resolve(DIDDocument.createDIDDocument(new DID(Hash(keypair.GetPublicKey())), [keypair]));
+            let Document : DIDDocument = DIDDocument.createDIDDocument(new DID(Hash(keypair.GetPublicKey())));
+            Document.AddKeypair(keypair, "keys-1");
+            resolve(Document);
         })
         .catch((err)=> {
             reject(err);

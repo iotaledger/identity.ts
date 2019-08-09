@@ -1,3 +1,11 @@
+/**
+ * @module DID
+ */
+
+ /**
+  * @class
+  * @classdesc This class handles the naming conventions of the Decentralized Identifiers (DID). Outputs several different DID formats.
+  */
 export class DID {
     private urlScheme : string = "did";
     private didMethod : string = "IOTA";

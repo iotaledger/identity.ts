@@ -8,11 +8,15 @@
       "node_modules/jsdoc-babel",
       "dmd-clear"
     ],
+    "templates": {
+        "cleverLinks" : true,
+        "monospaceLinks" : false
+    },
     "babel": {
       "extensions": ["ts", "tsx"],
       "ignore": ["**/*.(test|spec).ts"],
       "babelrc": false,
-      "presets": [["@babel/preset-env", { "targets": { "node": true } }], "@babel/preset-typescript"],
+      "presets": [["@babel/preset-env", { "targets": { "node": "current" } }], "@babel/preset-typescript"],
       "plugins": ["@babel/proposal-class-properties", "@babel/proposal-object-rest-spread"]
     }
   }

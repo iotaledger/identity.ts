@@ -4,11 +4,16 @@
 
  /**
   * This class handles the naming conventions of the Decentralized Identifiers (DID). Outputs several different DID formats.
+  * @class Decentralized Identifiers
   */
 export class DID {
-    private urlScheme : string = "did";
-    private didMethod : string = "IOTA";
+    /** The standard convention of starting a DID with "did:" */
+    private static readonly urlScheme : string = "did";
+    /** The DID method that it implements. Hardcoded IOTA */
+    private static readonly didMethod : string = "IOTA";
+    /** The network and optionally the shard of the network, where the DID Document is uploaded */
     private network : string = "main";
+    /** The Universal Unique IDentifier, which allows an identity to be uniquely identified. */
     private uuid : string;
 
     constructor(uuid : string) {
@@ -20,7 +25,7 @@ export class DID {
      * @returns {string} DID
      */
     public GetDID() : string {
-        return this.urlScheme + ":" + this.didMethod + ":" + this.uuid;
+        return DID.urlScheme + ":" + DID.didMethod + ":" + this.uuid;
     }
 
     /**
@@ -28,7 +33,7 @@ export class DID {
      * @returns {string} DID + network/shard
      */
     public GetSpecificDID() : string {
-        return this.urlScheme + ":" + this.didMethod + ":" + this.network + ":" + this.uuid;
+        return DID.urlScheme + ":" + DID.didMethod + ":" + this.network + ":" + this.uuid;
     }
 
     /**

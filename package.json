@@ -5,7 +5,7 @@
   "main": "./out/src/index",
   "scripts": {
     "test": "mocha -r ts-node/register test/**.ts",
-    "doc" : "jsdoc2md --template README_tpl.hbs --files ./src/**/*.ts --configure ./jsdoc2md.json > ./README.md"
+    "doc": "jsdoc2md --template README_tpl.hbs --files ./src/**/*.ts --configure ./jsdoc2md.json > ./README.md"
   },
   "repository": {
     "type": "git",
@@ -30,6 +30,7 @@
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.6.9",
     "chai": "^4.2.0",
+    "dmd-clear": "^0.1.2",
     "jsdoc-babel": "^0.5.0",
     "jsdoc-to-markdown": "^5.0.0",
     "mocha": "^6.2.0",

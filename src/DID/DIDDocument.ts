@@ -23,7 +23,7 @@ export class DIDDocument {
 
     /**
      * Creates a new DID Document from scratch. This is only for new Identities.
-     * @param {DID} did - The DID that will point towards this document.
+     * @param {DID} did The DID that will point towards this document.
      * @return {DIDDocument} A newly created class instance of DIDDocument.
      */
     static createDIDDocument(did : DID) : DIDDocument {
@@ -38,10 +38,10 @@ export class DIDDocument {
 
     /**
      * Adds a keypair to the DID Document. 
-     * @param {BaseKeypair} keypair - The keypair instance that will now be added to the DID Document. 
-     * @param {string} keyId - The name of the publicKey. Must be unique in the document. 
-     * @param {DID} [keyOwner] - The DID of the owner of the publicKey. Defaults to the DID of the DID Document.
-     * @param {DID} [keyController] - The DID of the controller of the publicKey. Defaults to the keyOwner. 
+     * @param {BaseKeypair} keypair The keypair instance that will now be added to the DID Document. 
+     * @param {string} keyId The name of the publicKey. Must be unique in the document. 
+     * @param {DID} [keyOwner] The DID of the owner of the publicKey. Defaults to the DID of the DID Document.
+     * @param {DID} [keyController] The DID of the controller of the publicKey. Defaults to the keyOwner. 
      */
     public AddKeypair(keypair : BaseKeypair, keyId : string, keyOwner ?: DID, keyController ?: DID) {
         this.publicKeys.push( new DIDKeypair(keypair, keyId, (keyOwner)?keyOwner:this.DID, keyController ));

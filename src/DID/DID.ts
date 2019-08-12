@@ -16,8 +16,27 @@ export class DID {
     /** The Universal Unique IDentifier, which allows an identity to be uniquely identified. */
     private uuid : string;
 
-    constructor(uuid : string) {
-        this.uuid = uuid;
+    /**
+     * Creates a DID object from a did string. 
+     * Accepted string formats:
+     * - did:method:network:uuid
+     * - did:method:uuid
+     * - uuid
+     * @param did The string containing the did, must fit the format. 
+     */
+    constructor(did : string) {
+        let parts : number = (did.match(/:/g) || []).length + 1;
+        if(parts == 1) {
+            this.uuid = did;
+        } 
+        else if (parts == 3) {
+            this.uuid = did.substr(did.lastIndexOf(":")+1);
+        }
+        else if (parts == 4) {
+            this.network = did.substr(0,did.lastIndexOf(":"));
+            this.network = this.network.substr(this.network.lastIndexOf(":")+1);
+            this.uuid = did.substr(did.lastIndexOf(":")+1);
+        }
     }
 
     /**
@@ -43,5 +62,5 @@ export class DID {
     public GetUUID() : string {
         return this.uuid;
     }
-
 }
+

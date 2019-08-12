@@ -11,7 +11,9 @@ export class RSAKeypair extends BaseKeypair {
         this.publicKey = publicKey;
         this.publicKey = this.publicKey.replace(/\r?\n|\r/g, "");
         this.privateKey = (privateKey)?privateKey:undefined;
-        this.privateKey = this.privateKey.replace(/\r?\n|\r/g, "");
+        if(this.privateKey) {
+            this.privateKey = this.privateKey.replace(/\r?\n|\r/g, "");
+        }
     }
     
     public async PublicEncrypt(message: string): Promise<Buffer> {

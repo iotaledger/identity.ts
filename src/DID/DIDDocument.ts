@@ -1,6 +1,8 @@
 import { DID } from './DID';
 import { DIDKeypair } from './DIDKeypair';
 import { BaseKeypair } from '../Encryption/BaseKeypair';
+import { MAMSettings, ReadMAMStream } from './../IOTA/mam';
+import { RSAKeypair } from '../Encryption/RSAKeypair';
 
 /**
  * @module DID
@@ -13,12 +15,34 @@ import { BaseKeypair } from '../Encryption/BaseKeypair';
 export class DIDDocument {
     private contexts : string[];
     private DID : DID;
-    private publicKeys ?: DIDKeypair[]; //TODO: Make Type
+    private publicKeys ?: DIDKeypair[];
     private authentications : undefined; //TODO: Make Type
     private services : undefined; //TODO: Make Type
 
-    static async readDIDDocument(did : DID, provider : string) {
+    static async readDIDDocument(provider : string, root : string, settings ?: MAMSettings) : Promise<DIDDocument> {
+        return new Promise<DIDDocument>((resolve, reject) => {
+            //Retrieve the DID Document
+            ReadMAMStream(provider, root, settings)
+            .then((messages : string[]) => {
+                let latestDIDDocument : string = messages[messages.length-1];
+                let JSONDocument : { "@context" : string[], id : string,  [key: string]: any} = JSON.parse(latestDIDDocument);
 
+                //Parse the DID Document
+                let document : DIDDocument = new DIDDocument(JSONDocument["@context"], new DID(JSONDocument.id));
+                let publicKeys = JSONDocument["publicKey"];
+                if(publicKeys) {
+                    for(let i=0; i < publicKeys.length; i++) {
+                        let keypair : BaseKeypair;
+                        if(publicKeys[i].type == "RsaVerificationKey2018") {
+                            keypair = new RSAKeypair(publicKeys[i].publicKeyPem);
+                        }
+                        document.AddKeypair(keypair, publicKeys[i].id.substr(publicKeys[i].id.lastIndexOf("#")+1), new DID(publicKeys[i].id.substr(0, publicKeys[i].id.lastIndexOf("#"))), new DID(publicKeys[i].controller));
+                    }
+                }
+                resolve(document);
+            })
+            .catch((err : Error) => reject(err));
+        });
     }
 
     /**

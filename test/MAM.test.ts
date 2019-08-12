@@ -1,8 +1,7 @@
 import { expect } from 'chai';
 import 'mocha';
-import { MAMPublisher, MAMState, MAM_MODE, ReadMAMStream } from "./../src/IOTA/mam";
+import { MAMPublisher, MAMState, MAM_MODE, ReadMAMStream, MAMSettings } from "./../src/IOTA/mam";
 import { GenerateSeed } from "./../src/Helpers/GenerateSeed";
-import { trytesToAscii } from '@iota/converter';
 
 const provider : string = "https://nodes.devnet.iota.org:443";
 
@@ -22,7 +21,7 @@ describe('Masked Autenticated Messaging', function() {
     it('Should read the first message', async function() {
         await delay(1000); //Sleep prevents the node to not know about the first tx yet, failing the test.
         let messages : string[] = await ReadMAMStream(provider, rootOfFirstMessage);
-        expect(trytesToAscii(messages[0])).to.deep.equal("First Message");
+        expect(messages[0]).to.deep.equal("First Message");
     });
 
     it('Should send a valid second transaction', async function(){
@@ -33,8 +32,8 @@ describe('Masked Autenticated Messaging', function() {
 
     it('Should read the first 2 messages', async function() {
         let messages : string[] = await ReadMAMStream(provider, rootOfFirstMessage);
-        expect(trytesToAscii(messages[0])).to.deep.equal("First Message");
-        expect(trytesToAscii(messages[1])).to.deep.equal("Second Message");
+        expect(messages[0]).to.deep.equal("First Message");
+        expect(messages[1]).to.deep.equal("Second Message");
     });
 
     it('Should export the correct state', function() {
@@ -48,7 +47,7 @@ describe('Masked Autenticated Messaging', function() {
     });
 
     it('Should send a valid third transaction (After state import)', async function() {
-        secondPublisher = new MAMPublisher(provider, state.seed, state.mode, state.sideKey, state.securityLevel);
+        secondPublisher = new MAMPublisher(provider, state.seed, new MAMSettings(state.mode, state.sideKey, state.securityLevel));
         secondPublisher.UpdateMAMState(state.nextRoot, state.channelStart);
         let root3 = await secondPublisher.PublishMessage("Third Message", undefined, 9);
         expect(root3).to.not.be.undefined;
@@ -56,9 +55,9 @@ describe('Masked Autenticated Messaging', function() {
 
     it('Should read the first 3 messages', async function() {
         let messages : string[] = await ReadMAMStream(provider, rootOfFirstMessage);
-        expect(trytesToAscii(messages[0])).to.deep.equal("First Message");
-        expect(trytesToAscii(messages[1])).to.deep.equal("Second Message");
-        expect(trytesToAscii(messages[2])).to.deep.equal("Third Message");
+        expect(messages[0]).to.deep.equal("First Message");
+        expect(messages[1]).to.deep.equal("Second Message");
+        expect(messages[2]).to.deep.equal("Third Message");
     });
 });
 

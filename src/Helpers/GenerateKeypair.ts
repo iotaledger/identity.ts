@@ -1,7 +1,7 @@
 import { RSAKeypair, passphrase } from "../Encryption/RSAKeypair";
 import * as crypto from 'crypto';
 
-export function GenerateRSAKeypair(keyId : string) : Promise<RSAKeypair> {
+export function GenerateRSAKeypair() : Promise<RSAKeypair> {
     return new Promise<RSAKeypair>((resolve, reject) => {
         crypto.generateKeyPair('rsa', {
             modulusLength: 2048,

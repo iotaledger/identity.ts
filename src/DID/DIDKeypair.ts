@@ -31,4 +31,12 @@ export class DIDKeypair {
             "publicKeyPem" : this.encryptionKeypair.GetPublicKey()
         }
     }
+
+    public GetEncryptionKeypair() : BaseKeypair {
+        return this.encryptionKeypair;
+    }
+
+    public GetKeyId() {
+        return this.keyId;
+    }
 }

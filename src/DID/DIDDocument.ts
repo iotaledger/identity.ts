@@ -102,4 +102,13 @@ export class DIDDocument {
     public GetDID() : DID {
         return this.DID;
     }
+
+    public GetEncryptionKeypair(keyId : string) : BaseKeypair {
+        for(let i=0; i < this.publicKeys.length; i++) {
+            if(this.publicKeys[i].GetKeyId() == keyId) {
+                return this.publicKeys[i].GetEncryptionKeypair();
+            }
+        }
+        return null;
+    }
 }

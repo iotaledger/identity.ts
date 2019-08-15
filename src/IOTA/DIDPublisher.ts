@@ -1,4 +1,4 @@
-import { MAMPublisher, MAMSettings, MAM_MODE, MAMState } from './mam';
+import { MAMPublisher, MAMSettings, MAMState } from './mam';
 import { DIDDocument } from './../DID/DIDDocument';
 
 /**

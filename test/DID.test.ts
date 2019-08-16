@@ -34,20 +34,11 @@ describe('DID Document', function() {
     let document : DIDDocument;
     let seed : string = GenerateSeed();
     let root : string;
+    let documentFromTangle : DIDDocument;
 
     it('Should create and output a valid DID Document', async function(){
         document = await CreateRandomDID("keys-1");
-        expect(
-            {
-                "@contect" : [
-                    "https://www.w3.org/2019/did/v1"
-                ],
-                "id" : document.GetDID().GetDID(),
-                "publicKey" : [
-                    document.GetJSONDIDDocument()
-                ]
-            }, document.GetJSONDIDDocument()
-        )
+        expect(document.GetJSONDIDDocument()).to.not.be.undefined;
     });
 
     it('Should publish the DID Document', async function() {
@@ -60,8 +51,14 @@ describe('DID Document', function() {
     it('Should read the same document from the Tangle', async function() {
         this.timeout(20000);
         await delay(1000); //Sleep prevents the node to not know about the first tx yet, failing the test.
-        let documentFromTangle : DIDDocument = await DIDDocument.readDIDDocument(provider, root);
+        documentFromTangle = await DIDDocument.readDIDDocument(provider, root);
         expect(documentFromTangle.GetJSONDIDDocument()).to.deep.equal(document.GetJSONDIDDocument());
+    });
+
+    it('Should Sign locally and Verify from loaded DID Document', async function() {
+        let msg : string = "Hello World";
+        let signature : Buffer = await document.GetEncryptionKeypair("keys-1").Sign(msg);
+        expect(await documentFromTangle.GetEncryptionKeypair("keys-1").Verify(msg, signature)).to.be.true;
     });
 });
 

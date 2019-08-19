@@ -25,7 +25,7 @@ export class DIDKeypair {
      */
     public GetJSON() {
         return {
-            "id" : this.keyOwner.GetDID()+"#"+this.keyId,
+            "id" : this.GetFullId(),
             "type" : this.encryptionKeypair.GetKeyType(),
             "controller" : this.keyController.GetDID(),
             "publicKeyPem" : this.encryptionKeypair.GetPublicKey()
@@ -38,5 +38,9 @@ export class DIDKeypair {
 
     public GetKeyId() {
         return this.keyId;
+    }
+
+    public GetFullId() {
+        return this.keyOwner.GetDID()+"#"+this.keyId;
     }
 }

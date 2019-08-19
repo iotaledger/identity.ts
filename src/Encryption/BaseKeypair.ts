@@ -19,6 +19,11 @@ export abstract class BaseKeypair {
     public GetPublicKey(): string {
         return this.publicKey;
     }
+
+    public SetPrivateKey(privateKey : string) {
+        this.privateKey = privateKey;
+    }
+
     public GetPrivateKey(): string {
         return this.privateKey;
     }

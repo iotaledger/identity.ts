@@ -1,17 +1,39 @@
 import { VerifiableCredential } from "./VerifiableCredentail";
 import { DIDDocument } from "../DID/DIDDocument";
-import { RSAKeypair } from "../Encryption/RSAKeypair";
 
-export enum ProofTypes {
-    RSA = "RsaSignature2018"
+export interface ProofDocument {
+    type : string,
+    verificationMethod : string
 }
 
-export function CreateRSAProof(credentialToSign : VerifiableCredential, issuerDID : DIDDocument, issuerKeyId : string) : string {
-    let keypair : RSAKeypair = issuerDID.GetEncryptionKeypair(issuerKeyId);
-    return keypair.Sign(JSON.stringify(credentialToSign.GetCredential()));
+interface CreationDetails {
+    created : string,
+    creator : string,
 }
 
-export function VerifyRSAProof(credentialToVerify : VerifiableCredential, issuerDID : DIDDocument, issuerKeyId : string) {
-    let keypair : RSAKeypair = issuerDID.GetEncryptionKeypair(issuerKeyId);
-    return keypair.Verify(JSON.stringify(credentialToVerify.GetCredential()), credentialToVerify.GetProof());
+type ExtendedProofDocument = ProofDocument & CreationDetails;
+
+export abstract class BaseProof {
+    protected credential : VerifiableCredential;
+    protected issuer : DIDDocument;
+    protected proofDocument : ExtendedProofDocument;
+
+    constructor(credential : VerifiableCredential, issuer : DIDDocument) { 
+        this.credential = credential;
+        this.issuer = issuer;
+    }
+
+    protected abstract _Sign() : ProofDocument;
+    public Sign() {
+        let document : ProofDocument = this._Sign();
+        this.proofDocument = {...document, ...{ 
+            created : new Date().toUTCString(),
+            creator : this.issuer.GetDID().GetDID()
+        }};
+        this.credential.SetProof(this);
+    }
+    public abstract Verify() : boolean;
+    public GetJSON() : {} {
+        return this.proofDocument;
+    };
 }

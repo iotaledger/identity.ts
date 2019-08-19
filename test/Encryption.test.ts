@@ -22,7 +22,6 @@ describe('RSA Encryption', function() {
 
     it('Should Sign and correctly verify msg', async function() {
         let signature : Buffer = await keypair.Sign(msg);
-        console.log(keypair.Verify(msg, signature));
         expect(await keypair.Verify(msg, signature)).to.be.true;
     });
 
@@ -30,6 +29,13 @@ describe('RSA Encryption', function() {
         let signature : Buffer = await keypair.Sign(msg);
         expect(await keypair.Verify("Another message", signature)).to.be.false;
     });    
+
+    it('Should Signa nd Verify correctly after doing a base64 encoding', async function() {
+        let signature : Buffer = await keypair.Sign(msg);
+        let stringSignature : string = signature.toString("base64");
+        let signatureBuffer : Buffer = Buffer.from(stringSignature, "base64");
+        expect(await keypair.Verify(msg, signatureBuffer)).to.be.true;
+    });
 });
 
 describe('Recursive Sorting', function() {
@@ -94,8 +100,8 @@ describe('Recursive Sorting', function() {
     }); 
 
     it('Should sort the document correctly', function() {
-        console.log(SortedObject);
-        console.log(PostSorting);
+        //console.log(SortedObject);
+        //console.log(PostSorting);
         expect(SortedObject).to.deep.equal(PostSorting);
     });
 

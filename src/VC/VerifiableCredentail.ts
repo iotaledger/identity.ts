@@ -1,5 +1,6 @@
 import { DID } from "../DID/DID";
 import { RecursiveSort } from "../Helpers/RecursiveSort";
+import { BaseProof } from "./BaseProof";
 
 export class VerifiableCredential {
     private contexts : string[];
@@ -7,7 +8,7 @@ export class VerifiableCredential {
     private issuerDID : DID;
     private issuanceData : string;
     private credentialSubjects : [{}] | {};
-    private proof : {}
+    private proof : BaseProof;
 
     private constructor(context : string, credentialType : string, issuerDID : DID, credentialData : [{}] | {}, issuanceData : Date = new Date()) {
         this.contexts = ["https://www.w3.org/2018/credentials/v1", context];
@@ -21,8 +22,12 @@ export class VerifiableCredential {
         return this.credentialSubjects;
     }
 
-    public GetProof() : string {
-        return "";
+    public SetProof(proof : BaseProof) {
+        this.proof = proof;
+    }
+
+    public GetProof() : BaseProof {
+        return this.proof;
     }
 
     public GetJSONDIDDocument() : string {
@@ -34,6 +39,9 @@ export class VerifiableCredential {
             issuanceDate : this.issuanceData,
             credentialSubject : this.credentialSubjects
         };
+        if(this.proof) {
+            JSONObject["proof"] = this.proof.GetJSON();
+        }
         return JSON.stringify(JSONObject);
     };
 }

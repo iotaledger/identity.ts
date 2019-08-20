@@ -57,8 +57,8 @@ describe('DID Document', function() {
 
     it('Should Sign locally and Verify from loaded DID Document', async function() {
         let msg : string = "Hello World";
-        let signature : Buffer = await document.GetEncryptionKeypair("keys-1").Sign(msg);
-        expect(await documentFromTangle.GetEncryptionKeypair("keys-1").Verify(msg, signature)).to.be.true;
+        let signature : Buffer = await document.GetKeypair("keys-1").GetEncryptionKeypair().Sign(msg);
+        expect(await documentFromTangle.GetKeypair("keys-1").GetEncryptionKeypair().Verify(msg, signature)).to.be.true;
     });
 });
 

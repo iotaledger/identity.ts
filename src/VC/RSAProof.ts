@@ -1,7 +1,6 @@
 import { BaseProof, ProofDocument } from "./BaseProof";
-import { VerifiableCredential } from "./VerifiableCredentail";
+import { Credential } from "./Credential";
 import { DIDDocument } from "../DID/DIDDocument";
-import { DIDKeypair } from "../DID/DIDKeypair";
 import { RecursiveSort } from "../Helpers/RecursiveSort";
 import { RSAKeypair } from "../Encryption/RSAKeypair";
 
@@ -10,20 +9,17 @@ export interface RSAProofDocument extends ProofDocument {
 }
 
 export class RSAProof extends BaseProof {
-    private keypair : DIDKeypair;
-
-    constructor(credential : VerifiableCredential, issuer : DIDDocument, issuerKeyId : string) {
-        super(credential, issuer);
-        this.keypair = this.issuer.GetKeypair(issuerKeyId);
+    constructor(issuer : DIDDocument, issuerKeyId : string) {
+        super(issuer, issuerKeyId);
     }
 
     public SetPrivateKey(privateKey : string) {
         this.keypair.GetEncryptionKeypair().SetPrivateKey(privateKey);
     }
    
-    protected _Sign() : ProofDocument {
+    protected _Sign(credential : Credential) : ProofDocument {
         let encryptionKeypair : RSAKeypair = this.keypair.GetEncryptionKeypair();
-        let documentToSign : string = JSON.stringify( RecursiveSort(this.credential.GetJSONDIDDocument(true)) );
+        let documentToSign : string = JSON.stringify( RecursiveSort(credential.GetJSONDIDDocument()) );
 
         let proof : RSAProofDocument = {
             type: "RsaSignature2018",
@@ -33,9 +29,9 @@ export class RSAProof extends BaseProof {
         return proof;
     }    
     
-    public Verify() : boolean {
-        let documentToVerify : string = JSON.stringify( RecursiveSort(this.credential.GetJSONDIDDocument(true)) );
-        let proofDocument : RSAProofDocument = <RSAProofDocument>this.credential.GetProof().GetJSON();
+    public VerifySignature(credential : Credential) : boolean {
+        let documentToVerify : string = JSON.stringify( RecursiveSort(credential.GetJSONDIDDocument()) );
+        let proofDocument : RSAProofDocument = <RSAProofDocument><unknown>this.proofDocument;
         return this.keypair.GetEncryptionKeypair().Verify( documentToVerify, Buffer.from(proofDocument.signatureValue, "base64"));
     }
 }

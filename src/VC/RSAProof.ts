@@ -2,6 +2,8 @@ import { BaseProof, ProofDocument } from "./BaseProof";
 import { VerifiableCredential } from "./VerifiableCredentail";
 import { DIDDocument } from "../DID/DIDDocument";
 import { DIDKeypair } from "../DID/DIDKeypair";
+import { RecursiveSort } from "../Helpers/RecursiveSort";
+import { RSAKeypair } from "../Encryption/RSAKeypair";
 
 export interface RSAProofDocument extends ProofDocument {
     signatureValue : string
@@ -20,16 +22,20 @@ export class RSAProof extends BaseProof {
     }
    
     protected _Sign() : ProofDocument {
+        let encryptionKeypair : RSAKeypair = this.keypair.GetEncryptionKeypair();
+        let documentToSign : string = JSON.stringify( RecursiveSort(this.credential.GetJSONDIDDocument(true)) );
+
         let proof : RSAProofDocument = {
             type: "RsaSignature2018",
             verificationMethod : this.keypair.GetFullId(),
-            signatureValue : this.keypair.GetEncryptionKeypair().Sign(JSON.stringify(this.credential.GetCredential())).toString("base64")
+            signatureValue : encryptionKeypair.Sign(documentToSign).toString("base64")
         };
         return proof;
     }    
     
-    public Verify() {
-        let document : RSAProofDocument = <RSAProofDocument>this.credential.GetProof().GetJSON();
-        return this.keypair.GetEncryptionKeypair().Verify( JSON.stringify(this.credential.GetCredential()), Buffer.from(document.signatureValue, "base64"));
+    public Verify() : boolean {
+        let documentToVerify : string = JSON.stringify( RecursiveSort(this.credential.GetJSONDIDDocument(true)) );
+        let proofDocument : RSAProofDocument = <RSAProofDocument>this.credential.GetProof().GetJSON();
+        return this.keypair.GetEncryptionKeypair().Verify( documentToVerify, Buffer.from(proofDocument.signatureValue, "base64"));
     }
 }

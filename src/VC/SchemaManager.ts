@@ -11,17 +11,16 @@ export class SchemaManager {
         this.schemas = [];
 
         //Load all default Schemas
-        let filePaths : string[] = fs.readdirSync("./Schemas");
+        let folderPath : string = __dirname +"/Schemas";
+        let filePaths : string[] = fs.readdirSync(folderPath);
         for(let i=0; i < filePaths.length; i++) {
-            let fileName = filePaths[i].substr(filePaths[i].lastIndexOf('/'));
-            fileName = fileName.substr(0, fileName.lastIndexOf('.'));
-            this.AddSchemaFromFile(fileName, filePaths[i]);
+            let fileName : string = filePaths[i].substr(0, filePaths[i].lastIndexOf('.'));
+            this.AddSchemaFromFile(fileName, folderPath+"/"+filePaths[i]);
         }
     }
 
     public AddSchemaFromFile(name : string, path : string, trustedDIDs ?: DID[]) {
         let fileData : string = fs.readFileSync(path, "utf8");
-        console.log(fileData);
         this.schemas.push( new Schema(name, JSON.parse(fileData), trustedDIDs) );
     }
 

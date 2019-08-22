@@ -1,5 +1,5 @@
 import { DID } from "../DID/DID";
-import { validate } from 'tv4';
+import * as tv4 from 'tv4';
 
 export class Schema {
     private name : string;
@@ -24,11 +24,20 @@ export class Schema {
     }
 
     public DoesObjectFollowSchema( object : {} ) : boolean {
-        return validate(object, this.layout);
+        let result : boolean = tv4.validate(object, this.layout);
+        if(!result) {
+            console.log(JSON.stringify({message : tv4.error.message, params : tv4.error.params, dataPath : tv4.error.dataPath, schemaPath: tv4.error.schemaPath}));
+        }
+        return result;
     }
 
     public IsDIDTrusted( did : DID ) : boolean {
-        return (this.trustedDIDs.indexOf(did) > -1);
+        for(let i=0; i < this.trustedDIDs.length; i++) {
+            if(this.trustedDIDs[i].GetDID() == did.GetDID()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public GetName() : string {

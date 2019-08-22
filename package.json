@@ -5,6 +5,7 @@
   "main": "./out/src/index",
   "scripts": {
     "test": "mocha -r ts-node/register test/**.ts",
+    "testVC": "mocha -r ts-node/register test/VC.test.ts",
     "doc": "jsdoc2md --template README_tpl.hbs --files ./src/**/*.ts --configure ./jsdoc2md.json > ./README.md"
   },
   "repository": {

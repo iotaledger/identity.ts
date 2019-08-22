@@ -2,6 +2,7 @@ import { DID } from "../DID/DID";
 import { RecursiveSort } from "../Helpers/RecursiveSort";
 import { Schema } from "./Schema";
 import { SchemaManager } from "./SchemaManager";
+import { ExportableObject } from "./ExportableObject";
 
 export interface CredentialDataModel {
     "@context" : string[],
@@ -11,7 +12,7 @@ export interface CredentialDataModel {
     "credentialSubject" : {}
 }
 
-export class Credential {
+export class Credential implements ExportableObject {
     private contexts : string[];
     private schema : Schema;
     private issuerDID : DID;
@@ -46,7 +47,7 @@ export class Credential {
         return this.schema;
     }
 
-    public GetJSONDIDDocument() : CredentialDataModel {
+    public EncodeToJSON() : CredentialDataModel {
         let credentialData : CredentialDataModel =
         {
             "@context" : this.contexts,

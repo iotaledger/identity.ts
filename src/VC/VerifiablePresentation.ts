@@ -1,20 +1,24 @@
-import { VerifiableCredentialDataModel } from "./VerifiableCredential";
+import { Presentation, PresentationDataModel } from './Presentation';
+import { BaseProof, ProofDataModel } from "./BaseProof";
+import { VerifiableObject, VerificationErrorCodes } from './VerifiableObject';
 
-export interface VerifiablePresentationDataModel {
-    type : string[],
-    holder : string,
-    verifiableCredential: VerifiableCredentialDataModel[],
-    proof ?: {}
-}
+type VerifiablePresentationDataModel = PresentationDataModel & ProofDataModel;
 
-export class VerifiablePresentation {
-
-    constructor() {
-
+export class VerifiablePresentation extends VerifiableObject {
+    private presentation : Presentation;
+    
+    constructor(presentation : Presentation, proof : BaseProof) {
+        super(proof);
+        this.presentation = presentation;
     }
 
-    public Verify() {
+    public Verify() : VerificationErrorCodes {
         
+        return VerificationErrorCodes.SUCCES;
     }
 
+    public EncodeToJSON(): VerifiablePresentationDataModel {
+
+        return;
+    }
 }

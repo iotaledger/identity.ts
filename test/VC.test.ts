@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import 'mocha';
 import { Credential } from '../src/VC/Credential';
-import { VerifiableCredential, VerificationErrorCodes } from '../src/VC/VerifiableCredential';
+import { VerifiableCredential } from '../src/VC/VerifiableCredential';
 import { SchemaManager } from './../src/VC/SchemaManager';
 import { Schema } from '../src/VC/Schema';
 import { DID, DIDDocument } from '../src';
@@ -9,6 +9,9 @@ import { CreateRandomDID } from '../src/Helpers/CreateRandomDID';
 import { RSAProof } from '../src/VC/RSAProof';
 import { DIDPublisher } from '../src/IOTA/DIDPublisher';
 import { GenerateSeed } from '../src/Helpers/GenerateSeed';
+import { Presentation } from '../src/VC/Presentation';
+import { VerifiablePresentation } from '../src/VC/VerifiablePresentation';
+import { VerificationErrorCodes } from '../src/VC/VerifiableObject';
 
 const provider : string = "https://nodes.devnet.iota.org:443";
 
@@ -132,6 +135,10 @@ describe('Verifiable Credentials', async function() {
         let Proof : RSAProof = new RSAProof(IssuerDIDDocument, "keys-1");
         Proof.Sign(credential);
         TestCredential = new VerifiableCredential(credential, Proof);
+        let presentation : Presentation = new Presentation();
+        presentation.EncodeToJSON();
+        let verifiablePresentation : VerifiablePresentation = new VerifiablePresentation(presentation, Proof);
+        verifiablePresentation.EncodeToJSON();
         expect(TestCredential.Verify()).to.deep.equal(VerificationErrorCodes.SUCCES);
     });
 

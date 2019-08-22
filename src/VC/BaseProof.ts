@@ -1,6 +1,11 @@
 import { DIDDocument } from "../DID/DIDDocument";
 import { DIDKeypair } from "../DID/DIDKeypair";
 import { Credential } from "./Credential";
+import { ExportableObject } from "./ExportableObject";
+
+export interface ProofDataModel {
+    "proof" ?: {}
+}
 
 export interface ProofDocument {
     type : string,
@@ -24,15 +29,15 @@ export abstract class BaseProof {
         this.keypair = this.issuer.GetKeypair(issuerKeyId);
     }
 
-    protected abstract _Sign(credential : Credential) : ProofDocument;
-    public Sign(credential : Credential) {
-        let document : ProofDocument = this._Sign(credential);
+    protected abstract _Sign(object : ExportableObject) : ProofDocument;
+    public Sign(object : ExportableObject) {
+        let document : ProofDocument = this._Sign(object);
         this.proofDocument = {...document, ...{ 
             created : new Date().toUTCString(),
             creator : this.issuer.GetDID().GetDID()
         }};
     }
-    public abstract VerifySignature(credential : Credential) : boolean;
+    public abstract VerifySignature(object : ExportableObject) : boolean;
     public GetJSON() : {} {
         return this.proofDocument;
     };

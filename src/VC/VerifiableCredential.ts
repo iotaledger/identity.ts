@@ -1,32 +1,18 @@
 import { Credential, CredentialDataModel } from "./Credential";
-import { BaseProof } from "./BaseProof";
-
-export enum VerificationErrorCodes {
-    SUCCES = 1,
-    NO_MATCH_SCHEMA,
-    ISSUER_NOT_TRUSTED,
-    INCORRECT_SIGNATURE,
-    CREDENTIAL_EXPIRED,
-    INCORRECT_CHALLENGE_ANSWER,
-    CHALLENGE_ANSWER_EXPIRED
-}
-
-interface ProofDataModel {
-    "proof" ?: {}
-}
+import { BaseProof, ProofDataModel } from "./BaseProof";
+import { VerifiableObject, VerificationErrorCodes } from "./VerifiableObject";
 
 export type VerifiableCredentialDataModel = CredentialDataModel & ProofDataModel;
 
-export class VerifiableCredential {
+export class VerifiableCredential extends VerifiableObject {
     private credential : Credential;
-    private proof : BaseProof;
 
     constructor(credential : Credential, proof : BaseProof) {
+        super(proof);
         this.credential = credential;
-        this.proof = proof;
     }
 
-    public Verify() {
+    public Verify() : VerificationErrorCodes {
         //Verification Steps
         if(!this.credential.GetSchema().IsDIDTrusted(this.proof.GetIssuer().GetDID())) {
             return VerificationErrorCodes.ISSUER_NOT_TRUSTED;
@@ -39,5 +25,9 @@ export class VerifiableCredential {
         }
 
         return VerificationErrorCodes.SUCCES;
+    }
+
+    public EncodeToJSON() : VerifiableCredentialDataModel {
+        return;
     }
 }

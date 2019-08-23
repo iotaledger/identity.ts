@@ -6,12 +6,13 @@ import { SchemaManager } from './../src/VC/SchemaManager';
 import { Schema } from '../src/VC/Schema';
 import { DID, DIDDocument } from '../src';
 import { CreateRandomDID } from '../src/Helpers/CreateRandomDID';
-import { RSAProof } from '../src/VC/RSAProof';
+import { BuildRSAProof } from '../src/VC/RSAProof';
 import { DIDPublisher } from '../src/IOTA/DIDPublisher';
 import { GenerateSeed } from '../src/Helpers/GenerateSeed';
 import { Presentation } from '../src/VC/Presentation';
 import { VerifiablePresentation } from '../src/VC/VerifiablePresentation';
 import { VerificationErrorCodes } from '../src/VC/VerifiableObject';
+import { Proof } from '../src/VC/Proof';
 
 const provider : string = "https://nodes.devnet.iota.org:443";
 
@@ -112,14 +113,18 @@ describe('Schemas', function() {
 
 describe('Verifiable Credentials', async function() {
     let credential : Credential;
-    it('Should create a Credential, which cannot be verified yet', async function() {
+
+    before(async function() {
         this.timeout(20000);
         IssuerDIDDocument = await CreateRandomDID("keys-1");
         issuerSeed = GenerateSeed();
         let publisher : DIDPublisher = new DIDPublisher(provider, issuerSeed);
         issuerRoot = await publisher.PublishDIDDocument(IssuerDIDDocument, "DIDTEST", 9);
         SchemaManager.GetInstance().GetSchema("DomainValidatedCertificate").AddTrustedDID(IssuerDIDDocument.GetDID());
-        SubjectDIDDocument = await CreateRandomDID("Keys-1");
+        SubjectDIDDocument = await CreateRandomDID("keys-1");
+    });
+
+    it('Should create a Credential, which cannot be verified yet', function() {
         let domainCertificate = {
             id : SubjectDIDDocument.GetDID().GetDID(),
             domains : [
@@ -128,17 +133,29 @@ describe('Verifiable Credentials', async function() {
                 "docs.iota.org"
             ]
         };
-        credential = Credential.CreateVerifiableCredential(SchemaManager.GetInstance().GetSchema("DomainValidatedCertificate"), IssuerDIDDocument.GetDID(), domainCertificate);
+        credential = Credential.Create(SchemaManager.GetInstance().GetSchema("DomainValidatedCertificate"), IssuerDIDDocument.GetDID(), domainCertificate);
     });
 
-    it('Should be able to add a RSA proof and verify', function() {
-        let Proof : RSAProof = new RSAProof(IssuerDIDDocument, "keys-1", "123");
-        Proof.Sign(credential.EncodeToJSON());
-        TestCredential = new VerifiableCredential(credential, Proof);
-        let presentation : Presentation = new Presentation();
-        let verifiablePresentation : VerifiablePresentation = new VerifiablePresentation(presentation, Proof);
+    it('Should be able to add a RSA proof and verify the Verifiable Credential', function() {
+        let credProof : Proof = BuildRSAProof(IssuerDIDDocument, "keys-1", "123");
+        credProof.Sign(credential.EncodeToJSON());
+        TestCredential = VerifiableCredential.Create(credential, credProof);
         expect(TestCredential.Verify()).to.deep.equal(VerificationErrorCodes.SUCCES);
     });
+
+    it('Should be able to verify a Verifiable Presentation', function() {
+        let presentation : Presentation = new Presentation([TestCredential]);
+        let credProof : Proof = BuildRSAProof(SubjectDIDDocument, "keys-1", "456");
+        credProof.Sign(presentation.EncodeToJSON());
+        let verifiablePresentation : VerifiablePresentation = new VerifiablePresentation(presentation, credProof);
+        expect(verifiablePresentation.Verify()).to.deep.equal(VerificationErrorCodes.SUCCES);
+    });
+
+    it('Should be able to recognize wrong signatures on Verifiable Presentations', function() {
+
+    });
+
+
 
     /*it('Should be able to export and import to still verify', async function() {
         this.timeout(20000);

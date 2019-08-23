@@ -17,11 +17,11 @@ export class Credential extends BaseValidationObject {
     private issuanceData : string;
     private credentialSubjects : [{}] | {};
 
-    public static CreateVerifiableCredential(credentialSchema : Schema, issuerDID : DID, credentialData : [{}] | {}, issuanceData : Date = new Date(), context : string = "iota.org") : Credential {
+    public static Create(credentialSchema : Schema, issuerDID : DID, credentialData : [{}] | {}, issuanceData : Date = new Date(), context : string = "iota.org") : Credential {
         return new Credential(context, credentialSchema, issuerDID, credentialData, issuanceData);
     }
 
-    public static ImportVerifiableCredential(credentialData : CredentialDataModel) : Credential{
+    public static DecodeFromJSON(credentialData : CredentialDataModel) : Credential{
         return new Credential(
             credentialData["@context"][1], 
             SchemaManager.GetInstance().GetSchema(credentialData.type[1]), new DID(credentialData.issuer), 

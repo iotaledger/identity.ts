@@ -1,4 +1,4 @@
-import { BaseProof } from "./BaseProof";
+import { Proof } from "./Proof";
 
 export enum VerificationErrorCodes {
     SUCCES = 1,
@@ -11,9 +11,9 @@ export enum VerificationErrorCodes {
 }
 
 export abstract class VerifiableObject {
-    protected proof : BaseProof;
+    protected proof : Proof;
 
-    constructor(proof : BaseProof) { 
+    constructor(proof : Proof) { 
         this.proof = proof;
     };
 

@@ -1,37 +1,30 @@
-import { BaseProof, ProofDocument } from "./BaseProof";
+import { Proof, ProofDocument, SigningMethod, VerifySignatureMethod, ProofBuildingMethod } from "./Proof";
 import { DIDDocument } from "../DID/DIDDocument";
 import { RecursiveSort } from "../Helpers/RecursiveSort";
 import { RSAKeypair } from "../Encryption/RSAKeypair";
-import { BaseValidationObject } from "./BaseValidationObject";
+import { DIDKeypair } from "../DID/DIDKeypair";
 
 export interface RSAProofDocument extends ProofDocument {
     signatureValue : string
 }
 
-export class RSAProof extends BaseProof {
-    constructor(issuer : DIDDocument, issuerKeyId : string, challengeNonce ?: string) {
-        super(issuer, issuerKeyId, challengeNonce);
-    }
-
-    public SetPrivateKey(privateKey : string) {
-        this.keypair.GetEncryptionKeypair().SetPrivateKey(privateKey);
-    }
-   
-    protected _Sign(JSONToSign : {}) : ProofDocument {
-        let encryptionKeypair : RSAKeypair = this.keypair.GetEncryptionKeypair();
+export const BuildRSAProof : ProofBuildingMethod = function(issuer : DIDDocument, issuerKeyId : string, challengeNonce : string | undefined) : Proof {
+    let SigningMethod : SigningMethod = function(JSONToSign : {}, keypair : DIDKeypair) {
+        let encryptionKeypair : RSAKeypair = keypair.GetEncryptionKeypair();
         let documentToSign : string = JSON.stringify( RecursiveSort(JSONToSign) );
 
         let proof : RSAProofDocument = {
             type: "RsaSignature2018",
-            verificationMethod : this.keypair.GetFullId(),
+            verificationMethod : keypair.GetFullId(),
             signatureValue : encryptionKeypair.Sign(documentToSign).toString("base64")
         };
         return proof;
-    }    
-    
-    protected _VerifySignature(JSONToVerify : {}) : boolean {
+    };
+
+    let VerifySignatureMethod : VerifySignatureMethod = function(JSONToVerify : {}, keypair : DIDKeypair, proofDocument : ProofDocument) {
         let documentToVerify : string = JSON.stringify( RecursiveSort(JSONToVerify) );
-        let proofDocument : RSAProofDocument = <RSAProofDocument><unknown>this.proofDocument;
-        return this.keypair.GetEncryptionKeypair().Verify( documentToVerify, Buffer.from(proofDocument.signatureValue, "base64"));
-    }
+        let RSAproofDocument : RSAProofDocument = <RSAProofDocument>proofDocument;
+        return keypair.GetEncryptionKeypair().Verify( documentToVerify, Buffer.from(RSAproofDocument.signatureValue, "base64"));
+    };
+    return new Proof(SigningMethod, VerifySignatureMethod, issuer, issuerKeyId, challengeNonce);
 }

@@ -2,7 +2,7 @@ import { DID } from "../DID/DID";
 import { RecursiveSort } from "../Helpers/RecursiveSort";
 import { Schema } from "./Schema";
 import { SchemaManager } from "./SchemaManager";
-import { ExportableObject } from "./ExportableObject";
+import { BaseValidationObject } from "./BaseValidationObject";
 
 export interface CredentialDataModel {
     "@context" : string[],
@@ -12,14 +12,12 @@ export interface CredentialDataModel {
     "credentialSubject" : {}
 }
 
-export class Credential implements ExportableObject {
-    private contexts : string[];
-    private schema : Schema;
+export class Credential extends BaseValidationObject {
     private issuerDID : DID;
     private issuanceData : string;
     private credentialSubjects : [{}] | {};
 
-    public static CreateVerifiableCredential(context : string, credentialSchema : Schema, issuerDID : DID, credentialData : [{}] | {}, issuanceData : Date = new Date()) : Credential {
+    public static CreateVerifiableCredential(credentialSchema : Schema, issuerDID : DID, credentialData : [{}] | {}, issuanceData : Date = new Date(), context : string = "iota.org") : Credential {
         return new Credential(context, credentialSchema, issuerDID, credentialData, issuanceData);
     }
 
@@ -32,8 +30,7 @@ export class Credential implements ExportableObject {
     }
 
     private constructor(context : string, credentialSchema : Schema, issuerDID : DID, credentialData : [{}] | {}, issuanceData : Date = new Date()) {
-        this.contexts = ["https://www.w3.org/2018/credentials/v1", context];
-        this.schema = credentialSchema;
+        super(context, credentialSchema);
         this.issuerDID = issuerDID;
         this.issuanceData = issuanceData.toUTCString();
         this.credentialSubjects = RecursiveSort(credentialData);
@@ -41,10 +38,6 @@ export class Credential implements ExportableObject {
 
     public GetCredential() : [{}] | {} {
         return this.credentialSubjects;
-    }
-
-    public GetSchema() : Schema {
-        return this.schema;
     }
 
     public EncodeToJSON() : CredentialDataModel {

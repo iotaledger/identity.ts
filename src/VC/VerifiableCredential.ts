@@ -20,7 +20,7 @@ export class VerifiableCredential extends VerifiableObject {
         if(!this.credential.GetSchema().DoesObjectFollowSchema(this.credential.GetCredential())) {
             return VerificationErrorCodes.NO_MATCH_SCHEMA;
         }
-        if(!this.proof.VerifySignature(this.credential)) {
+        if(!this.proof.VerifySignature(this.credential.EncodeToJSON())) {
             return VerificationErrorCodes.INCORRECT_SIGNATURE;
         }
 

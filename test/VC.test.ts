@@ -128,17 +128,15 @@ describe('Verifiable Credentials', async function() {
                 "docs.iota.org"
             ]
         };
-        credential = Credential.CreateVerifiableCredential("iota.org", SchemaManager.GetInstance().GetSchema("DomainValidatedCertificate"), IssuerDIDDocument.GetDID(), domainCertificate);
+        credential = Credential.CreateVerifiableCredential(SchemaManager.GetInstance().GetSchema("DomainValidatedCertificate"), IssuerDIDDocument.GetDID(), domainCertificate);
     });
 
     it('Should be able to add a RSA proof and verify', function() {
-        let Proof : RSAProof = new RSAProof(IssuerDIDDocument, "keys-1");
-        Proof.Sign(credential);
+        let Proof : RSAProof = new RSAProof(IssuerDIDDocument, "keys-1", "123");
+        Proof.Sign(credential.EncodeToJSON());
         TestCredential = new VerifiableCredential(credential, Proof);
         let presentation : Presentation = new Presentation();
-        presentation.EncodeToJSON();
         let verifiablePresentation : VerifiablePresentation = new VerifiablePresentation(presentation, Proof);
-        verifiablePresentation.EncodeToJSON();
         expect(TestCredential.Verify()).to.deep.equal(VerificationErrorCodes.SUCCES);
     });
 

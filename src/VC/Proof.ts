@@ -2,7 +2,7 @@ import { DIDDocument } from "../DID/DIDDocument";
 import { DIDKeypair } from "../DID/DIDKeypair";
 
 export interface ProofDataModel {
-    "proof" ?: {}
+    "proof" ?: ExtendedProofDocument
 }
 
 export interface ProofDocument {
@@ -13,57 +13,20 @@ export interface ProofDocument {
 interface CreationDetails {
     created : string,
     creator : string,
+    nonce : string
+}
+
+export interface ProofParameters {
+    issuer : DIDDocument, 
+    issuerKeyId : string, 
+    challengeNonce ?: string
 }
 
 type ExtendedProofDocument = ProofDocument & CreationDetails;
 
-/*
-export interface BaseProof extends AbstractProof {}
-
-export abstract class BaseProof implements AbstractProof {
-    protected keypair : DIDKeypair;
-    protected issuer : DIDDocument;
-    protected proofDocument : ExtendedProofDocument;
-    protected challengeNonce : string | undefined;
-
-    constructor(issuer : DIDDocument, issuerKeyId : string, challengeNonce : string | undefined) { 
-        this.issuer = issuer;
-        this.keypair = this.issuer.GetKeypair(issuerKeyId);
-        this.challengeNonce = challengeNonce;
-    }
-
-    protected abstract _Sign(JSONToSign : {}) : ProofDocument;
-    public Sign(JSONToSign : {}) {
-        let finalJSON = JSONToSign;
-        if(this.challengeNonce) {
-            finalJSON = { ...finalJSON, "nonce" : this.challengeNonce}
-        }
-        let document : ProofDocument = this._Sign(finalJSON);
-        this.proofDocument = {...document, ...{ 
-            created : new Date().toUTCString(),
-            creator : this.issuer.GetDID().GetDID()
-        }};
-    }
-    protected abstract _VerifySignature(JSONToVerify : {}) : boolean; 
-    public VerifySignature(JSONToVerify : {}) : boolean {
-        let finalJSON = JSONToVerify;
-        if(this.challengeNonce) {
-            finalJSON = { ...finalJSON, "nonce" : this.challengeNonce}
-        }
-        return this._VerifySignature(finalJSON);
-    } ;
-    public EncodeToJSON() : {} {
-        return this.proofDocument;
-    };
-
-    public GetIssuer() : DIDDocument {
-        return this.issuer;
-    }
-}*/
-
 export type SigningMethod = (JSONToSign : {}, keypair : DIDKeypair) => ProofDocument;
 export type VerifySignatureMethod = (JSONToVerify : {}, keypair : DIDKeypair, proofDocument : ProofDocument) => boolean;
-export type ProofBuildingMethod = (issuer : DIDDocument, issuerKeyId : string, challengeNonce : string | undefined) => Proof;
+export type ProofBuildingMethod = (proofParameter : ProofParameters) => Proof;
 
 export class Proof {
     private signMethod : SigningMethod;
@@ -74,12 +37,12 @@ export class Proof {
     private proofDocument : ExtendedProofDocument;
     private challengeNonce : string | undefined;
 
-    constructor(signMethod : SigningMethod, verifySignatureMethod : VerifySignatureMethod, issuer : DIDDocument, issuerKeyId : string, challengeNonce : string | undefined) {
+    constructor(signMethod : SigningMethod, verifySignatureMethod : VerifySignatureMethod, proofParameter : ProofParameters) {
         this.signMethod = signMethod;
         this.verifySignatureMethod = verifySignatureMethod;
-        this.issuer = issuer;
-        this.keypair = this.issuer.GetKeypair(issuerKeyId);
-        this.challengeNonce = challengeNonce;
+        this.issuer = proofParameter.issuer;
+        this.keypair = this.issuer.GetKeypair(proofParameter.issuerKeyId);
+        this.challengeNonce = proofParameter.challengeNonce;
     }
 
     public Sign(JSONToSign : {}) {
@@ -90,7 +53,8 @@ export class Proof {
         let document : ProofDocument = this.signMethod(finalJSON, this.keypair);
         this.proofDocument = {...document, ...{ 
             created : new Date().toUTCString(),
-            creator : this.issuer.GetDID().GetDID()
+            creator : this.issuer.GetDID().GetDID(),
+            nonce : this.challengeNonce
         }};
     }
 
@@ -102,7 +66,7 @@ export class Proof {
         return this.verifySignatureMethod(finalJSON, this.keypair, this.proofDocument);
     }
 
-    public EncodeToJSON() : {} {
+    public EncodeToJSON() : ExtendedProofDocument {
         return this.proofDocument;
     };
 

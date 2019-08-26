@@ -15,6 +15,8 @@ export class DID {
     private network : string = "main";
     /** The Universal Unique IDentifier, which allows an identity to be uniquely identified. */
     private uuid : string;
+    /** DID Fragment references to a component of the DID Document */
+    private fragment : string | undefined;
 
     /**
      * Creates a DID object from a did string. 
@@ -36,6 +38,13 @@ export class DID {
             this.network = did.substr(0,did.lastIndexOf(":"));
             this.network = this.network.substr(this.network.lastIndexOf(":")+1);
             this.uuid = did.substr(did.lastIndexOf(":")+1);
+        }
+
+        //Load Fragment
+        let fragmentIndex : number = this.uuid.lastIndexOf("#");
+        if(fragmentIndex >= 0) {
+            this.fragment = this.uuid.substr(fragmentIndex);
+            this.uuid = this.uuid.substr(0, fragmentIndex);
         }
     }
 
@@ -61,6 +70,14 @@ export class DID {
      */
     public GetUUID() : string {
         return this.uuid;
+    }
+
+    /**
+     * Returns the fragment, if present, from the DID. Otherwise returns undefined.
+     * @returns {string|undefined} fragment
+     */
+    public GetFragment() : string | undefined {
+        return this.fragment;
     }
 }
 

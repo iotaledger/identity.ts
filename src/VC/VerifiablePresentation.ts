@@ -1,13 +1,24 @@
 import { Presentation, PresentationDataModel } from './Presentation';
-import { Proof, ProofDataModel } from "./Proof";
+import { Proof, ProofDataModel, ProofBuildingMethod, ProofParameters } from "./Proof";
 import { VerifiableObject, VerificationErrorCodes } from './VerifiableObject';
+import { Schema } from './Schema';
+import { ProofTypeManager } from './ProofTypeManager';
 
 type VerifiablePresentationDataModel = PresentationDataModel & ProofDataModel;
 
 export class VerifiablePresentation extends VerifiableObject {
     private presentation : Presentation;
+
+    public static Create(presentation : Presentation, proof : Proof) : VerifiablePresentation {
+        return new VerifiablePresentation(presentation, proof);
+    }
+
+    public static async DecodeFromJSON(presentationData : VerifiablePresentationDataModel, provider : string, proofParameter : ProofParameters, presentationSchema ?: Schema) { 
+        let proof : Proof = ProofTypeManager.GetInstance().CreateProofWithBuilder(presentationData.proof.type, proofParameter);
+        return new VerifiablePresentation( await Presentation.DecodeFromJSON(<PresentationDataModel>presentationData, provider, presentationSchema), proof);
+    }
     
-    constructor(presentation : Presentation, proof : Proof) {
+    private constructor(presentation : Presentation, proof : Proof) {
         super(proof);
         this.presentation = presentation;
     }
@@ -30,7 +41,6 @@ export class VerifiablePresentation extends VerifiableObject {
     }
 
     public EncodeToJSON(): VerifiablePresentationDataModel {
-
-        return;
+        return { ...this.presentation.EncodeToJSON(), ...{ proof : this.proof.EncodeToJSON()}};
     }
 }

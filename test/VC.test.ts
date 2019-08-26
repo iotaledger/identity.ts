@@ -6,13 +6,13 @@ import { SchemaManager } from './../src/VC/SchemaManager';
 import { Schema } from '../src/VC/Schema';
 import { DID, DIDDocument } from '../src';
 import { CreateRandomDID } from '../src/Helpers/CreateRandomDID';
-import { BuildRSAProof } from '../src/VC/RSAProof';
 import { DIDPublisher } from '../src/IOTA/DIDPublisher';
 import { GenerateSeed } from '../src/Helpers/GenerateSeed';
 import { Presentation } from '../src/VC/Presentation';
 import { VerifiablePresentation } from '../src/VC/VerifiablePresentation';
 import { VerificationErrorCodes } from '../src/VC/VerifiableObject';
 import { Proof } from '../src/VC/Proof';
+import { ProofTypeManager } from '../src/VC/ProofTypeManager';
 
 const provider : string = "https://nodes.devnet.iota.org:443";
 
@@ -137,17 +137,17 @@ describe('Verifiable Credentials', async function() {
     });
 
     it('Should be able to add a RSA proof and verify the Verifiable Credential', function() {
-        let credProof : Proof = BuildRSAProof(IssuerDIDDocument, "keys-1", "123");
+        let credProof : Proof = ProofTypeManager.GetInstance().CreateProofWithBuilder("RsaSignature2018", { 'issuer' : IssuerDIDDocument, 'issuerKeyId' : "keys-1", 'challengeNonce' : "123" });
         credProof.Sign(credential.EncodeToJSON());
         TestCredential = VerifiableCredential.Create(credential, credProof);
         expect(TestCredential.Verify()).to.deep.equal(VerificationErrorCodes.SUCCES);
     });
 
     it('Should be able to verify a Verifiable Presentation', function() {
-        let presentation : Presentation = new Presentation([TestCredential]);
-        let credProof : Proof = BuildRSAProof(SubjectDIDDocument, "keys-1", "456");
+        let presentation : Presentation = Presentation.Create([TestCredential]);
+        let credProof : Proof =  ProofTypeManager.GetInstance().CreateProofWithBuilder("RsaSignature2018", { 'issuer' : SubjectDIDDocument, 'issuerKeyId' : "keys-1", 'challengeNonce' : "456" });
         credProof.Sign(presentation.EncodeToJSON());
-        let verifiablePresentation : VerifiablePresentation = new VerifiablePresentation(presentation, credProof);
+        let verifiablePresentation : VerifiablePresentation = VerifiablePresentation.Create(presentation, credProof);
         expect(verifiablePresentation.Verify()).to.deep.equal(VerificationErrorCodes.SUCCES);
     });
 

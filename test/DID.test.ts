@@ -27,6 +27,12 @@ describe('DID Functionalities', function() {
         expect("did:iota:dev:"+uuid, new DID("did:iota:dev:"+uuid).GetSpecificDID());
     });
 
+    it('Should create a valid DID from a did:method:network:uuid#fragment', async function() {
+        let did : DID = new DID("did:iota:dev:"+uuid + "#fragment");
+        expect("did:iota:dev:"+uuid, did.GetSpecificDID());
+        expect("fragment", did.GetFragment());
+    });
+
 });
 
 

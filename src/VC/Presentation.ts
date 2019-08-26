@@ -2,6 +2,7 @@ import { VerifiableCredentialDataModel, VerifiableCredential } from "./Verifiabl
 import { Schema } from "./Schema";
 import { BaseValidationObject } from "./BaseValidationObject";
 import { DID } from "../DID/DID";
+import { DIDDocument } from "../DID/DIDDocument";
 
 export interface PresentationDataModel {
     "@context" : string[],
@@ -14,7 +15,33 @@ export class Presentation extends BaseValidationObject {
     private verifiableCredentials : VerifiableCredential[];
     private holder : DID;
 
-    constructor(verifiableCredentials : VerifiableCredential[], presentationSchema ?: Schema, context : string = "iota.org") {
+    public static Create(verifiableCredentials : VerifiableCredential[], presentationSchema ?: Schema, context : string = "iota.org") : Presentation {
+        return new Presentation(verifiableCredentials, presentationSchema, context);
+    }
+
+    public static DecodeFromJSON(presentationData : PresentationDataModel, provider : string, presentationSchema ?: Schema) : Promise<Presentation> {
+        return new Promise<Presentation> (async(resolve, reject) => {
+            let verifiableCredentials : VerifiableCredential[] = [];
+            let context : string = presentationData["@context"][1];
+            for(let i=0; i < presentationData.verifiableCredential.length; i++) {
+                //TODO: Check if VerificationMethod & IssuerDID are the same?
+                let issuerDID : DID = new DID(presentationData.verifiableCredential[i].proof.verificationMethod);
+                let issuerRoot : string = issuerDID.GetUUID();
+                let issuerDIDDoc : DIDDocument = await DIDDocument.readDIDDocument(provider, issuerRoot);
+                let issuerKeyId : string = issuerDID.GetFragment();
+                let nonce : string = presentationData.verifiableCredential[i].proof.nonce;
+                let vc : VerifiableCredential = VerifiableCredential.DecodeFromJSONWithLoadedIssuer(<VerifiableCredentialDataModel>presentationData.verifiableCredential[i].credentialSubject, { 'issuer' : issuerDIDDoc, 'issuerKeyId' : issuerKeyId, 'challengeNonce' : nonce});
+                if(vc) {
+                    verifiableCredentials.push(vc);
+                } else {
+                    reject("Invalid Verifiable Credential");
+                }
+            }
+            resolve(new Presentation(verifiableCredentials, presentationSchema, context));
+        });
+    }
+
+    private constructor(verifiableCredentials : VerifiableCredential[], presentationSchema ?: Schema, context : string = "iota.org") {
         super(context, presentationSchema);
         this.verifiableCredentials = verifiableCredentials;
     }

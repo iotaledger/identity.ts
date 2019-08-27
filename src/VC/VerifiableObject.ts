@@ -1,4 +1,4 @@
-import { Proof } from "./Proof";
+import { Proof } from "./Proof/Proof";
 
 export enum VerificationErrorCodes {
     SUCCES = 1,

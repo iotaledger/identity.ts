@@ -1,5 +1,5 @@
-import { DIDDocument } from "../DID/DIDDocument";
-import { DIDKeypair } from "../DID/DIDKeypair";
+import { DIDDocument } from "../../DID/DIDDocument";
+import { DIDKeypair } from "../../DID/DIDKeypair";
 
 export interface ProofDataModel {
     "proof" ?: ExtendedProofDocument
@@ -22,7 +22,7 @@ export interface ProofParameters {
     challengeNonce ?: string
 }
 
-type ExtendedProofDocument = ProofDocument & CreationDetails;
+export type ExtendedProofDocument = ProofDocument & CreationDetails;
 
 export type SigningMethod = (JSONToSign : {}, keypair : DIDKeypair) => ProofDocument;
 export type VerifySignatureMethod = (JSONToVerify : {}, keypair : DIDKeypair, proofDocument : ProofDocument) => boolean;

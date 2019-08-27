@@ -1,5 +1,5 @@
 import { ProofBuildingMethod, Proof, ProofParameters } from './Proof';
-import { DIDDocument } from '../DID/DIDDocument';
+import { DIDDocument } from '../../DID/DIDDocument';
 import { BuildRSAProof } from './RSAProof';
 
 export class ProofTypeManager {

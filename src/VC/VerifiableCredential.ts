@@ -1,6 +1,6 @@
 import { Credential, CredentialDataModel } from "./Credential";
-import { ProofTypeManager } from "./ProofTypeManager";
-import { Proof, ProofDataModel, ProofBuildingMethod, ProofParameters } from "./Proof";
+import { ProofTypeManager } from "./Proof/ProofTypeManager";
+import { Proof, ProofDataModel, ProofBuildingMethod, ProofParameters } from "./Proof/Proof";
 import { VerifiableObject, VerificationErrorCodes } from "./VerifiableObject";
 import { DIDDocument } from "../DID/DIDDocument";
 import { MAMSettings } from "../IOTA/mam";
@@ -29,7 +29,7 @@ export class VerifiableCredential extends VerifiableObject {
         return new VerifiableCredential( Credential.DecodeFromJSON(<CredentialDataModel>credentialData), proof);
     }*/
 
-    public static DecodeFromJSONWithLoadedIssuer(credentialData : VerifiableCredentialDataModel, proofParameter : ProofParameters) : VerifiableCredential {
+    public static DecodeFromJSON(credentialData : VerifiableCredentialDataModel, proofParameter : ProofParameters) : VerifiableCredential {
         let proof : Proof = ProofTypeManager.GetInstance().CreateProofWithBuilder(credentialData.proof.type, proofParameter);
         if(proof) {
             return new VerifiableCredential( Credential.DecodeFromJSON(<CredentialDataModel>credentialData), proof);

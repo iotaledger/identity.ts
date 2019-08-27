@@ -1,8 +1,8 @@
 import { Proof, ProofDocument, SigningMethod, VerifySignatureMethod, ProofBuildingMethod, ProofParameters } from "./Proof";
-import { DIDDocument } from "../DID/DIDDocument";
-import { RecursiveSort } from "../Helpers/RecursiveSort";
-import { RSAKeypair } from "../Encryption/RSAKeypair";
-import { DIDKeypair } from "../DID/DIDKeypair";
+import { DIDDocument } from "../../DID/DIDDocument";
+import { RecursiveSort } from "../../Helpers/RecursiveSort";
+import { RSAKeypair } from "../../Encryption/RSAKeypair";
+import { DIDKeypair } from "../../DID/DIDKeypair";
 
 export interface RSAProofDocument extends ProofDocument {
     signatureValue : string

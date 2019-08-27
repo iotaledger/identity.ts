@@ -1,8 +1,8 @@
 import { Presentation, PresentationDataModel } from './Presentation';
-import { Proof, ProofDataModel, ProofBuildingMethod, ProofParameters } from "./Proof";
+import { Proof, ProofDataModel, ProofBuildingMethod, ProofParameters } from "./Proof/Proof";
 import { VerifiableObject, VerificationErrorCodes } from './VerifiableObject';
 import { Schema } from './Schema';
-import { ProofTypeManager } from './ProofTypeManager';
+import { ProofTypeManager } from './Proof/ProofTypeManager';
 
 type VerifiablePresentationDataModel = PresentationDataModel & ProofDataModel;
 

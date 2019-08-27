@@ -52,6 +52,7 @@ export class MAMPublisher {
         this.seed = seed;
         this.mamState = MAM.init(this.provider, this.seed, this.settings.securityLevel);
         this.mamState = MAM.changeMode(this.mamState, this.settings.mode, this.settings.sideKey);
+        this.mamState.channel.next_root = MAM.getRoot(this.mamState);
     }
 
     /**

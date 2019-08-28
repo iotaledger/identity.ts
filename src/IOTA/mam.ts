@@ -8,7 +8,7 @@ export class MAMSettings {
     public sideKey : string;
     public securityLevel : number;
 
-    constructor(mode : MAM_MODE = MAM_MODE.PRIVATE, sideKey ?: string, securityLevel : number = 2) {
+    constructor(mode : MAM_MODE = MAM_MODE.PUBLIC, sideKey ?: string, securityLevel : number = 2) {
         this.mode = mode;
         this.sideKey = (this.mode == MAM_MODE.RESTRICTED)?sideKey:undefined;
         this.securityLevel = securityLevel;
@@ -112,6 +112,7 @@ export class MAMPublisher {
 export function ReadMAMStream(provider : string, root : string, settings : MAMSettings = new MAMSettings()) : Promise<string[]> {
     return new Promise<string[]>((resolve, reject)=>{
         //TODO: Check if MAM.Init is needed.
+        MAM.init(provider, root, settings.securityLevel);
         MAM.fetch(root, settings.mode, settings.sideKey)
         .then((result : any) => {
             let messages : string[] = [];

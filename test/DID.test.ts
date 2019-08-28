@@ -43,7 +43,9 @@ describe('DID Document', function() {
     let documentFromTangle : DIDDocument;
 
     it('Should create and output a valid DID Document', async function(){
-        document = await CreateRandomDID("keys-1");
+        document = await CreateRandomDID(seed);
+        let keypair : RSAKeypair = await GenerateRSAKeypair();
+        document.AddKeypair(keypair, "keys-1");
         expect(document.GetJSONDIDDocument()).to.not.be.undefined;
     });
 

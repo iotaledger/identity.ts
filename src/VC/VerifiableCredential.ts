@@ -1,20 +1,10 @@
 import { Credential, CredentialDataModel } from "./Credential";
 import { ProofTypeManager } from "./Proof/ProofTypeManager";
-import { Proof, ProofDataModel, ProofBuildingMethod, ProofParameters } from "./Proof/Proof";
+import { Proof, ProofDataModel, ProofParameters } from "./Proof/Proof";
 import { VerifiableObject, VerificationErrorCodes } from "./VerifiableObject";
-import { DIDDocument } from "../DID/DIDDocument";
-import { MAMSettings } from "../IOTA/mam";
 
 export type VerifiableCredentialDataModel = CredentialDataModel & ProofDataModel;
 
-export interface VerifiableCredentialCommunicationPackage {
-    dataModel : VerifiableCredentialDataModel,
-    issuerRoot : string,
-    issuerKeyId : string,
-    issuerMamSettings : MAMSettings,
-    proofBuilder : ProofBuildingMethod,
-    challengeNonce : string | undefined;
-}
 
 export class VerifiableCredential extends VerifiableObject {
     private credential : Credential;
@@ -30,6 +20,7 @@ export class VerifiableCredential extends VerifiableObject {
     }*/
 
     public static DecodeFromJSON(credentialData : VerifiableCredentialDataModel, proofParameter : ProofParameters) : VerifiableCredential {
+        console.log(proofParameter);
         let proof : Proof = ProofTypeManager.GetInstance().CreateProofWithBuilder(credentialData.proof.type, proofParameter);
         if(proof) {
             return new VerifiableCredential( Credential.DecodeFromJSON(<CredentialDataModel>credentialData), proof);

@@ -14,7 +14,7 @@ export class VerifiablePresentation extends VerifiableObject {
     }
 
     public static async DecodeFromJSON(presentationData : VerifiablePresentationDataModel, provider : string, proofParameter : ProofParameters, presentationSchema ?: Schema) { 
-        let proof : Proof = ProofTypeManager.GetInstance().CreateProofWithBuilder(presentationData.proof.type, proofParameter);
+        let proof : Proof = ProofTypeManager.GetInstance().CreateProofWithBuilder(presentationData.proof.type, proofParameter, presentationData.proof);
         return new VerifiablePresentation( await Presentation.DecodeFromJSON(<PresentationDataModel>presentationData, provider, presentationSchema), proof);
     }
     

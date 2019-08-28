@@ -1,4 +1,4 @@
-import { Proof, ProofDocument, SigningMethod, VerifySignatureMethod, ProofBuildingMethod, ProofParameters } from "./Proof";
+import { Proof, ProofDocument, SigningMethod, VerifySignatureMethod, ProofBuildingMethod, ProofParameters, ExtendedProofDocument } from "./Proof";
 import { DIDDocument } from "../../DID/DIDDocument";
 import { RecursiveSort } from "../../Helpers/RecursiveSort";
 import { RSAKeypair } from "../../Encryption/RSAKeypair";
@@ -8,7 +8,7 @@ export interface RSAProofDocument extends ProofDocument {
     signatureValue : string
 }
 
-export const BuildRSAProof : ProofBuildingMethod = function(proofParameter : ProofParameters) : Proof {
+export const BuildRSAProof : ProofBuildingMethod = function(proofParameter : ProofParameters, proofDocument ?: ExtendedProofDocument) : Proof {
     let SigningMethod : SigningMethod = function(JSONToSign : {}, keypair : DIDKeypair) {
         let encryptionKeypair : RSAKeypair = keypair.GetEncryptionKeypair();
         let documentToSign : string = JSON.stringify( RecursiveSort(JSONToSign) );
@@ -26,5 +26,5 @@ export const BuildRSAProof : ProofBuildingMethod = function(proofParameter : Pro
         let RSAproofDocument : RSAProofDocument = <RSAProofDocument>proofDocument;
         return keypair.GetEncryptionKeypair().Verify( documentToVerify, Buffer.from(RSAproofDocument.signatureValue, "base64"));
     };
-    return new Proof(SigningMethod, VerifySignatureMethod, proofParameter);
+    return new Proof(SigningMethod, VerifySignatureMethod, proofParameter, proofDocument);
 }

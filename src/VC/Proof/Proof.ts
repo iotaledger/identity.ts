@@ -26,7 +26,7 @@ export type ExtendedProofDocument = ProofDocument & CreationDetails;
 
 export type SigningMethod = (JSONToSign : {}, keypair : DIDKeypair) => ProofDocument;
 export type VerifySignatureMethod = (JSONToVerify : {}, keypair : DIDKeypair, proofDocument : ProofDocument) => boolean;
-export type ProofBuildingMethod = (proofParameter : ProofParameters) => Proof;
+export type ProofBuildingMethod = (proofParameter : ProofParameters, proofDocument ?: ExtendedProofDocument) => Proof;
 
 export class Proof {
     private signMethod : SigningMethod;
@@ -37,12 +37,13 @@ export class Proof {
     private proofDocument : ExtendedProofDocument;
     private challengeNonce : string | undefined;
 
-    constructor(signMethod : SigningMethod, verifySignatureMethod : VerifySignatureMethod, proofParameter : ProofParameters) {
+    constructor(signMethod : SigningMethod, verifySignatureMethod : VerifySignatureMethod, proofParameter : ProofParameters, proofDocument ?: ExtendedProofDocument) {
         this.signMethod = signMethod;
         this.verifySignatureMethod = verifySignatureMethod;
         this.issuer = proofParameter.issuer;
         this.keypair = this.issuer.GetKeypair(proofParameter.issuerKeyId);
         this.challengeNonce = proofParameter.challengeNonce;
+        this.proofDocument = proofDocument;
     }
 
     public Sign(JSONToSign : {}) {

@@ -136,6 +136,10 @@ describe('Verifiable Credentials', async function() {
         SchemaManager.GetInstance().GetSchema("DomainValidatedCertificate").AddTrustedDID(IssuerDIDDocument.GetDID());
         subjectSeed = GenerateSeed();
         SubjectDIDDocument = CreateRandomDID(subjectSeed);
+        let keypair2 : RSAKeypair = await GenerateRSAKeypair();
+        SubjectDIDDocument.AddKeypair(keypair2, "keys-1");
+        let publisher2 : DIDPublisher = new DIDPublisher(provider, subjectSeed);
+        await publisher2.PublishDIDDocument(SubjectDIDDocument, "DIDTEST", 9);
         proofMethod = ProofTypeManager.GetInstance().GetProofBuilder("RsaSignature2018");
     });
 
@@ -166,13 +170,11 @@ describe('Verifiable Credentials', async function() {
 
     it('Should be able to Encode / Decode a Verifiable Credential and still verify', async function() {
         this.timeout(30000);
-        await delay(10000);
+        await delay(2000);
         let proofParameters : ProofParameters = await DecodeProofDocument(verifiableCredential.EncodeToJSON().proof, provider);
         let importedVerifiableCredential : VerifiableCredential = VerifiableCredential.DecodeFromJSON(verifiableCredential.EncodeToJSON(), proofParameters);
-        console.log(importedVerifiableCredential.EncodeToJSON());
-        console.log(verifiableCredential.EncodeToJSON());
         expect(importedVerifiableCredential.Verify()).to.deep.equal(VerificationErrorCodes.SUCCES);
-        //expect(importedVerifiableCredential.EncodeToJSON()).to.deep.equal(verifiableCredential.EncodeToJSON());
+        expect(importedVerifiableCredential.EncodeToJSON()).to.deep.equal(verifiableCredential.EncodeToJSON());
     });
 
     it('Should test all Verification Error codes for Verifiable Credentials', function() {
@@ -181,10 +183,10 @@ describe('Verifiable Credentials', async function() {
 
     it('Should be able to create a presentation from a Verifiable Credential', function() {
         presentation = Presentation.Create([verifiableCredential]);
-        expect(presentation.EncodeToJSON().verifiableCredential).to.deep.equal(verifiableCredential.EncodeToJSON());
+        expect(presentation.EncodeToJSON().verifiableCredential[0]).to.deep.equal(verifiableCredential.EncodeToJSON());
     });
 
-    it('Should be able to Encode / Decode a credential to be the same', async function() {
+    it('Should be able to Encode / Decode a presentation to be the same', async function() {
         let importPresentation : Presentation = await Presentation.DecodeFromJSON(presentation.EncodeToJSON(), provider);
         expect(importPresentation.EncodeToJSON()).to.deep.equal(presentation.EncodeToJSON());
     });
@@ -196,12 +198,11 @@ describe('Verifiable Credentials', async function() {
         expect(verifiablePresentation.Verify()).to.deep.equal(VerificationErrorCodes.SUCCES);
     });
 
+    //verifiablePresentation Shouldn't this be enough to integrate into VerifiableObject and do DecodeProofDocument?
     it('Should be able to Encode / Decode a Verifiable Presentation and still verify', async function() {
-        console.log(presentationProof.EncodeToJSON());
-        console.log(verifiablePresentation.EncodeToJSON());//Shouldn't this be enough to integrate into VerifiableObject and do DecodeProofDocument?
-        let proofParameters : ProofParameters = await DecodeProofDocument(presentationProof.EncodeToJSON(), provider);
+        let proofParameters : ProofParameters = await DecodeProofDocument(verifiablePresentation.EncodeToJSON().proof, provider);
         let importVerifiablePresentation : VerifiablePresentation = await VerifiablePresentation.DecodeFromJSON(verifiablePresentation.EncodeToJSON(), provider, proofParameters);
-        expect(importVerifiablePresentation).to.deep.equal(VerificationErrorCodes.SUCCES);
+        expect(importVerifiablePresentation.Verify()).to.deep.equal(VerificationErrorCodes.SUCCES);
         expect(importVerifiablePresentation.EncodeToJSON()).to.deep.equal(verifiablePresentation.EncodeToJSON());
     });
 

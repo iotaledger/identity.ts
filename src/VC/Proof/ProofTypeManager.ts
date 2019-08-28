@@ -1,4 +1,4 @@
-import { ProofBuildingMethod, Proof, ProofParameters } from './Proof';
+import { ProofBuildingMethod, Proof, ProofParameters, ExtendedProofDocument } from './Proof';
 import { DIDDocument } from '../../DID/DIDDocument';
 import { BuildRSAProof } from './RSAProof';
 
@@ -17,10 +17,10 @@ export class ProofTypeManager {
         this.proofTypes.set(name, proof);
     }
 
-    public CreateProofWithBuilder(name : string, proofParameter : ProofParameters) : Proof {
+    public CreateProofWithBuilder(name : string, proofParameter : ProofParameters, proofDocument ?: ExtendedProofDocument) : Proof {
         let proofBuilder : ProofBuildingMethod = this.proofTypes.get(name);
         if(proofBuilder) {
-            return proofBuilder(proofParameter);
+            return proofBuilder(proofParameter, proofDocument);
         }
     }
 

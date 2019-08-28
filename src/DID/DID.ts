@@ -43,7 +43,7 @@ export class DID {
         //Load Fragment
         let fragmentIndex : number = this.uuid.lastIndexOf("#");
         if(fragmentIndex >= 0) {
-            this.fragment = this.uuid.substr(fragmentIndex);
+            this.fragment = this.uuid.substr(fragmentIndex+1);
             this.uuid = this.uuid.substr(0, fragmentIndex);
         }
     }

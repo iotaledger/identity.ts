@@ -30,7 +30,7 @@ export class Presentation extends BaseValidationObject {
                 let issuerDIDDoc : DIDDocument = await DIDDocument.readDIDDocument(provider, issuerRoot);
                 let issuerKeyId : string = issuerDID.GetFragment();
                 let nonce : string = presentationData.verifiableCredential[i].proof.nonce;
-                let vc : VerifiableCredential = VerifiableCredential.DecodeFromJSON(<VerifiableCredentialDataModel>presentationData.verifiableCredential[i].credentialSubject, { 'issuer' : issuerDIDDoc, 'issuerKeyId' : issuerKeyId, 'challengeNonce' : nonce});
+                let vc : VerifiableCredential = VerifiableCredential.DecodeFromJSON(<VerifiableCredentialDataModel>presentationData.verifiableCredential[i], { 'issuer' : issuerDIDDoc, 'issuerKeyId' : issuerKeyId, 'challengeNonce' : nonce});
                 if(vc) {
                     verifiableCredentials.push(vc);
                 } else {

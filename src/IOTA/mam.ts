@@ -8,7 +8,7 @@ export class MAMSettings {
     public sideKey : string;
     public securityLevel : number;
 
-    constructor(mode : MAM_MODE = MAM_MODE.PUBLIC, sideKey ?: string, securityLevel : number = 2) {
+    constructor(mode : MAM_MODE = MAM_MODE.PRIVATE, sideKey ?: string, securityLevel : number = 2) {
         this.mode = mode;
         this.sideKey = (this.mode == MAM_MODE.RESTRICTED)?sideKey:undefined;
         this.securityLevel = securityLevel;

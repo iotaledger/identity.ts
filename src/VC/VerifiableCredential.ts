@@ -20,13 +20,13 @@ export class VerifiableCredential extends VerifiableObject {
     }*/
 
     public static DecodeFromJSON(credentialData : VerifiableCredentialDataModel, proofParameter : ProofParameters) : VerifiableCredential {
-        console.log(proofParameter);
-        let proof : Proof = ProofTypeManager.GetInstance().CreateProofWithBuilder(credentialData.proof.type, proofParameter);
-        if(proof) {
-            return new VerifiableCredential( Credential.DecodeFromJSON(<CredentialDataModel>credentialData), proof);
-        } else {
-            return null;
+        if(credentialData.proof) {
+            let proof : Proof = ProofTypeManager.GetInstance().CreateProofWithBuilder(credentialData.proof.type, proofParameter, credentialData.proof);
+            if(proof) {
+                return new VerifiableCredential( Credential.DecodeFromJSON(<CredentialDataModel>credentialData), proof);
+            } 
         }
+        return null;
     }
     
     private constructor(credential : Credential, proof : Proof) {

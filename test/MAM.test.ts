@@ -14,19 +14,20 @@ describe('Masked Autenticated Messaging', function() {
     it('Should send a valid first transaction', async function(){
         this.timeout(20000);
         firstPublisher = new MAMPublisher(provider, GenerateSeed());
-        rootOfFirstMessage = await firstPublisher.PublishMessage("First Message", undefined);
+        rootOfFirstMessage = await firstPublisher.PublishMessage("First Message", undefined, 9);
         expect(rootOfFirstMessage).to.not.be.undefined;
     });
 
     it('Should read the first message', async function() {
-        await delay(8000); //Sleep prevents the node to not know about the first tx yet, failing the test.
+        this.timeout(20000);
+        await delay(2000); //Sleep prevents the node to not know about the first tx yet, failing the test.
         let messages : string[] = await ReadMAMStream(provider, rootOfFirstMessage);
         expect(messages[0]).to.deep.equal("First Message");
     });
 
     it('Should send a valid second transaction', async function(){
         this.timeout(20000);
-        let root2 = await firstPublisher.PublishMessage("Second Message", undefined);
+        let root2 = await firstPublisher.PublishMessage("Second Message", undefined, 9);
         expect(root2).to.not.be.undefined;
     });
 
@@ -49,7 +50,7 @@ describe('Masked Autenticated Messaging', function() {
     it('Should send a valid third transaction (After state import)', async function() {
         secondPublisher = new MAMPublisher(provider, state.seed, new MAMSettings(state.mode, state.sideKey, state.securityLevel));
         secondPublisher.UpdateMAMState(state.nextRoot, state.channelStart);
-        let root3 = await secondPublisher.PublishMessage("Third Message", undefined);
+        let root3 = await secondPublisher.PublishMessage("Third Message", undefined, 9);
         expect(root3).to.not.be.undefined;
     });
 

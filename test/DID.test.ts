@@ -58,7 +58,7 @@ describe('DID Document', function() {
 
     it('Should read the same document from the Tangle', async function() {
         this.timeout(20000);
-        await delay(1000); //Sleep prevents the node to not know about the first tx yet, failing the test.
+        await delay(2000); //Sleep prevents the node to not know about the first tx yet, failing the test.
         documentFromTangle = await DIDDocument.readDIDDocument(provider, root);
         expect(documentFromTangle.GetJSONDIDDocument()).to.deep.equal(document.GetJSONDIDDocument());
     });

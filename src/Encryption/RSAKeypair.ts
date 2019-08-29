@@ -1,6 +1,5 @@
 import { BaseKeypair } from './BaseKeypair';
 import * as crypto from 'crypto';
-import { DID } from '../DID/DID';
 
 export const passphrase : string = 'Semantic Market runs on IOTA! @(^_^)@';
 

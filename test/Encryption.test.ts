@@ -1,10 +1,8 @@
 import { expect } from 'chai';
 import 'mocha';
 import { GenerateRSAKeypair } from '../src/Helpers/GenerateKeypair';
-import { RSAKeypair, passphrase } from '../src/Encryption/RSAKeypair';
+import { RSAKeypair } from '../src/Encryption/RSAKeypair';
 import { RecursiveSort } from '../src/Helpers/RecursiveSort';
-import * as crypto from 'crypto';
-
 
 describe('RSA Encryption', function() {
     let keypair : RSAKeypair;

@@ -4,7 +4,7 @@ import { VerifiableObject, VerificationErrorCodes } from './VerifiableObject';
 import { Schema } from './Schema';
 import { ProofTypeManager } from './Proof/ProofTypeManager';
 
-type VerifiablePresentationDataModel = PresentationDataModel & ProofDataModel;
+export type VerifiablePresentationDataModel = PresentationDataModel & ProofDataModel;
 
 export class VerifiablePresentation extends VerifiableObject {
     private presentation : Presentation;

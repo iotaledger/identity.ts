@@ -1,5 +1,3 @@
-import { DID } from "../DID/DID";
-
 
 export abstract class BaseKeypair {
     protected publicKey : string;

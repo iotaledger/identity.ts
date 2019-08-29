@@ -1,6 +1,6 @@
 {
-  "name": "identity.ts",
-  "version": "1.0.0",
+  "name": "identity_ts",
+  "version": "0.1.1",
   "description": "Digital Identity implementation",
   "main": "./out/src/index",
   "scripts": {

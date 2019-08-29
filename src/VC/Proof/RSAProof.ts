@@ -1,5 +1,4 @@
 import { Proof, ProofDocument, SigningMethod, VerifySignatureMethod, ProofBuildingMethod, ProofParameters, ExtendedProofDocument } from "./Proof";
-import { DIDDocument } from "../../DID/DIDDocument";
 import { RecursiveSort } from "../../Helpers/RecursiveSort";
 import { RSAKeypair } from "../../Encryption/RSAKeypair";
 import { DIDKeypair } from "../../DID/DIDKeypair";

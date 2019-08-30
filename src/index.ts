@@ -2,6 +2,11 @@
 export { DID } from './DID/DID';
 export { DIDDocument } from './DID/DIDDocument';
 
+//Encryption
+export { BaseKeypair } from './Encryption/BaseKeypair';
+export { Hash } from './Encryption/Hash';
+export { RSAKeypair } from './Encryption/RSAKeypair';
+
 //Helpers
 export { CreateRandomDID, CreateRandomDIDFromPublicKey} from './Helpers/CreateRandomDID';
 export { DecodeProofDocument } from './Helpers/DecodeProofDocument';

@@ -2,7 +2,8 @@
   "name": "identity_ts",
   "version": "0.1.1",
   "description": "Digital Identity implementation",
-  "main": "./out/src/index",
+  "main": "./out/src/index.js",
+  "typings" : "typings/src",
   "scripts": {
     "test": "mocha -r ts-node/register test/**.ts",
     "testVC": "mocha -r ts-node/register test/VC.test.ts",

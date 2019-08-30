@@ -1,0 +1,1 @@
+{"version":3,"file":"BaseValidationObject.js","sourceRoot":"","sources":["../../../src/VC/BaseValidationObject.ts"],"names":[],"mappings":";;AAEA;IAII,8BAAY,OAAgB,EAAE,MAAe;QACzC,IAAI,CAAC,QAAQ,GAAG,CAAC,wCAAwC,EAAE,OAAO,CAAC,CAAC;QACpE,IAAI,CAAC,MAAM,GAAG,MAAM,CAAC;IACzB,CAAC;IAIM,wCAAS,GAAhB;QACI,OAAO,IAAI,CAAC,MAAM,CAAC;IACvB,CAAC;IACL,2BAAC;AAAD,CAAC,AAdD,IAcC;AAdqB,oDAAoB"}

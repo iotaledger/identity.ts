@@ -5,6 +5,13 @@ var DID_1 = require("./DID/DID");
 exports.DID = DID_1.DID;
 var DIDDocument_1 = require("./DID/DIDDocument");
 exports.DIDDocument = DIDDocument_1.DIDDocument;
+//Encryption
+var BaseKeypair_1 = require("./Encryption/BaseKeypair");
+exports.BaseKeypair = BaseKeypair_1.BaseKeypair;
+var Hash_1 = require("./Encryption/Hash");
+exports.Hash = Hash_1.Hash;
+var RSAKeypair_1 = require("./Encryption/RSAKeypair");
+exports.RSAKeypair = RSAKeypair_1.RSAKeypair;
 //Helpers
 var CreateRandomDID_1 = require("./Helpers/CreateRandomDID");
 exports.CreateRandomDID = CreateRandomDID_1.CreateRandomDID;

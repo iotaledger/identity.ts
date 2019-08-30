@@ -1,5 +1,8 @@
 export { DID } from './DID/DID';
 export { DIDDocument } from './DID/DIDDocument';
+export { BaseKeypair } from './Encryption/BaseKeypair';
+export { Hash } from './Encryption/Hash';
+export { RSAKeypair } from './Encryption/RSAKeypair';
 export { CreateRandomDID, CreateRandomDIDFromPublicKey } from './Helpers/CreateRandomDID';
 export { DecodeProofDocument } from './Helpers/DecodeProofDocument';
 export { GenerateRSAKeypair } from './Helpers/GenerateKeypair';

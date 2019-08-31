@@ -8,6 +8,7 @@ export { DecodeProofDocument } from './Helpers/DecodeProofDocument';
 export { GenerateRSAKeypair } from './Helpers/GenerateKeypair';
 export { GenerateSeed } from './Helpers/GenerateSeed';
 export { DIDPublisher } from './IOTA/DIDPublisher';
+export { MAMSettings, MAMState, MAM_MODE } from './IOTA/mam';
 export { Proof, ExtendedProofDocument, ProofBuildingMethod, SigningMethod, VerifySignatureMethod, ProofParameters } from './VC/Proof/Proof';
 export { ProofTypeManager } from './VC/Proof/ProofTypeManager';
 export { BuildRSAProof, RSAProofDocument } from './VC/Proof/RSAProof';

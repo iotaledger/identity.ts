@@ -25,6 +25,9 @@ exports.GenerateSeed = GenerateSeed_1.GenerateSeed;
 //IOTA
 var DIDPublisher_1 = require("./IOTA/DIDPublisher");
 exports.DIDPublisher = DIDPublisher_1.DIDPublisher;
+var mam_1 = require("./IOTA/mam");
+exports.MAMSettings = mam_1.MAMSettings;
+exports.MAM_MODE = mam_1.MAM_MODE;
 //VC - Proofs
 var Proof_1 = require("./VC/Proof/Proof");
 exports.Proof = Proof_1.Proof;

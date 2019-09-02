@@ -1,0 +1,15 @@
+{
+    "type" : "object",
+    "required" : ["id", "domains"],
+    "properties" : {
+        "id" : { 
+            "type" : "string"
+        },
+        "domains" : { 
+            "type" : "array",
+            "items" : {
+                "type" : "string"
+            }
+        }
+    }
+}

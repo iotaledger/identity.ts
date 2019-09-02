@@ -1,3 +1,4 @@
+/// <reference types="node" />
 export declare abstract class BaseKeypair {
     protected publicKey: string;
     protected privateKey: string;

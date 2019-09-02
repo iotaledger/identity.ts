@@ -1,10 +1,11 @@
 {
   "name": "identity_ts",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Digital Identity implementation",
   "main": "./out/src/index.js",
-  "typings" : "typings/src",
+  "typings": "typings/src",
   "scripts": {
+    "build": "copyfiles -V \"./src/VC/Schemas/*.json\" \"./out\" && tsc",
     "test": "mocha -r ts-node/register test/**.ts",
     "testVC": "mocha -r ts-node/register test/VC.test.ts",
     "doc": "jsdoc2md --template README_tpl.hbs --files ./src/**/*.ts --configure ./jsdoc2md.json > ./README.md"
@@ -34,6 +35,7 @@
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.6.9",
     "chai": "^4.2.0",
+    "copyfiles": "^2.1.1",
     "dmd-clear": "^0.1.2",
     "jsdoc-babel": "^0.5.0",
     "jsdoc-to-markdown": "^5.0.0",

@@ -14,4 +14,5 @@ export declare class Presentation extends BaseValidationObject {
     static DecodeFromJSON(presentationData: PresentationDataModel, provider: string, presentationSchema?: Schema): Promise<Presentation>;
     private constructor();
     EncodeToJSON(): PresentationDataModel;
+    GetVerifiableCredentials(): VerifiableCredential[];
 }

@@ -142,7 +142,7 @@ describe('Schemas', function () {
 });
 describe('Verifiable Credentials', function () {
     return __awaiter(this, void 0, void 0, function () {
-        var IssuerDIDDocument, issuerSeed, issuerPrivateKey, SubjectDIDDocument, subjectSeed, credential, verifiableCredential, proofMethod, VCProof, presentation, verifiablePresentation, presentationProof;
+        var IssuerDIDDocument, issuerSeed, issuerPrivateKey, SubjectDIDDocument, subjectSeed, credential, verifiableCredential, proofMethod, VCProof, presentation, verifiablePresentation, presentationProof, DIDAuth;
         return __generator(this, function (_a) {
             before(function () {
                 return __awaiter(this, void 0, void 0, function () {
@@ -268,6 +268,27 @@ describe('Verifiable Credentials', function () {
                 });
             });
             it('Should test all Verification Error codes for Verifiable Presentation', function () {
+            });
+            it('Should create a DID Authentication Verifiable Presentation', function () {
+                DIDAuth = src_1.SignDIDAuthentication(SubjectDIDDocument, "keys-1", GenerateSeed_1.GenerateSeed(12));
+                SchemaManager_1.SchemaManager.GetInstance().GetSchema("DIDAuthenticationCredential").AddTrustedDID(SubjectDIDDocument.GetDID());
+                chai_1.expect(DIDAuth.Verify()).to.deep.equal(VerifiableObject_1.VerificationErrorCodes.SUCCES);
+                SchemaManager_1.SchemaManager.GetInstance().GetSchema("DIDAuthenticationCredential").RemoveTrustedDID(SubjectDIDDocument.GetDID());
+            });
+            it('Should be able to verify an imported DID Authentication', function () {
+                return __awaiter(this, void 0, void 0, function () {
+                    var _a;
+                    return __generator(this, function (_b) {
+                        switch (_b.label) {
+                            case 0:
+                                _a = chai_1.expect;
+                                return [4 /*yield*/, src_1.VerifyDIDAuthentication(DIDAuth.EncodeToJSON(), provider)];
+                            case 1:
+                                _a.apply(void 0, [_b.sent()]).to.deep.equal(VerifiableObject_1.VerificationErrorCodes.SUCCES);
+                                return [2 /*return*/];
+                        }
+                    });
+                });
             });
             return [2 /*return*/];
         });

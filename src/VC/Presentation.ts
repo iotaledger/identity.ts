@@ -65,4 +65,8 @@ export class Presentation extends BaseValidationObject {
         };
         return credentialData;
     }
+
+    public GetVerifiableCredentials() : VerifiableCredential[] {
+        return this.verifiableCredentials;
+    }
 }

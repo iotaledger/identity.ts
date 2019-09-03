@@ -4,7 +4,7 @@ import { Credential } from '../src/VC/Credential';
 import { VerifiableCredential } from '../src/VC/VerifiableCredential';
 import { SchemaManager } from './../src/VC/SchemaManager';
 import { Schema } from '../src/VC/Schema';
-import { DID, DIDDocument } from '../src';
+import { DID, DIDDocument, SignDIDAuthentication, VerifyDIDAuthentication } from '../src';
 import { CreateRandomDID } from '../src/Helpers/CreateRandomDID';
 import { DIDPublisher } from '../src/IOTA/DIDPublisher';
 import { GenerateSeed } from '../src/Helpers/GenerateSeed';
@@ -209,7 +209,20 @@ describe('Verifiable Credentials', async function() {
     it('Should test all Verification Error codes for Verifiable Presentation', function() {
 
     });
+
+    let DIDAuth : VerifiablePresentation;
+    it('Should create a DID Authentication Verifiable Presentation', function() {
+        DIDAuth = SignDIDAuthentication(SubjectDIDDocument, "keys-1", GenerateSeed(12));
+        SchemaManager.GetInstance().GetSchema("DIDAuthenticationCredential").AddTrustedDID(SubjectDIDDocument.GetDID());
+        expect(DIDAuth.Verify()).to.deep.equal(VerificationErrorCodes.SUCCES);
+        SchemaManager.GetInstance().GetSchema("DIDAuthenticationCredential").RemoveTrustedDID(SubjectDIDDocument.GetDID());
+    });
+
+    it('Should be able to verify an imported DID Authentication', async function() {
+        expect(await VerifyDIDAuthentication(DIDAuth.EncodeToJSON(), provider)).to.deep.equal(VerificationErrorCodes.SUCCES);
+    });
 });
+
 
 function delay(ms: number) {
     return new Promise( resolve => setTimeout(resolve, ms) );

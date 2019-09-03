@@ -99,6 +99,14 @@ var VerifiablePresentation = /** @class */ (function (_super) {
         if (!this.proof.VerifySignature(this.presentation.EncodeToJSON())) {
             return VerifiableObject_1.VerificationErrorCodes.INCORRECT_SIGNATURE;
         }
+        //Verify all Verifiable Credentials
+        var vcs = this.presentation.GetVerifiableCredentials();
+        for (var i = 0; i < vcs.length; i++) {
+            var code = vcs[i].Verify();
+            if (code != VerifiableObject_1.VerificationErrorCodes.SUCCES) {
+                return code;
+            }
+        }
         return VerifiableObject_1.VerificationErrorCodes.SUCCES;
     };
     VerifiablePresentation.prototype.EncodeToJSON = function () {

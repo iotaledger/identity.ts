@@ -37,6 +37,15 @@ export class VerifiablePresentation extends VerifiableObject {
             return VerificationErrorCodes.INCORRECT_SIGNATURE;
         }
 
+        //Verify all Verifiable Credentials
+        const vcs = this.presentation.GetVerifiableCredentials();
+        for(let i=0; i < vcs.length; i++) {
+            const code = vcs[i].Verify();
+            if(code != VerificationErrorCodes.SUCCES) {
+                return code;
+            }
+        }
+
         return VerificationErrorCodes.SUCCES;
     }
 

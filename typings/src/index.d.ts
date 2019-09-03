@@ -5,6 +5,7 @@ export { Hash } from './Encryption/Hash';
 export { RSAKeypair } from './Encryption/RSAKeypair';
 export { CreateRandomDID, CreateRandomDIDFromPublicKey } from './Helpers/CreateRandomDID';
 export { DecodeProofDocument } from './Helpers/DecodeProofDocument';
+export { SignDIDAuthentication, VerifyDIDAuthentication } from './Helpers/DIDAuthentication';
 export { GenerateRSAKeypair } from './Helpers/GenerateKeypair';
 export { GenerateSeed } from './Helpers/GenerateSeed';
 export { DIDPublisher } from './IOTA/DIDPublisher';

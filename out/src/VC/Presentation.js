@@ -118,6 +118,9 @@ var Presentation = /** @class */ (function (_super) {
         };
         return credentialData;
     };
+    Presentation.prototype.GetVerifiableCredentials = function () {
+        return this.verifiableCredentials;
+    };
     return Presentation;
 }(BaseValidationObject_1.BaseValidationObject));
 exports.Presentation = Presentation;

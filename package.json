@@ -1,6 +1,6 @@
 {
   "name": "identity_ts",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Digital Identity implementation",
   "main": "./out/src/index.js",
   "typings": "typings/src",

@@ -44,6 +44,7 @@ var Hash_1 = require("../src/Encryption/Hash");
 var DIDDocument_1 = require("../src/DID/DIDDocument");
 var DIDPublisher_1 = require("../src/IOTA/DIDPublisher");
 var GenerateSeed_1 = require("../src/Helpers/GenerateSeed");
+var Service_1 = require("../src/DID/Service");
 var provider = "https://nodes.devnet.iota.org:443";
 describe('DID Functionalities', function () {
     var uuid;
@@ -95,6 +96,8 @@ describe('DID Document', function () {
     var seed = GenerateSeed_1.GenerateSeed();
     var root;
     var documentFromTangle;
+    var publisher;
+    var service;
     it('Should create and output a valid DID Document', function () {
         return __awaiter(this, void 0, void 0, function () {
             var keypair;
@@ -115,7 +118,6 @@ describe('DID Document', function () {
     });
     it('Should publish the DID Document', function () {
         return __awaiter(this, void 0, void 0, function () {
-            var publisher;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -162,6 +164,30 @@ describe('DID Document', function () {
                         return [4 /*yield*/, documentFromTangle.GetKeypair("keys-1").GetEncryptionKeypair().Verify(msg, signature)];
                     case 2:
                         _a.apply(void 0, [_b.sent()]).to.be.true;
+                        return [2 /*return*/];
+                }
+            });
+        });
+    });
+    it('Should add a ServiceEndpoint', function () {
+        service = new Service_1.Service(document.GetDID(), "test", "TestService", GenerateSeed_1.GenerateSeed());
+        document.AddServiceEndpoint(service);
+        chai_1.expect(document.GetService("test")).to.not.be.null;
+    });
+    it('Should update the DIDDocument correctly and contain a ServiceEndpoint', function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        this.timeout(20000);
+                        return [4 /*yield*/, publisher.PublishDIDDocument(document, "DIDTEST", 9)];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, DIDDocument_1.DIDDocument.readDIDDocument(provider, root)];
+                    case 2:
+                        documentFromTangle = _a.sent();
+                        chai_1.expect(documentFromTangle.GetJSONDIDDocument()).to.deep.equal(document.GetJSONDIDDocument());
+                        chai_1.expect(documentFromTangle.GetService("test").EncodeToJSON()).to.deep.equal(service.EncodeToJSON());
                         return [2 /*return*/];
                 }
             });

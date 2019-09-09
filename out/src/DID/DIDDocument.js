@@ -39,6 +39,7 @@ var DID_1 = require("./DID");
 var DIDKeypair_1 = require("./DIDKeypair");
 var mam_1 = require("./../IOTA/mam");
 var RSAKeypair_1 = require("../Encryption/RSAKeypair");
+var Service_1 = require("./Service");
 /**
  * @module DID
  */
@@ -51,6 +52,7 @@ var DIDDocument = /** @class */ (function () {
         this.contexts = contexts;
         this.DID = DID;
         this.publicKeys = [];
+        this.services = [];
     }
     DIDDocument.readDIDDocument = function (provider, root, settings) {
         return __awaiter(this, void 0, void 0, function () {
@@ -63,6 +65,7 @@ var DIDDocument = /** @class */ (function () {
                             var JSONDocument = JSON.parse(latestDIDDocument);
                             //Parse the DID Document
                             var document = new DIDDocument(JSONDocument["@context"], new DID_1.DID(JSONDocument.id));
+                            //Public keys
                             var publicKeys = JSONDocument["publicKey"];
                             if (publicKeys) {
                                 for (var i = 0; i < publicKeys.length; i++) {
@@ -71,6 +74,15 @@ var DIDDocument = /** @class */ (function () {
                                         keypair = new RSAKeypair_1.RSAKeypair(publicKeys[i].publicKeyPem);
                                     }
                                     document.AddKeypair(keypair, publicKeys[i].id.substr(publicKeys[i].id.lastIndexOf("#") + 1), new DID_1.DID(publicKeys[i].id.substr(0, publicKeys[i].id.lastIndexOf("#"))), new DID_1.DID(publicKeys[i].controller));
+                                }
+                            }
+                            //Service Endpoints
+                            var services = JSONDocument["service"];
+                            if (services) {
+                                for (var i = 0; i < services.length; i++) {
+                                    var service = services[i];
+                                    var did = new DID_1.DID(service.id);
+                                    document.AddServiceEndpoint(new Service_1.Service(did, did.GetFragment(), service.type, service.serviceEndpoint));
                                 }
                             }
                             resolve(document);
@@ -99,6 +111,13 @@ var DIDDocument = /** @class */ (function () {
         this.publicKeys.push(new DIDKeypair_1.DIDKeypair(keypair, keyId, (keyOwner) ? keyOwner : this.DID, keyController));
     };
     /**
+     * Creates a new ServiceEndpoint, which can be used to add any type of service to the DID.
+     * @param {Service} service The service to add to the DID Document.
+     */
+    DIDDocument.prototype.AddServiceEndpoint = function (service) {
+        this.services.push(service);
+    };
+    /**
      * Creates the DID Document, which is compatible with the DID standard from W3C.
      * @return {string} The stringified version of the JSON-LD formatted DID Document.
      */
@@ -107,7 +126,7 @@ var DIDDocument = /** @class */ (function () {
             "@context": this.contexts,
             id: this.DID.GetDID()
         };
-        if (this.publicKeys) {
+        if (this.publicKeys.length) {
             JSONObject["publicKey"] = [];
             for (var i = 0; i < this.publicKeys.length; i++) {
                 JSONObject["publicKey"].push(this.publicKeys[i].GetJSON());
@@ -116,8 +135,11 @@ var DIDDocument = /** @class */ (function () {
         if (this.authentications) {
             JSONObject["authentication"] = this.authentications; //TODO: create return function
         }
-        if (this.services) {
-            JSONObject["service"] = this.services; //TODO: create return function
+        if (this.services.length) {
+            JSONObject["service"] = [];
+            for (var i = 0; i < this.services.length; i++) {
+                JSONObject["service"].push(this.services[i].EncodeToJSON());
+            }
         }
         return JSON.stringify(JSONObject, null, 2); //TODO: Remove Pretty print
     };
@@ -131,6 +153,14 @@ var DIDDocument = /** @class */ (function () {
         for (var i = 0; i < this.publicKeys.length; i++) {
             if (this.publicKeys[i].GetKeyId() == keyId) {
                 return this.publicKeys[i];
+            }
+        }
+        return null;
+    };
+    DIDDocument.prototype.GetService = function (name) {
+        for (var i = 0; i < this.services.length; i++) {
+            if (this.services[i].GetName() == name) {
+                return this.services[i];
             }
         }
         return null;

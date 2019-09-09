@@ -5,6 +5,8 @@ var DID_1 = require("./DID/DID");
 exports.DID = DID_1.DID;
 var DIDDocument_1 = require("./DID/DIDDocument");
 exports.DIDDocument = DIDDocument_1.DIDDocument;
+var Service_1 = require("./DID/Service");
+exports.Service = Service_1.Service;
 //Encryption
 var BaseKeypair_1 = require("./Encryption/BaseKeypair");
 exports.BaseKeypair = BaseKeypair_1.BaseKeypair;

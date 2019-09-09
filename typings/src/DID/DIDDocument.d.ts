@@ -2,6 +2,7 @@ import { DID } from './DID';
 import { DIDKeypair } from './DIDKeypair';
 import { BaseKeypair } from '../Encryption/BaseKeypair';
 import { MAMSettings } from './../IOTA/mam';
+import { Service } from './Service';
 /**
  * @module DID
  */
@@ -12,7 +13,7 @@ import { MAMSettings } from './../IOTA/mam';
 export declare class DIDDocument {
     private contexts;
     private DID;
-    private publicKeys?;
+    private publicKeys;
     private authentications;
     private services;
     static readDIDDocument(provider: string, root: string, settings?: MAMSettings): Promise<DIDDocument>;
@@ -32,6 +33,11 @@ export declare class DIDDocument {
      */
     AddKeypair(keypair: BaseKeypair, keyId: string, keyOwner?: DID, keyController?: DID): void;
     /**
+     * Creates a new ServiceEndpoint, which can be used to add any type of service to the DID.
+     * @param {Service} service The service to add to the DID Document.
+     */
+    AddServiceEndpoint(service: Service): void;
+    /**
      * Creates the DID Document, which is compatible with the DID standard from W3C.
      * @return {string} The stringified version of the JSON-LD formatted DID Document.
      */
@@ -41,4 +47,5 @@ export declare class DIDDocument {
      */
     GetDID(): DID;
     GetKeypair(keyId: string): DIDKeypair;
+    GetService(name: string): Service;
 }

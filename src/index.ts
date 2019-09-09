@@ -1,6 +1,7 @@
 //DID
 export { DID } from './DID/DID';
 export { DIDDocument } from './DID/DIDDocument';
+export { Service, ServiceDataModel } from './DID/Service';
 
 //Encryption
 export { BaseKeypair } from './Encryption/BaseKeypair';

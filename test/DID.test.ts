@@ -8,6 +8,7 @@ import { Hash } from '../src/Encryption/Hash';
 import { DIDDocument } from '../src/DID/DIDDocument';
 import { DIDPublisher } from '../src/IOTA/DIDPublisher';
 import { GenerateSeed } from '../src/Helpers/GenerateSeed';
+import { Service } from '../src/DID/Service';
 
 const provider : string = "https://nodes.devnet.iota.org:443";
 
@@ -41,6 +42,8 @@ describe('DID Document', function() {
     let seed : string = GenerateSeed();
     let root : string;
     let documentFromTangle : DIDDocument;
+    let publisher : DIDPublisher;
+    let service : Service;
 
     it('Should create and output a valid DID Document', async function(){
         document = await CreateRandomDID(seed);
@@ -51,7 +54,7 @@ describe('DID Document', function() {
 
     it('Should publish the DID Document', async function() {
         this.timeout(20000);
-        let publisher : DIDPublisher = new DIDPublisher(provider, seed);
+        publisher = new DIDPublisher(provider, seed);
         root = await publisher.PublishDIDDocument(document, "DIDTEST", 9)
         expect(root).to.not.be.undefined;
     });
@@ -67,6 +70,20 @@ describe('DID Document', function() {
         let msg : string = "Hello World";
         let signature : Buffer = await document.GetKeypair("keys-1").GetEncryptionKeypair().Sign(msg);
         expect(await documentFromTangle.GetKeypair("keys-1").GetEncryptionKeypair().Verify(msg, signature)).to.be.true;
+    });
+
+    it('Should add a ServiceEndpoint', function() {
+        service = new Service(document.GetDID(), "test", "TestService", GenerateSeed());
+        document.AddServiceEndpoint(service);
+        expect(document.GetService("test")).to.not.be.null;
+    });
+
+    it('Should update the DIDDocument correctly and contain a ServiceEndpoint', async function() {
+        this.timeout(20000);	
+        await publisher.PublishDIDDocument(document, "DIDTEST", 9);
+        documentFromTangle = await DIDDocument.readDIDDocument(provider, root);
+        expect(documentFromTangle.GetJSONDIDDocument()).to.deep.equal(document.GetJSONDIDDocument());
+        expect(documentFromTangle.GetService("test").EncodeToJSON()).to.deep.equal(service.EncodeToJSON());
     });
 });
 

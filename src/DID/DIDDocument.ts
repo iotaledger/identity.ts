@@ -3,6 +3,7 @@ import { DIDKeypair } from './DIDKeypair';
 import { BaseKeypair } from '../Encryption/BaseKeypair';
 import { MAMSettings, ReadMAMStream } from './../IOTA/mam';
 import { RSAKeypair } from '../Encryption/RSAKeypair';
+import { Service, ServiceDataModel } from './Service';
 
 /**
  * @module DID
@@ -15,9 +16,9 @@ import { RSAKeypair } from '../Encryption/RSAKeypair';
 export class DIDDocument {
     private contexts : string[];
     private DID : DID;
-    private publicKeys ?: DIDKeypair[];
+    private publicKeys : DIDKeypair[];
     private authentications : undefined; //TODO: Make Type
-    private services : undefined; //TODO: Make Type
+    private services : Service[]; //TODO: Make Type
 
     static async readDIDDocument(provider : string, root : string, settings ?: MAMSettings) : Promise<DIDDocument> {
         return new Promise<DIDDocument>((resolve, reject) => {
@@ -29,6 +30,7 @@ export class DIDDocument {
 
                 //Parse the DID Document
                 let document : DIDDocument = new DIDDocument(JSONDocument["@context"], new DID(JSONDocument.id));
+                //Public keys
                 let publicKeys = JSONDocument["publicKey"];
                 if(publicKeys) {
                     for(let i=0; i < publicKeys.length; i++) {
@@ -37,6 +39,15 @@ export class DIDDocument {
                             keypair = new RSAKeypair(publicKeys[i].publicKeyPem);
                         }
                         document.AddKeypair(keypair, publicKeys[i].id.substr(publicKeys[i].id.lastIndexOf("#")+1), new DID(publicKeys[i].id.substr(0, publicKeys[i].id.lastIndexOf("#"))), new DID(publicKeys[i].controller));
+                    }
+                }
+                //Service Endpoints
+                let services = JSONDocument["service"];
+                if(services) {
+                    for(let i=0; i < services.length; i++) {
+                        const service = <ServiceDataModel>services[i];
+                        let did : DID = new DID(service.id);
+                        document.AddServiceEndpoint(new Service(did, did.GetFragment(), service.type, service.serviceEndpoint));
                     }
                 }
                 resolve(document);
@@ -58,6 +69,7 @@ export class DIDDocument {
         this.contexts = contexts;
         this.DID = DID;
         this.publicKeys = [];
+        this.services = [];
     }
 
     /**
@@ -72,6 +84,14 @@ export class DIDDocument {
     }
 
     /**
+     * Creates a new ServiceEndpoint, which can be used to add any type of service to the DID.
+     * @param {Service} service The service to add to the DID Document.
+     */
+    public AddServiceEndpoint(service : Service) {
+        this.services.push(service);
+    }
+
+    /**
      * Creates the DID Document, which is compatible with the DID standard from W3C.
      * @return {string} The stringified version of the JSON-LD formatted DID Document.
      */
@@ -81,7 +101,7 @@ export class DIDDocument {
             "@context" : this.contexts,
             id : this.DID.GetDID()
         };
-        if(this.publicKeys) {
+        if(this.publicKeys.length) {
             JSONObject["publicKey"] = [];
             for(let i=0; i<this.publicKeys.length; i++) {
                 JSONObject["publicKey"].push(this.publicKeys[i].GetJSON());
@@ -90,8 +110,11 @@ export class DIDDocument {
         if(this.authentications) {
             JSONObject["authentication"] = this.authentications; //TODO: create return function
         }
-        if(this.services) {
-            JSONObject["service"] = this.services; //TODO: create return function
+        if(this.services.length) {
+            JSONObject["service"] = [];
+            for(let i=0; i<this.services.length; i++) {
+                JSONObject["service"].push(this.services[i].EncodeToJSON());
+            }
         }
         return JSON.stringify(JSONObject, null, 2); //TODO: Remove Pretty print
     }
@@ -107,6 +130,15 @@ export class DIDDocument {
         for(let i=0; i < this.publicKeys.length; i++) {
             if(this.publicKeys[i].GetKeyId() == keyId) {
                 return this.publicKeys[i];
+            }
+        }
+        return null;
+    }
+
+    public GetService(name : string) : Service {
+        for(let i=0; i < this.services.length; i++) {
+            if(this.services[i].GetName() == name) {
+                return this.services[i];
             }
         }
         return null;

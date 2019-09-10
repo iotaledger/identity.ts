@@ -11,7 +11,7 @@ export class RSAKeypair extends BaseKeypair {
         this.privateKey = (privateKey)?privateKey:undefined;
     }
     
-    public async PublicEncrypt(message: string): Promise<Buffer> {
+    public PublicEncrypt(message: string): Buffer {
         return crypto.publicEncrypt({key: this.publicKey, padding: crypto.constants.RSA_PKCS1_PADDING}, Buffer.from(message));
     }   
 
@@ -30,7 +30,7 @@ export class RSAKeypair extends BaseKeypair {
         return crypto.privateEncrypt({key: this.privateKey, passphrase: passphrase, padding: crypto.constants.RSA_PKCS1_PADDING}, Buffer.from(message));
     }*/
 
-    public async PrivateDecrypt(input : Buffer): Promise<string> {
+    public PrivateDecrypt(input : Buffer): string {
         if(!this.privateKey) {
             console.log("Warning: Decryption with private key called, without a private key accessible\n");
             return "";

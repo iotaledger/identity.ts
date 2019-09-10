@@ -57,71 +57,43 @@ describe('RSA Encryption', function () {
     });
     it('Should encrypt->decrypt to reveal the same message', function () {
         return __awaiter(this, void 0, void 0, function () {
-            var encryptedMsg, _a;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0: return [4 /*yield*/, keypair.PublicEncrypt(msg)];
-                    case 1:
-                        encryptedMsg = _b.sent();
-                        _a = chai_1.expect;
-                        return [4 /*yield*/, keypair.PrivateDecrypt(encryptedMsg)];
-                    case 2:
-                        _a.apply(void 0, [_b.sent()]).to.deep.equal(msg);
-                        return [2 /*return*/];
-                }
+            var encryptedMsg;
+            return __generator(this, function (_a) {
+                encryptedMsg = keypair.PublicEncrypt(msg);
+                chai_1.expect(keypair.PrivateDecrypt(encryptedMsg)).to.deep.equal(msg);
+                return [2 /*return*/];
             });
         });
     });
     it('Should Sign and correctly verify msg', function () {
         return __awaiter(this, void 0, void 0, function () {
-            var signature, _a;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0: return [4 /*yield*/, keypair.Sign(msg)];
-                    case 1:
-                        signature = _b.sent();
-                        _a = chai_1.expect;
-                        return [4 /*yield*/, keypair.Verify(msg, signature)];
-                    case 2:
-                        _a.apply(void 0, [_b.sent()]).to.be.true;
-                        return [2 /*return*/];
-                }
+            var signature;
+            return __generator(this, function (_a) {
+                signature = keypair.Sign(msg);
+                chai_1.expect(keypair.Verify(msg, signature)).to.be.true;
+                return [2 /*return*/];
             });
         });
     });
     it('Should Sign and catch the change', function () {
         return __awaiter(this, void 0, void 0, function () {
-            var signature, _a;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0: return [4 /*yield*/, keypair.Sign(msg)];
-                    case 1:
-                        signature = _b.sent();
-                        _a = chai_1.expect;
-                        return [4 /*yield*/, keypair.Verify("Another message", signature)];
-                    case 2:
-                        _a.apply(void 0, [_b.sent()]).to.be.false;
-                        return [2 /*return*/];
-                }
+            var signature;
+            return __generator(this, function (_a) {
+                signature = keypair.Sign(msg);
+                chai_1.expect(keypair.Verify("Another message", signature)).to.be.false;
+                return [2 /*return*/];
             });
         });
     });
     it('Should Signa nd Verify correctly after doing a base64 encoding', function () {
         return __awaiter(this, void 0, void 0, function () {
-            var signature, stringSignature, signatureBuffer, _a;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0: return [4 /*yield*/, keypair.Sign(msg)];
-                    case 1:
-                        signature = _b.sent();
-                        stringSignature = signature.toString("base64");
-                        signatureBuffer = Buffer.from(stringSignature, "base64");
-                        _a = chai_1.expect;
-                        return [4 /*yield*/, keypair.Verify(msg, signatureBuffer)];
-                    case 2:
-                        _a.apply(void 0, [_b.sent()]).to.be.true;
-                        return [2 /*return*/];
-                }
+            var signature, stringSignature, signatureBuffer;
+            return __generator(this, function (_a) {
+                signature = keypair.Sign(msg);
+                stringSignature = signature.toString("base64");
+                signatureBuffer = Buffer.from(stringSignature, "base64");
+                chai_1.expect(keypair.Verify(msg, signatureBuffer)).to.be.true;
+                return [2 /*return*/];
             });
         });
     });

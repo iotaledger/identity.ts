@@ -25,7 +25,7 @@ describe('Schemas', function() {
     let schema : Schema;
     let testObject : {};
     
-    let SchemaList : string[] = ['DIDAuthenticationCredential', 'DomainValidatedCertificate', 'EclassCredential'];
+    let SchemaList : string[] = ['DIDAuthenticationCredential', 'DomainValidatedCertificate', 'WhiteListedCredential'];
     it('Should contain a list of default schemas', function() {
         expect(SchemaManager.GetInstance().GetSchemaNames()).to.deep.equal(SchemaList);
     });

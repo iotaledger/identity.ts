@@ -14,25 +14,25 @@ describe('RSA Encryption', function() {
     });
 
     it('Should encrypt->decrypt to reveal the same message', async function() {
-        let encryptedMsg : Buffer = await keypair.PublicEncrypt(msg);
-        expect(await keypair.PrivateDecrypt(encryptedMsg)).to.deep.equal(msg);
+        let encryptedMsg : Buffer = keypair.PublicEncrypt(msg);
+        expect(keypair.PrivateDecrypt(encryptedMsg)).to.deep.equal(msg);
     });
 
     it('Should Sign and correctly verify msg', async function() {
-        let signature : Buffer = await keypair.Sign(msg);
-        expect(await keypair.Verify(msg, signature)).to.be.true;
+        let signature : Buffer = keypair.Sign(msg);
+        expect(keypair.Verify(msg, signature)).to.be.true;
     });
 
     it('Should Sign and catch the change', async function() {
-        let signature : Buffer = await keypair.Sign(msg);
-        expect(await keypair.Verify("Another message", signature)).to.be.false;
+        let signature : Buffer = keypair.Sign(msg);
+        expect(keypair.Verify("Another message", signature)).to.be.false;
     });    
 
     it('Should Signa nd Verify correctly after doing a base64 encoding', async function() {
-        let signature : Buffer = await keypair.Sign(msg);
+        let signature : Buffer = keypair.Sign(msg);
         let stringSignature : string = signature.toString("base64");
         let signatureBuffer : Buffer = Buffer.from(stringSignature, "base64");
-        expect(await keypair.Verify(msg, signatureBuffer)).to.be.true;
+        expect(keypair.Verify(msg, signatureBuffer)).to.be.true;
     });
 });
 

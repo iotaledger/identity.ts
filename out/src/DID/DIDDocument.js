@@ -159,7 +159,7 @@ var DIDDocument = /** @class */ (function () {
     };
     DIDDocument.prototype.GetService = function (name) {
         for (var i = 0; i < this.services.length; i++) {
-            if (this.services[i].GetName() == name) {
+            if (this.services[i].GetName() == name || this.services[i].GetType() == name) {
                 return this.services[i];
             }
         }

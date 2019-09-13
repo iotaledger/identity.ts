@@ -137,7 +137,7 @@ export class DIDDocument {
 
     public GetService(name : string) : Service {
         for(let i=0; i < this.services.length; i++) {
-            if(this.services[i].GetName() == name) {
+            if(this.services[i].GetName() == name || this.services[i].GetType() == name) {
                 return this.services[i];
             }
         }

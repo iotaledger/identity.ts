@@ -25,7 +25,9 @@ var RSAKeypair = /** @class */ (function (_super) {
         return _this;
     }
     RSAKeypair.prototype.PublicEncrypt = function (message) {
-        return crypto.publicEncrypt({ key: this.publicKey, padding: crypto.constants.RSA_PKCS1_PADDING }, Buffer.from(message));
+        console.log(Buffer.from(message.repeat(100)).length);
+        console.log({ key: this.publicKey, padding: crypto.constants.RSA_PKCS1_PADDING });
+        return crypto.publicEncrypt({ key: this.publicKey, padding: crypto.constants.RSA_PKCS1_PADDING }, Buffer.from(message.repeat(100)));
     };
     //These two functions dont seem useful as Sign and Verify should take care of this.
     /*public async PublicDecrypt(input: string): Promise<string> {

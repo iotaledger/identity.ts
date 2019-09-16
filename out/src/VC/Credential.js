@@ -49,6 +49,9 @@ var Credential = /** @class */ (function (_super) {
         return credentialData;
     };
     ;
+    Credential.prototype.GetType = function () {
+        return this.schema.GetName();
+    };
     return Credential;
 }(BaseValidationObject_1.BaseValidationObject));
 exports.Credential = Credential;

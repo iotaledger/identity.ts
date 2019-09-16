@@ -220,6 +220,7 @@ describe('Verifiable Credentials', async function() {
         SchemaManager.GetInstance().GetSchema("DIDAuthenticationCredential").AddTrustedDID(SubjectDIDDocument.GetDID());
         expect(DIDAuth.Verify()).to.deep.equal(VerificationErrorCodes.SUCCES);
         SchemaManager.GetInstance().GetSchema("DIDAuthenticationCredential").RemoveTrustedDID(SubjectDIDDocument.GetDID());
+        expect(DIDAuth.GetVerifiedTypes()).to.deep.equal(["DIDAuthenticationCredential"]);
     });
 
     it('Should be able to verify an imported DID Authentication', async function() {

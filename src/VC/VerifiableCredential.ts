@@ -52,4 +52,8 @@ export class VerifiableCredential extends VerifiableObject {
     public EncodeToJSON() : VerifiableCredentialDataModel {
         return { ...this.credential.EncodeToJSON(), ...{ proof : this.proof.EncodeToJSON()}};
     }
+
+    public GetCredential() : Credential {
+        return this.credential;
+    }
 }

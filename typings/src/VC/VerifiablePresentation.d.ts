@@ -10,4 +10,5 @@ export declare class VerifiablePresentation extends VerifiableObject {
     private constructor();
     Verify(): VerificationErrorCodes;
     EncodeToJSON(): VerifiablePresentationDataModel;
+    GetVerifiedTypes(): string[];
 }

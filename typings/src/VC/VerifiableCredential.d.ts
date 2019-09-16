@@ -9,4 +9,5 @@ export declare class VerifiableCredential extends VerifiableObject {
     private constructor();
     Verify(): VerificationErrorCodes;
     EncodeToJSON(): VerifiableCredentialDataModel;
+    GetCredential(): Credential;
 }

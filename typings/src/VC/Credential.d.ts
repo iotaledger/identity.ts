@@ -17,4 +17,5 @@ export declare class Credential extends BaseValidationObject {
     private constructor();
     GetCredential(): [{}] | {};
     EncodeToJSON(): CredentialDataModel;
+    GetType(): string;
 }

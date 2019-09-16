@@ -52,4 +52,13 @@ export class VerifiablePresentation extends VerifiableObject {
     public EncodeToJSON(): VerifiablePresentationDataModel {
         return { ...this.presentation.EncodeToJSON(), ...{ proof : this.proof.EncodeToJSON()}};
     }
+
+    public GetVerifiedTypes() : string[] {
+        const credentials = this.presentation.GetVerifiableCredentials();
+        const types : string[]= [];
+        for(let i=0; i < credentials.length; i++) {
+            types.push(credentials[i].GetCredential().GetType());
+        }
+        return types;
+    }
 }

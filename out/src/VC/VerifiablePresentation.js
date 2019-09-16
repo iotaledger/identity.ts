@@ -112,6 +112,14 @@ var VerifiablePresentation = /** @class */ (function (_super) {
     VerifiablePresentation.prototype.EncodeToJSON = function () {
         return __assign({}, this.presentation.EncodeToJSON(), { proof: this.proof.EncodeToJSON() });
     };
+    VerifiablePresentation.prototype.GetVerifiedTypes = function () {
+        var credentials = this.presentation.GetVerifiableCredentials();
+        var types = [];
+        for (var i = 0; i < credentials.length; i++) {
+            types.push(credentials[i].GetCredential().GetType());
+        }
+        return types;
+    };
     return VerifiablePresentation;
 }(VerifiableObject_1.VerifiableObject));
 exports.VerifiablePresentation = VerifiablePresentation;

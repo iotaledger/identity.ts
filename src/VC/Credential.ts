@@ -51,4 +51,8 @@ export class Credential extends BaseValidationObject {
         };
         return credentialData;
     };
+
+    public GetType() : string {
+        return this.schema.GetName()
+    }
 }

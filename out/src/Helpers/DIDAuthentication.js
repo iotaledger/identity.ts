@@ -39,7 +39,6 @@ var Credential_1 = require("./../VC/Credential");
 var SchemaManager_1 = require("../VC/SchemaManager");
 var RSAProof_1 = require("./../VC/Proof/RSAProof");
 var VerifiableCredential_1 = require("./../VC/VerifiableCredential");
-var Presentation_1 = require("./../VC/Presentation");
 var VerifiablePresentation_1 = require("./../VC/VerifiablePresentation");
 var DecodeProofDocument_1 = require("./DecodeProofDocument");
 function SignDIDAuthentication(document, keyId, challenge) {
@@ -47,10 +46,11 @@ function SignDIDAuthentication(document, keyId, challenge) {
     var proof = RSAProof_1.BuildRSAProof({ issuer: document, issuerKeyId: keyId, challengeNonce: challenge });
     proof.Sign(credential.EncodeToJSON());
     var VC = VerifiableCredential_1.VerifiableCredential.Create(credential, proof);
-    var presentation = Presentation_1.Presentation.Create([VC]);
-    var presentationProof = RSAProof_1.BuildRSAProof({ issuer: document, issuerKeyId: keyId, challengeNonce: challenge });
+    return VC;
+    /*const presentation = Presentation.Create([VC]);
+    const presentationProof = BuildRSAProof({issuer:document, issuerKeyId:keyId, challengeNonce:challenge});
     presentationProof.Sign(presentation.EncodeToJSON());
-    return VerifiablePresentation_1.VerifiablePresentation.Create(presentation, presentationProof);
+    return VerifiablePresentation.Create(presentation, presentationProof);*/
 }
 exports.SignDIDAuthentication = SignDIDAuthentication;
 function VerifyDIDAuthentication(presentationData, provider) {

@@ -270,7 +270,11 @@ describe('Verifiable Credentials', function () {
             it('Should test all Verification Error codes for Verifiable Presentation', function () {
             });
             it('Should create a DID Authentication Verifiable Presentation', function () {
-                DIDAuth = src_1.SignDIDAuthentication(SubjectDIDDocument, "keys-1", GenerateSeed_1.GenerateSeed(12));
+                var DIDAuthVC = src_1.SignDIDAuthentication(SubjectDIDDocument, "keys-1", GenerateSeed_1.GenerateSeed(12));
+                var presentation = Presentation_1.Presentation.Create([DIDAuthVC]);
+                var presentationProof = src_1.BuildRSAProof({ issuer: SubjectDIDDocument, issuerKeyId: "keys-1", challengeNonce: GenerateSeed_1.GenerateSeed(12) });
+                presentationProof.Sign(presentation.EncodeToJSON());
+                DIDAuth = VerifiablePresentation_1.VerifiablePresentation.Create(presentation, presentationProof);
                 SchemaManager_1.SchemaManager.GetInstance().GetSchema("DIDAuthenticationCredential").AddTrustedDID(SubjectDIDDocument.GetDID());
                 chai_1.expect(DIDAuth.Verify()).to.deep.equal(VerifiableObject_1.VerificationErrorCodes.SUCCES);
                 SchemaManager_1.SchemaManager.GetInstance().GetSchema("DIDAuthenticationCredential").RemoveTrustedDID(SubjectDIDDocument.GetDID());

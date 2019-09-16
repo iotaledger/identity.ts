@@ -4,7 +4,7 @@ import { Credential } from '../src/VC/Credential';
 import { VerifiableCredential } from '../src/VC/VerifiableCredential';
 import { SchemaManager } from './../src/VC/SchemaManager';
 import { Schema } from '../src/VC/Schema';
-import { DID, DIDDocument, SignDIDAuthentication, VerifyDIDAuthentication } from '../src';
+import { DID, DIDDocument, SignDIDAuthentication, VerifyDIDAuthentication, BuildRSAProof } from '../src';
 import { CreateRandomDID } from '../src/Helpers/CreateRandomDID';
 import { DIDPublisher } from '../src/IOTA/DIDPublisher';
 import { GenerateSeed } from '../src/Helpers/GenerateSeed';
@@ -212,7 +212,11 @@ describe('Verifiable Credentials', async function() {
 
     let DIDAuth : VerifiablePresentation;
     it('Should create a DID Authentication Verifiable Presentation', function() {
-        DIDAuth = SignDIDAuthentication(SubjectDIDDocument, "keys-1", GenerateSeed(12));
+        const DIDAuthVC = SignDIDAuthentication(SubjectDIDDocument, "keys-1", GenerateSeed(12));
+        const presentation = Presentation.Create([DIDAuthVC]);
+        const presentationProof = BuildRSAProof({issuer:SubjectDIDDocument, issuerKeyId:"keys-1", challengeNonce:GenerateSeed(12)});
+        presentationProof.Sign(presentation.EncodeToJSON());
+        DIDAuth = VerifiablePresentation.Create(presentation, presentationProof);
         SchemaManager.GetInstance().GetSchema("DIDAuthenticationCredential").AddTrustedDID(SubjectDIDDocument.GetDID());
         expect(DIDAuth.Verify()).to.deep.equal(VerificationErrorCodes.SUCCES);
         SchemaManager.GetInstance().GetSchema("DIDAuthenticationCredential").RemoveTrustedDID(SubjectDIDDocument.GetDID());

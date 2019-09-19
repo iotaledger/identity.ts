@@ -47,10 +47,6 @@ function SignDIDAuthentication(document, keyId, challenge) {
     proof.Sign(credential.EncodeToJSON());
     var VC = VerifiableCredential_1.VerifiableCredential.Create(credential, proof);
     return VC;
-    /*const presentation = Presentation.Create([VC]);
-    const presentationProof = BuildRSAProof({issuer:document, issuerKeyId:keyId, challengeNonce:challenge});
-    presentationProof.Sign(presentation.EncodeToJSON());
-    return VerifiablePresentation.Create(presentation, presentationProof);*/
 }
 exports.SignDIDAuthentication = SignDIDAuthentication;
 function VerifyDIDAuthentication(presentationData, provider) {

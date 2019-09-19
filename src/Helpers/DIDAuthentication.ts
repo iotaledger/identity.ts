@@ -3,9 +3,9 @@ import { Credential } from './../VC/Credential';
 import { SchemaManager } from '../VC/SchemaManager';
 import { BuildRSAProof } from './../VC/Proof/RSAProof';
 import { VerifiableCredential } from './../VC/VerifiableCredential';
-import { Presentation } from './../VC/Presentation';
 import { VerifiablePresentation, VerifiablePresentationDataModel } from './../VC/VerifiablePresentation';
 import { DecodeProofDocument } from './DecodeProofDocument';
+import { VerificationErrorCodes } from '../VC/VerifiableObject';
 
 export function SignDIDAuthentication(document : DIDDocument, keyId : string, challenge : string) : VerifiableCredential {
     const credential = Credential.Create(SchemaManager.GetInstance().GetSchema("DIDAuthenticationCredential"), document.GetDID(), {"DID" : document.GetDID().GetDID() });
@@ -13,13 +13,9 @@ export function SignDIDAuthentication(document : DIDDocument, keyId : string, ch
     proof.Sign(credential.EncodeToJSON());
     const VC =  VerifiableCredential.Create(credential, proof);
     return VC;
-    /*const presentation = Presentation.Create([VC]);
-    const presentationProof = BuildRSAProof({issuer:document, issuerKeyId:keyId, challengeNonce:challenge});
-    presentationProof.Sign(presentation.EncodeToJSON());
-    return VerifiablePresentation.Create(presentation, presentationProof);*/
 }
 
-export async function VerifyDIDAuthentication(presentationData : VerifiablePresentationDataModel, provider : string) {
+export async function VerifyDIDAuthentication(presentationData : VerifiablePresentationDataModel, provider : string) : Promise<VerificationErrorCodes> {
     const proofParameters = await DecodeProofDocument(presentationData.proof, provider);
     const verifiablePresentation = await VerifiablePresentation.DecodeFromJSON(presentationData, provider, proofParameters);
     SchemaManager.GetInstance().GetSchema("DIDAuthenticationCredential").AddTrustedDID(proofParameters.issuer.GetDID());

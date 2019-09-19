@@ -8,7 +8,7 @@ For example, a user would be able to prove that he is above the legal drinking a
 This information is instantly verifiable by the online vendor.
 
 **WARNING: THE CURRENT VERSION IS FEATURE INCOMPLETE AND WILL STILL UNDERGO MASSIVE CHANGES**
-If you are interested in using this project or contributing, join our [Discord](discord.iota.org) and visit the channel #digital-id. 
+If you are interested in using this project or contributing, join our [Discord](https://discord.iota.org) and visit the channel #digital-id. 
 
 ## Prerequisits
 

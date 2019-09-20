@@ -66,6 +66,10 @@ describe('DID Document', function() {
         expect(documentFromTangle.GetJSONDIDDocument()).to.deep.equal(document.GetJSONDIDDocument());
     });
 
+    it('Should handle empty DID Documents', async function() {
+        const result = await DIDDocument.readDIDDocument(provider, GenerateSeed(81));
+    });
+
     it('Should Sign locally and Verify from loaded DID Document', async function() {
         let msg : string = "Hello World";
         let signature : Buffer = await document.GetKeypair("keys-1").GetEncryptionKeypair().Sign(msg);

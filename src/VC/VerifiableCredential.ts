@@ -45,6 +45,23 @@ export class VerifiableCredential extends VerifiableObject {
         if(!this.proof.VerifySignature(this.credential.EncodeToJSON())) {
             return VerificationErrorCodes.INCORRECT_SIGNATURE;
         }
+        if(this.credential.GetRevocationAddress()) {
+            //Check for Revocation
+
+            //Get Revocation transactions from this.credential.GetRevocationAddress()
+
+            //What transaction should look like in Ascii:
+            /*  { 
+                    keyId : string,
+                    originalSignature : string,
+                    revocationSignature : string
+                }
+            */
+            //The keyId looks 
+
+            //if()
+            //return VerificationErrorCodes.CREDENTIAL_REVOCATED;
+        }
 
         return VerificationErrorCodes.SUCCES;
     }

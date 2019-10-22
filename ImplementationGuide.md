@@ -69,7 +69,7 @@ let schema = SchemaManager.GetInstance().GetSchema(standardSchemaName);
 
 //Fill in the schema
 let schemaData = {}; //Make an object, conform to the schema, which contains the data about the subject.
-let credential = Credential.Create(schema, issuerDocument.GetDID(), schemaData);
+let credential = Credential.Create(schema, issuerDocument.GetDID(), schemaData, "OPTIONAL9REVOCATION9ADDRESS99999...");
 
 //Sign the schema
 let proof = BuildRSAProof({issuer:issuerDocument, issuerKeyId:keyId});
@@ -115,21 +115,40 @@ schematic.AddTrustedDID(issuerDID);
 
 ### Verifying Verifiable Presentation
 A receiving party needs to verify the Verifiable Presentation. This simply checks for the integrity and if the issuers are trusted.
-The content of the credentials should be verified according to the applications need. 
+The content of the credentials should be verified according to the applications need. It throws an error if the verification fails.
 
 ```
-let result : VerificationErrorCodes = verifiablePresentation.Verify();
-//To verify the result
-if(result == VerificationErrorCodes.SUCCESS)
+verifiablePresentation.Verify(provider)
+.then(() => {
+    //Logic if credentuals check out
+}).catch((err : Error) => console.log(err));
 ```
 
+### Revoking a Verifiable Credential
+The issuer is able to revoke a credential, by signing a revocation transaction to the revocation address.
+
+```
+let proofParameters : ProofParameters = await DecodeProofDocument(verifiableCredential.EncodeToJSON().proof, provider);
+let importedVerifiableCredential : VerifiableCredential = VerifiableCredential.DecodeFromJSON(verifiableCredential.EncodeToJSON(), proofParameters);
+importedVerifiableCredential.GetProof().GetIssuer().GetKeypair(keyName).GetEncryptionKeypair().SetPrivateKey(privateKey);
+importedVerifiableCredential.GetProof().Revoke(importedVerifiableCredential.GetCredential(), provider);
+
+```
 ##### DID Authentication and Trusted Issuers
 The verification process will return "untrusted issuer" if the issuers are not generally trusted. Trusted sources should be registered to the Schemas that you entrust them with. To handle DID Authentication the following is required to accept their authentication once:
 ```
 let didAuthSchema = SchemaManager.GetInstance().GetSchema("DIDAuthenticationCredential");
-didAuthSchema.AddTrustedDID(holderDID);
-verifiablePresentation.Verify();
-didAuthSchema.RemoveTrustedDID(holderDID);
+didAuthSchema.AddTrustedDID(proofParameters.issuer.GetDID());
+verifiablePresentation.Verify(provider)
+.then(() => {
+    resolve();
+})
+.catch((err : Error) => {
+    reject(err);
+})
+.finally(() => {
+    didAuthSchema.RemoveTrustedDID(proofParameters.issuer.GetDID());
+});
 ```
 
 ##### Verify Specific parts of a credential (Like DIDAuthentication age)

@@ -10,4 +10,5 @@ export declare class VerifiableCredential extends VerifiableObject {
     Verify(provider: string): Promise<void>;
     EncodeToJSON(): VerifiableCredentialDataModel;
     GetCredential(): Credential;
+    GetProof(): Proof;
 }

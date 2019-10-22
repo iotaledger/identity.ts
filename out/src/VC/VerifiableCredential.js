@@ -133,6 +133,7 @@ var VerifiableCredential = /** @class */ (function (_super) {
                                         if (!keypair) {
                                             continue;
                                         }
+                                        //TODO: Check if the originalSignature matches the proof signature
                                         if (keypair.GetEncryptionKeypair().Verify(jsonObject["originalSignature"], Buffer.from(jsonObject["revocationSignature"], "base64"))) {
                                             reject("Verification failed: Claim has been revoked");
                                         }
@@ -152,6 +153,9 @@ var VerifiableCredential = /** @class */ (function (_super) {
     };
     VerifiableCredential.prototype.GetCredential = function () {
         return this.credential;
+    };
+    VerifiableCredential.prototype.GetProof = function () {
+        return this.proof;
     };
     return VerifiableCredential;
 }(VerifiableObject_1.VerifiableObject));

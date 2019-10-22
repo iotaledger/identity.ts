@@ -74,6 +74,8 @@ export class VerifiableCredential extends VerifiableObject {
                         continue;
                     }
 
+                    //TODO: Check if the originalSignature matches the proof signature
+
                     if( keypair.GetEncryptionKeypair().Verify(jsonObject["originalSignature"], Buffer.from(jsonObject["revocationSignature"], "base64")) ) {
                         reject("Verification failed: Claim has been revoked");
                     }
@@ -89,5 +91,9 @@ export class VerifiableCredential extends VerifiableObject {
 
     public GetCredential() : Credential {
         return this.credential;
+    }
+
+    public GetProof() : Proof {
+        return this.proof;
     }
 }

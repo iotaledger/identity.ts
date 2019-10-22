@@ -86,28 +86,35 @@ var VerifiablePresentation = /** @class */ (function (_super) {
             });
         });
     };
-    VerifiablePresentation.prototype.Verify = function () {
-        //Verification Steps
-        if (this.presentation.GetSchema()) {
-            if (!this.presentation.GetSchema().IsDIDTrusted(this.proof.GetIssuer().GetDID())) {
-                return VerifiableObject_1.VerificationErrorCodes.ISSUER_NOT_TRUSTED;
-            }
-            if (!this.presentation.GetSchema().DoesObjectFollowSchema(this.presentation.EncodeToJSON())) {
-                return VerifiableObject_1.VerificationErrorCodes.NO_MATCH_SCHEMA;
-            }
-        }
-        if (!this.proof.VerifySignature(this.presentation.EncodeToJSON())) {
-            return VerifiableObject_1.VerificationErrorCodes.INCORRECT_SIGNATURE;
-        }
-        //Verify all Verifiable Credentials
-        var vcs = this.presentation.GetVerifiableCredentials();
-        for (var i = 0; i < vcs.length; i++) {
-            var code = vcs[i].Verify();
-            if (code != VerifiableObject_1.VerificationErrorCodes.SUCCES) {
-                return code;
-            }
-        }
-        return VerifiableObject_1.VerificationErrorCodes.SUCCES;
+    VerifiablePresentation.prototype.Verify = function (provider) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+                        var vcs, i;
+                        return __generator(this, function (_a) {
+                            //Verification Steps
+                            if (this.presentation.GetSchema()) {
+                                if (!this.presentation.GetSchema().IsDIDTrusted(this.proof.GetIssuer().GetDID())) {
+                                    reject("Verification failed: Issuer not trusted for schema " + this.presentation.GetSchema());
+                                }
+                                if (!this.presentation.GetSchema().DoesObjectFollowSchema(this.presentation.EncodeToJSON())) {
+                                    reject("Verification failed: Schema not followed for schema " + this.presentation.GetSchema());
+                                }
+                            }
+                            if (!this.proof.VerifySignature(this.presentation.EncodeToJSON())) {
+                                reject("Verification failed: Signature incorrect");
+                            }
+                            vcs = this.presentation.GetVerifiableCredentials();
+                            for (i = 0; i < vcs.length; i++) {
+                                vcs[i].Verify(provider).catch(function (err) { return reject(err); });
+                            }
+                            resolve();
+                            return [2 /*return*/];
+                        });
+                    }); })];
+            });
+        });
     };
     VerifiablePresentation.prototype.EncodeToJSON = function () {
         return __assign({}, this.presentation.EncodeToJSON(), { proof: this.proof.EncodeToJSON() });

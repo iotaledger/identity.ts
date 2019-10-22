@@ -57,7 +57,6 @@ var DIDPublisher_1 = require("../src/IOTA/DIDPublisher");
 var GenerateSeed_1 = require("../src/Helpers/GenerateSeed");
 var Presentation_1 = require("../src/VC/Presentation");
 var VerifiablePresentation_1 = require("../src/VC/VerifiablePresentation");
-var VerifiableObject_1 = require("../src/VC/VerifiableObject");
 var ProofTypeManager_1 = require("../src/VC/Proof/ProofTypeManager");
 var DecodeProofDocument_1 = require("../src/Helpers/DecodeProofDocument");
 var GenerateKeypair_1 = require("../src/Helpers/GenerateKeypair");
@@ -188,7 +187,7 @@ describe('Verifiable Credentials', function () {
                         "docs.iota.org"
                     ]
                 };
-                credential = Credential_1.Credential.Create(SchemaManager_1.SchemaManager.GetInstance().GetSchema("DomainValidatedCertificate"), IssuerDIDDocument.GetDID(), domainCertificate);
+                credential = Credential_1.Credential.Create(SchemaManager_1.SchemaManager.GetInstance().GetSchema("DomainValidatedCertificate"), IssuerDIDDocument.GetDID(), domainCertificate, GenerateSeed_1.GenerateSeed());
                 chai_1.expect(credential.GetCredential()).to.not.be.undefined;
             });
             it('Should be able to Encode / Decode a credential to be the same', function () {
@@ -196,10 +195,20 @@ describe('Verifiable Credentials', function () {
                 chai_1.expect(importedCredential.EncodeToJSON()).to.deep.equal(credential.EncodeToJSON());
             });
             it('Should be able to create, sign and verify a Verifiable Credential', function () {
-                VCProof = proofMethod({ 'issuer': IssuerDIDDocument, 'issuerKeyId': "keys-1" });
-                VCProof.Sign(credential.EncodeToJSON());
-                verifiableCredential = VerifiableCredential_1.VerifiableCredential.Create(credential, VCProof);
-                chai_1.expect(verifiableCredential.Verify()).to.deep.equal(VerifiableObject_1.VerificationErrorCodes.SUCCES);
+                return __awaiter(this, void 0, void 0, function () {
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                VCProof = proofMethod({ 'issuer': IssuerDIDDocument, 'issuerKeyId': "keys-1" });
+                                VCProof.Sign(credential.EncodeToJSON());
+                                verifiableCredential = VerifiableCredential_1.VerifiableCredential.Create(credential, VCProof);
+                                return [4 /*yield*/, verifiableCredential.Verify(provider)];
+                            case 1:
+                                _a.sent();
+                                return [2 /*return*/];
+                        }
+                    });
+                });
             });
             it('Should be able to Encode / Decode a Verifiable Credential and still verify', function () {
                 return __awaiter(this, void 0, void 0, function () {
@@ -215,9 +224,41 @@ describe('Verifiable Credentials', function () {
                             case 2:
                                 proofParameters = _a.sent();
                                 importedVerifiableCredential = VerifiableCredential_1.VerifiableCredential.DecodeFromJSON(verifiableCredential.EncodeToJSON(), proofParameters);
-                                chai_1.expect(importedVerifiableCredential.Verify()).to.deep.equal(VerifiableObject_1.VerificationErrorCodes.SUCCES);
+                                return [4 /*yield*/, importedVerifiableCredential.Verify(provider)];
+                            case 3:
+                                _a.sent();
                                 chai_1.expect(importedVerifiableCredential.EncodeToJSON()).to.deep.equal(verifiableCredential.EncodeToJSON());
                                 return [2 /*return*/];
+                        }
+                    });
+                });
+            });
+            it('Should be able to retract a Verifiable Credential', function () {
+                return __awaiter(this, void 0, void 0, function () {
+                    var err_1;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                this.timeout(30000);
+                                return [4 /*yield*/, VCProof.Revoke(credential, provider)];
+                            case 1:
+                                _a.sent();
+                                return [4 /*yield*/, delay(10000)];
+                            case 2:
+                                _a.sent();
+                                _a.label = 3;
+                            case 3:
+                                _a.trys.push([3, 5, , 6]);
+                                return [4 /*yield*/, verifiableCredential.Verify(provider)];
+                            case 4:
+                                _a.sent();
+                                console.log("Task completed incorrectly");
+                                return [3 /*break*/, 6];
+                            case 5:
+                                err_1 = _a.sent();
+                                console.log("Task failed succesfully");
+                                return [3 /*break*/, 6];
+                            case 6: return [2 /*return*/];
                         }
                     });
                 });
@@ -243,10 +284,20 @@ describe('Verifiable Credentials', function () {
                 });
             });
             it('Should be able to create, sign and verify the Verifiable Presentation', function () {
-                presentationProof = proofMethod({ 'issuer': SubjectDIDDocument, 'issuerKeyId': "keys-1", challengeNonce: "123" });
-                presentationProof.Sign(presentation.EncodeToJSON());
-                verifiablePresentation = VerifiablePresentation_1.VerifiablePresentation.Create(presentation, presentationProof);
-                chai_1.expect(verifiablePresentation.Verify()).to.deep.equal(VerifiableObject_1.VerificationErrorCodes.SUCCES);
+                return __awaiter(this, void 0, void 0, function () {
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                presentationProof = proofMethod({ 'issuer': SubjectDIDDocument, 'issuerKeyId': "keys-1", challengeNonce: "123" });
+                                presentationProof.Sign(presentation.EncodeToJSON());
+                                verifiablePresentation = VerifiablePresentation_1.VerifiablePresentation.Create(presentation, presentationProof);
+                                return [4 /*yield*/, verifiablePresentation.Verify(provider)];
+                            case 1:
+                                _a.sent();
+                                return [2 /*return*/];
+                        }
+                    });
+                });
             });
             //verifiablePresentation Shouldn't this be enough to integrate into VerifiableObject and do DecodeProofDocument?
             it('Should be able to Encode / Decode a Verifiable Presentation and still verify', function () {
@@ -260,36 +311,44 @@ describe('Verifiable Credentials', function () {
                                 return [4 /*yield*/, VerifiablePresentation_1.VerifiablePresentation.DecodeFromJSON(verifiablePresentation.EncodeToJSON(), provider, proofParameters)];
                             case 2:
                                 importVerifiablePresentation = _a.sent();
-                                chai_1.expect(importVerifiablePresentation.Verify()).to.deep.equal(VerifiableObject_1.VerificationErrorCodes.SUCCES);
+                                return [4 /*yield*/, importVerifiablePresentation.Verify(provider)];
+                            case 3:
+                                _a.sent();
                                 chai_1.expect(importVerifiablePresentation.EncodeToJSON()).to.deep.equal(verifiablePresentation.EncodeToJSON());
                                 return [2 /*return*/];
                         }
                     });
                 });
             });
-            it('Should test all Verification Error codes for Verifiable Presentation', function () {
-            });
             it('Should create a DID Authentication Verifiable Presentation', function () {
-                var DIDAuthVC = src_1.SignDIDAuthentication(SubjectDIDDocument, "keys-1", GenerateSeed_1.GenerateSeed(12));
-                var presentation = Presentation_1.Presentation.Create([DIDAuthVC]);
-                var presentationProof = src_1.BuildRSAProof({ issuer: SubjectDIDDocument, issuerKeyId: "keys-1", challengeNonce: GenerateSeed_1.GenerateSeed(12) });
-                presentationProof.Sign(presentation.EncodeToJSON());
-                DIDAuth = VerifiablePresentation_1.VerifiablePresentation.Create(presentation, presentationProof);
-                SchemaManager_1.SchemaManager.GetInstance().GetSchema("DIDAuthenticationCredential").AddTrustedDID(SubjectDIDDocument.GetDID());
-                chai_1.expect(DIDAuth.Verify()).to.deep.equal(VerifiableObject_1.VerificationErrorCodes.SUCCES);
-                SchemaManager_1.SchemaManager.GetInstance().GetSchema("DIDAuthenticationCredential").RemoveTrustedDID(SubjectDIDDocument.GetDID());
-                chai_1.expect(DIDAuth.GetVerifiedTypes()).to.deep.equal(["DIDAuthenticationCredential"]);
+                return __awaiter(this, void 0, void 0, function () {
+                    var DIDAuthVC, presentation, presentationProof;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                DIDAuthVC = src_1.SignDIDAuthentication(SubjectDIDDocument, "keys-1", GenerateSeed_1.GenerateSeed(12));
+                                presentation = Presentation_1.Presentation.Create([DIDAuthVC]);
+                                presentationProof = src_1.BuildRSAProof({ issuer: SubjectDIDDocument, issuerKeyId: "keys-1", challengeNonce: GenerateSeed_1.GenerateSeed(12) });
+                                presentationProof.Sign(presentation.EncodeToJSON());
+                                DIDAuth = VerifiablePresentation_1.VerifiablePresentation.Create(presentation, presentationProof);
+                                SchemaManager_1.SchemaManager.GetInstance().GetSchema("DIDAuthenticationCredential").AddTrustedDID(SubjectDIDDocument.GetDID());
+                                return [4 /*yield*/, DIDAuth.Verify(provider)];
+                            case 1:
+                                _a.sent();
+                                SchemaManager_1.SchemaManager.GetInstance().GetSchema("DIDAuthenticationCredential").RemoveTrustedDID(SubjectDIDDocument.GetDID());
+                                chai_1.expect(DIDAuth.GetVerifiedTypes()).to.deep.equal(["DIDAuthenticationCredential"]);
+                                return [2 /*return*/];
+                        }
+                    });
+                });
             });
             it('Should be able to verify an imported DID Authentication', function () {
                 return __awaiter(this, void 0, void 0, function () {
-                    var _a;
-                    return __generator(this, function (_b) {
-                        switch (_b.label) {
-                            case 0:
-                                _a = chai_1.expect;
-                                return [4 /*yield*/, src_1.VerifyDIDAuthentication(DIDAuth.EncodeToJSON(), provider)];
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0: return [4 /*yield*/, src_1.VerifyDIDAuthentication(DIDAuth.EncodeToJSON(), provider)];
                             case 1:
-                                _a.apply(void 0, [_b.sent()]).to.deep.equal(VerifiableObject_1.VerificationErrorCodes.SUCCES);
+                                _a.sent();
                                 return [2 /*return*/];
                         }
                     });

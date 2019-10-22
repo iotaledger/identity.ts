@@ -18,6 +18,14 @@ exports.BuildRSAProof = function (proofParameter, proofDocument) {
         var RSAproofDocument = proofDocument;
         return keypair.GetEncryptionKeypair().Verify(documentToVerify, Buffer.from(RSAproofDocument.signatureValue, "base64"));
     };
-    return new Proof_1.Proof(SigningMethod, VerifySignatureMethod, proofParameter, proofDocument);
+    var RevocationMethod = function (keypair, proofDocument) {
+        var originalSignature = proofDocument.signatureValue;
+        return {
+            "keyId": keypair.GetFullId(),
+            "originalSignature": originalSignature,
+            "revocationSignature": keypair.GetEncryptionKeypair().Sign(originalSignature).toString("base64")
+        };
+    };
+    return new Proof_1.Proof(SigningMethod, VerifySignatureMethod, RevocationMethod, proofParameter, proofDocument);
 };
 //# sourceMappingURL=RSAProof.js.map

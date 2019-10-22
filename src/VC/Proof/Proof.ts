@@ -1,9 +1,9 @@
 import { DIDDocument } from "../../DID/DIDDocument";
 import { DIDKeypair } from "../../DID/DIDKeypair";
 import { Credential } from "../Credential";
-import { composeAPI } from '@iota/core';
-import { asciiToTrytes } from '@iota/converter';
-import { GenerateSeed } from "../../Helpers/GenerateSeed";
+import { PublishData } from "../../IOTA/iota";
+import { Transaction } from "@iota/core";
+import { RSAProofDocument } from "./RSAProof";
 
 export interface ProofDataModel {
     "proof" ?: ExtendedProofDocument
@@ -72,18 +72,19 @@ export class Proof {
         }};
     }
 
-    public Revoke(credential : Credential, provider : string, mwm : number = 9) {
-        const revocationAddress = credential.GetRevocationAddress();
-        if(!revocationAddress) {
-            return;
-        }
-        const RevocationSignature = this.revocationMethod(this.keypair, this.proofDocument);
-        const iota = composeAPI({provider : provider});
-        iota.prepareTransfers(GenerateSeed(), [{value:0, address:revocationAddress, message: asciiToTrytes(JSON.stringify(RevocationSignature))}])
-        .then((trytes : readonly string[]) => {
-            return iota.sendTrytes(trytes, 3, mwm)
-        })
-        .catch((err : Error) => { console.log("Error posting revocation: " + err);});
+    public Revoke(credential : Credential, provider : string, mwm : number = 9) : Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            const revocationAddress = credential.GetRevocationAddress();
+            if(!revocationAddress) {
+                return;
+            }
+            const RevocationSignature = this.revocationMethod(this.keypair, this.proofDocument);
+            PublishData(revocationAddress, JSON.stringify(RevocationSignature), provider, mwm)
+            .then((result : readonly Transaction[]) => {
+                resolve();
+            })
+            .catch((err : Error) => reject(err));
+        });
     }
 
     public VerifySignature(JSONToVerify : {}) : boolean {

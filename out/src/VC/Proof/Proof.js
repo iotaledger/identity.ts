@@ -11,10 +11,12 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var iota_1 = require("../../IOTA/iota");
 var Proof = /** @class */ (function () {
-    function Proof(signMethod, verifySignatureMethod, proofParameter, proofDocument) {
+    function Proof(signMethod, verifySignatureMethod, revocationMethod, proofParameter, proofDocument) {
         this.signMethod = signMethod;
         this.verifySignatureMethod = verifySignatureMethod;
+        this.revocationMethod = revocationMethod;
         this.issuer = proofParameter.issuer;
         this.keypair = this.issuer.GetKeypair(proofParameter.issuerKeyId);
         this.challengeNonce = proofParameter.challengeNonce;
@@ -30,6 +32,22 @@ var Proof = /** @class */ (function () {
             created: new Date().toUTCString(),
             creator: this.issuer.GetDID().GetDID(),
             nonce: this.challengeNonce
+        });
+    };
+    Proof.prototype.Revoke = function (credential, provider, mwm) {
+        var _this = this;
+        if (mwm === void 0) { mwm = 9; }
+        return new Promise(function (resolve, reject) {
+            var revocationAddress = credential.GetRevocationAddress();
+            if (!revocationAddress) {
+                return;
+            }
+            var RevocationSignature = _this.revocationMethod(_this.keypair, _this.proofDocument);
+            iota_1.PublishData(revocationAddress, JSON.stringify(RevocationSignature), provider, mwm)
+                .then(function (result) {
+                resolve();
+            })
+                .catch(function (err) { return reject(err); });
         });
     };
     Proof.prototype.VerifySignature = function (JSONToVerify) {

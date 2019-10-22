@@ -150,6 +150,19 @@ describe('DID Document', function () {
             });
         });
     });
+    it('Should handle empty DID Documents', function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, DIDDocument_1.DIDDocument.readDIDDocument(provider, GenerateSeed_1.GenerateSeed(81))];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    });
     it('Should Sign locally and Verify from loaded DID Document', function () {
         return __awaiter(this, void 0, void 0, function () {
             var msg, signature, _a;

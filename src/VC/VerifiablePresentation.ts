@@ -1,6 +1,6 @@
 import { Presentation, PresentationDataModel } from './Presentation';
-import { Proof, ProofDataModel, ProofBuildingMethod, ProofParameters } from "./Proof/Proof";
-import { VerifiableObject, VerificationErrorCodes } from './VerifiableObject';
+import { Proof, ProofDataModel, ProofParameters } from "./Proof/Proof";
+import { VerifiableObject } from './VerifiableObject';
 import { Schema } from './Schema';
 import { ProofTypeManager } from './Proof/ProofTypeManager';
 
@@ -23,30 +23,29 @@ export class VerifiablePresentation extends VerifiableObject {
         this.presentation = presentation;
     }
 
-    public Verify() : VerificationErrorCodes {
-        //Verification Steps
-        if(this.presentation.GetSchema()) {
-            if(!this.presentation.GetSchema().IsDIDTrusted(this.proof.GetIssuer().GetDID())) {
-                return VerificationErrorCodes.ISSUER_NOT_TRUSTED;
+    public async Verify(provider : string) : Promise<void> {
+        return new Promise<void>( async (resolve, reject) => {
+            //Verification Steps
+            if(this.presentation.GetSchema()) {
+                if(!this.presentation.GetSchema().IsDIDTrusted(this.proof.GetIssuer().GetDID())) {
+                    reject( "Verification failed: Issuer not trusted for schema " + this.presentation.GetSchema());
+                }
+                if(!this.presentation.GetSchema().DoesObjectFollowSchema(this.presentation.EncodeToJSON())) {
+                    reject("Verification failed: Schema not followed for schema " + this.presentation.GetSchema());
+                }
             }
-            if(!this.presentation.GetSchema().DoesObjectFollowSchema(this.presentation.EncodeToJSON())) {
-                return VerificationErrorCodes.NO_MATCH_SCHEMA;
+            if(!this.proof.VerifySignature(this.presentation.EncodeToJSON())) {
+                reject("Verification failed: Signature incorrect");
             }
-        }
-        if(!this.proof.VerifySignature(this.presentation.EncodeToJSON())) {
-            return VerificationErrorCodes.INCORRECT_SIGNATURE;
-        }
 
-        //Verify all Verifiable Credentials
-        const vcs = this.presentation.GetVerifiableCredentials();
-        for(let i=0; i < vcs.length; i++) {
-            const code = vcs[i].Verify();
-            if(code != VerificationErrorCodes.SUCCES) {
-                return code;
+            //Verify all Verifiable Credentials
+            const vcs = this.presentation.GetVerifiableCredentials();
+            for(let i=0; i < vcs.length; i++) {
+                vcs[i].Verify(provider).catch((err) => reject(err));
             }
-        }
 
-        return VerificationErrorCodes.SUCCES;
+            resolve();
+        });
     }
 
     public EncodeToJSON(): VerifiablePresentationDataModel {

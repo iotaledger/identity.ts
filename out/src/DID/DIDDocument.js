@@ -63,6 +63,14 @@ var DIDDocument = /** @class */ (function () {
                             .then(function (messages) {
                             var latestDIDDocument = messages[messages.length - 1];
                             var JSONDocument = JSON.parse(latestDIDDocument);
+                            //Verify if it contains a valid JSON
+                            try {
+                                JSONDocument = JSON.parse(latestDIDDocument);
+                            }
+                            catch (err) {
+                                reject("JSON Parse Error: " + err);
+                            }
+                            ;
                             //Parse the DID Document
                             var document = new DIDDocument(JSONDocument["@context"], new DID_1.DID(JSONDocument.id));
                             //Public keys

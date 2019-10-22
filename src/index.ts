@@ -29,5 +29,4 @@ export { Presentation, PresentationDataModel } from './VC/Presentation';
 export { Schema } from './VC/Schema';
 export { SchemaManager } from './VC/SchemaManager';
 export { VerifiableCredential, VerifiableCredentialDataModel } from './VC/VerifiableCredential';
-export { VerificationErrorCodes } from './VC/VerifiableObject';
 export { VerifiablePresentation, VerifiablePresentationDataModel } from './VC/VerifiablePresentation';

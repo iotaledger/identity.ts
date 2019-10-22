@@ -51,20 +51,33 @@ function SignDIDAuthentication(document, keyId, challenge) {
 exports.SignDIDAuthentication = SignDIDAuthentication;
 function VerifyDIDAuthentication(presentationData, provider) {
     return __awaiter(this, void 0, void 0, function () {
-        var proofParameters, verifiablePresentation, code;
+        var _this = this;
         return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, DecodeProofDocument_1.DecodeProofDocument(presentationData.proof, provider)];
-                case 1:
-                    proofParameters = _a.sent();
-                    return [4 /*yield*/, VerifiablePresentation_1.VerifiablePresentation.DecodeFromJSON(presentationData, provider, proofParameters)];
-                case 2:
-                    verifiablePresentation = _a.sent();
-                    SchemaManager_1.SchemaManager.GetInstance().GetSchema("DIDAuthenticationCredential").AddTrustedDID(proofParameters.issuer.GetDID());
-                    code = verifiablePresentation.Verify();
-                    SchemaManager_1.SchemaManager.GetInstance().GetSchema("DIDAuthenticationCredential").RemoveTrustedDID(proofParameters.issuer.GetDID());
-                    return [2 /*return*/, code];
-            }
+            return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+                    var proofParameters, verifiablePresentation;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0: return [4 /*yield*/, DecodeProofDocument_1.DecodeProofDocument(presentationData.proof, provider)];
+                            case 1:
+                                proofParameters = _a.sent();
+                                return [4 /*yield*/, VerifiablePresentation_1.VerifiablePresentation.DecodeFromJSON(presentationData, provider, proofParameters)];
+                            case 2:
+                                verifiablePresentation = _a.sent();
+                                SchemaManager_1.SchemaManager.GetInstance().GetSchema("DIDAuthenticationCredential").AddTrustedDID(proofParameters.issuer.GetDID());
+                                verifiablePresentation.Verify(provider)
+                                    .then(function () {
+                                    resolve();
+                                })
+                                    .catch(function (err) {
+                                    reject(err);
+                                })
+                                    .finally(function () {
+                                    SchemaManager_1.SchemaManager.GetInstance().GetSchema("DIDAuthenticationCredential").RemoveTrustedDID(proofParameters.issuer.GetDID());
+                                });
+                                return [2 /*return*/];
+                        }
+                    });
+                }); })];
         });
     });
 }

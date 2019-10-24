@@ -26,6 +26,9 @@ export class DIDDocument {
             ReadMAMStream(provider, root, settings)
             .then((messages : string[]) => {
                 let latestDIDDocument : string = messages[messages.length-1];
+                if(!latestDIDDocument) {
+                    resolve();
+                }
                 let JSONDocument : { "@context" : string[], id : string,  [key: string]: any} = JSON.parse(latestDIDDocument);
                 //Verify if it contains a valid JSON
                 try { JSONDocument = JSON.parse(latestDIDDocument); } catch(err) { reject("JSON Parse Error: " + err) };

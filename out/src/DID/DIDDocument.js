@@ -62,6 +62,9 @@ var DIDDocument = /** @class */ (function () {
                         mam_1.ReadMAMStream(provider, root, settings)
                             .then(function (messages) {
                             var latestDIDDocument = messages[messages.length - 1];
+                            if (!latestDIDDocument) {
+                                resolve();
+                            }
                             var JSONDocument = JSON.parse(latestDIDDocument);
                             //Verify if it contains a valid JSON
                             try {

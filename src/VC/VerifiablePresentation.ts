@@ -41,7 +41,7 @@ export class VerifiablePresentation extends VerifiableObject {
             //Verify all Verifiable Credentials
             const vcs = this.presentation.GetVerifiableCredentials();
             for(let i=0; i < vcs.length; i++) {
-                vcs[i].Verify(provider).catch((err) => reject(err));
+                await vcs[i].Verify(provider).catch((err) => reject(err));
             }
 
             resolve();

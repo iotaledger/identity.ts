@@ -93,24 +93,36 @@ var VerifiablePresentation = /** @class */ (function (_super) {
                 return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
                         var vcs, i;
                         return __generator(this, function (_a) {
-                            //Verification Steps
-                            if (this.presentation.GetSchema()) {
-                                if (!this.presentation.GetSchema().IsDIDTrusted(this.proof.GetIssuer().GetDID())) {
-                                    reject("Verification failed: Issuer not trusted for schema " + this.presentation.GetSchema());
-                                }
-                                if (!this.presentation.GetSchema().DoesObjectFollowSchema(this.presentation.EncodeToJSON())) {
-                                    reject("Verification failed: Schema not followed for schema " + this.presentation.GetSchema());
-                                }
+                            switch (_a.label) {
+                                case 0:
+                                    //Verification Steps
+                                    if (this.presentation.GetSchema()) {
+                                        if (!this.presentation.GetSchema().IsDIDTrusted(this.proof.GetIssuer().GetDID())) {
+                                            reject("Verification failed: Issuer not trusted for schema " + this.presentation.GetSchema());
+                                        }
+                                        if (!this.presentation.GetSchema().DoesObjectFollowSchema(this.presentation.EncodeToJSON())) {
+                                            reject("Verification failed: Schema not followed for schema " + this.presentation.GetSchema());
+                                        }
+                                    }
+                                    if (!this.proof.VerifySignature(this.presentation.EncodeToJSON())) {
+                                        reject("Verification failed: Signature incorrect");
+                                    }
+                                    vcs = this.presentation.GetVerifiableCredentials();
+                                    i = 0;
+                                    _a.label = 1;
+                                case 1:
+                                    if (!(i < vcs.length)) return [3 /*break*/, 4];
+                                    return [4 /*yield*/, vcs[i].Verify(provider).catch(function (err) { return reject(err); })];
+                                case 2:
+                                    _a.sent();
+                                    _a.label = 3;
+                                case 3:
+                                    i++;
+                                    return [3 /*break*/, 1];
+                                case 4:
+                                    resolve();
+                                    return [2 /*return*/];
                             }
-                            if (!this.proof.VerifySignature(this.presentation.EncodeToJSON())) {
-                                reject("Verification failed: Signature incorrect");
-                            }
-                            vcs = this.presentation.GetVerifiableCredentials();
-                            for (i = 0; i < vcs.length; i++) {
-                                vcs[i].Verify(provider).catch(function (err) { return reject(err); });
-                            }
-                            resolve();
-                            return [2 /*return*/];
                         });
                     }); })];
             });

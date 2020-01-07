@@ -13,6 +13,6 @@
     },
     "include": [
         "src",
-        "test"
+        "test", "src_rewrite/DID.ts"
     ]
 }

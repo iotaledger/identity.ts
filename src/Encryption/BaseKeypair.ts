@@ -1,3 +1,6 @@
+import { ec } from "elliptic";
+
+
 
 export abstract class BaseKeypair {
     protected publicKey : string;

@@ -1,4 +1,3 @@
-import * as elliptic from 'elliptic';
 import { BaseKeypair } from './BaseKeypair';
 import * as secp256k1 from 'secp256k1';
 import { Hash } from './Hash';

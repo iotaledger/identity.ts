@@ -4,7 +4,7 @@ import { Credential } from '../src/VC/Credential';
 import { VerifiableCredential } from '../src/VC/VerifiableCredential';
 import { SchemaManager } from '../src/VC/SchemaManager';
 import { Schema } from '../src/VC/Schema';
-import { DID, DIDDocument, SignDIDAuthentication, VerifyDIDAuthentication, BuildECDSAProof } from '../src';
+import { DID, DIDDocument, SignDIDAuthentication, VerifyDIDAuthentication } from '../src';
 import { CreateRandomDID } from '../src/Helpers/CreateRandomDID';
 import { DIDPublisher } from '../src/IOTA/DIDPublisher';
 import { GenerateSeed } from '../src/Helpers/GenerateSeed';
@@ -16,6 +16,7 @@ import { ProofTypeManager } from '../src/VC/Proof/ProofTypeManager';
 import { DecodeProofDocument } from '../src/Helpers/DecodeProofDocument';
 import { GenerateECDSAKeypair } from '../src/Helpers/GenerateKeypair';
 import { ECDSAKeypair } from '../src/Encryption/ECDSAKeypair';
+import { BuildECDSAProof } from '../src/VC/Proof/ECDSAProof';
 
 //const provider : string = "https://nodes.devnet.iota.org:443";
 const provider : string = "https://nodes.thetangle.org:443 "

@@ -1,7 +1,6 @@
 import { RSAKeypair, passphrase } from "../Encryption/RSAKeypair";
 import { ECDSAKeypair } from "../Encryption/ECDSAKeypair";
 import * as crypto from 'crypto';
-import * as elliptic from 'elliptic';
 import * as secp256k1 from 'secp256k1';
 
 export function GenerateRSAKeypair(): Promise<RSAKeypair> {

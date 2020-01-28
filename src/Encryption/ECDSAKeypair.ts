@@ -28,12 +28,11 @@ export class ECDSAKeypair extends BaseKeypair {
         const dataToSignBuffer: Buffer = Buffer.from(Hash(dataToSign), 'base64')
         const privateKeyBuffer: Buffer = Buffer.from(this.privateKey, 'base64')
         const signature = secp256k1.sign(dataToSignBuffer, privateKeyBuffer)
-       return Buffer.from(signature.signature)
+       return signature.signature
     }
 
 
     public Verify(dataToCheck: string, signatureToVerify: Buffer): boolean {
-
         const dataToCheckBuffer: Buffer =  Buffer.from(Hash(dataToCheck), 'base64')
         const publicKeyBuffer: Buffer = Buffer.from(this.publicKey, 'base64')
         return secp256k1.verify( dataToCheckBuffer, signatureToVerify, publicKeyBuffer)

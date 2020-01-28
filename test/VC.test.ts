@@ -20,9 +20,7 @@ import { ECDSAKeypair } from '../src/Encryption/ECDSAKeypair';
 import { BuildECDSAProof } from '../src/VC/Proof/ECDSAProof';
 import { GenerateECDSAKeypair } from '../src/Helpers/GenerateKeypair';
 
-//const provider : string = "https://nodes.devnet.iota.org:443";
-const provider : string = "https://nodes.thetangle.org:443 "
-
+const provider : string = "https://nodes.devnet.iota.org:443";
 let RandomDID : DID = new DID("did:iota:main:ABCABCABC");
 
 describe('Schemas', function() {
@@ -138,14 +136,14 @@ describe('RSA Verifiable Credentials', async function() {
         issuerPrivateKey = keypair.GetPrivateKey();
         IssuerDIDDocument.AddKeypair(keypair, "keys-1");
         let publisher : DIDPublisher = new DIDPublisher(provider, issuerSeed);
-        await publisher.PublishDIDDocument(IssuerDIDDocument, "DIDTEST", 14);
+        await publisher.PublishDIDDocument(IssuerDIDDocument, "DIDTEST", 9);
         SchemaManager.GetInstance().GetSchema("DomainValidatedCertificate").AddTrustedDID(IssuerDIDDocument.GetDID());
         subjectSeed = GenerateSeed();
         SubjectDIDDocument = CreateRandomDID(subjectSeed);
         let keypair2 : RSAKeypair = await GenerateRSAKeypair();
         SubjectDIDDocument.AddKeypair(keypair2, "keys-1");
         let publisher2 : DIDPublisher = new DIDPublisher(provider, subjectSeed);
-        await publisher2.PublishDIDDocument(SubjectDIDDocument, "DIDTEST", 14);
+        await publisher2.PublishDIDDocument(SubjectDIDDocument, "DIDTEST", 9);
         proofMethod = ProofTypeManager.GetInstance().GetProofBuilder("RsaSignature2018");
     });
 
@@ -175,7 +173,7 @@ describe('RSA Verifiable Credentials', async function() {
     });
 
     it('Should be able to Encode / Decode a Verifiable Credential and still verify', async function() {
-        this.timeout(30000);
+        this.timeout(80000);
         await delay(2000);
         let proofParameters : ProofParameters = await DecodeProofDocument(verifiableCredential.EncodeToJSON().proof, provider);
         let importedVerifiableCredential : VerifiableCredential = VerifiableCredential.DecodeFromJSON(verifiableCredential.EncodeToJSON(), proofParameters);
@@ -260,14 +258,14 @@ describe('ECDSA Verifiable Credentials', async function() {
         issuerPrivateKey = keypair.GetPrivateKey();
         IssuerDIDDocument.AddKeypair(keypair, "keys-1");
         let publisher : DIDPublisher = new DIDPublisher(provider, issuerSeed);
-        await publisher.PublishDIDDocument(IssuerDIDDocument, "DIDTEST", 14);
+        await publisher.PublishDIDDocument(IssuerDIDDocument, "DIDTEST", 9);
         SchemaManager.GetInstance().GetSchema("DomainValidatedCertificate").AddTrustedDID(IssuerDIDDocument.GetDID());
         subjectSeed = GenerateSeed();
         SubjectDIDDocument = CreateRandomDID(subjectSeed);
         let keypair2 : ECDSAKeypair = await GenerateECDSAKeypair();
         SubjectDIDDocument.AddKeypair(keypair2, "keys-1");
         let publisher2 : DIDPublisher = new DIDPublisher(provider, subjectSeed);
-        await publisher2.PublishDIDDocument(SubjectDIDDocument, "DIDTEST", 14);
+        await publisher2.PublishDIDDocument(SubjectDIDDocument, "DIDTEST", 9);
         proofMethod = ProofTypeManager.GetInstance().GetProofBuilder("EcdsaSecp256k1Signature2019");
     });
 

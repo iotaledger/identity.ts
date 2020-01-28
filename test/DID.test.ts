@@ -12,8 +12,7 @@ import { GenerateSeed } from '../src/Helpers/GenerateSeed';
 import { Service } from '../src/DID/Service';
 
 
-//const provider : string = "https://nodes.devnet.iota.org:443";
-const provider : string = "https://nodes.thetangle.org:443 "
+const provider : string = "https://nodes.devnet.iota.org:443";
 
 describe('DID Functionalities with RSA', function() {
     let uuid : string;
@@ -58,7 +57,7 @@ describe('DID Document with RSA', function() {
     it('Should publish the DID Document', async function() {
         this.timeout(60000);
         publisher = new DIDPublisher(provider, seed);
-        root = await publisher.PublishDIDDocument(document, "DIDTEST", 14)
+        root = await publisher.PublishDIDDocument(document, "DIDTEST", 9)
         expect(root).to.not.be.undefined;
     });
 
@@ -87,7 +86,7 @@ describe('DID Document with RSA', function() {
 
     it('Should update the DIDDocument correctly and contain a ServiceEndpoint', async function() {
         this.timeout(60000);	
-        await publisher.PublishDIDDocument(document, "DIDTEST", 14);
+        await publisher.PublishDIDDocument(document, "DIDTEST", 9);
         documentFromTangle = await DIDDocument.readDIDDocument(provider, root);
         expect(documentFromTangle.GetJSONDIDDocument()).to.deep.equal(document.GetJSONDIDDocument());
         expect(documentFromTangle.GetService("test").EncodeToJSON()).to.deep.equal(service.EncodeToJSON());
@@ -137,7 +136,7 @@ describe('DID Document with ECDSA', function() {
     it('Should publish the DID Document', async function() {
         this.timeout(40000);
         publisher = new DIDPublisher(provider, seed);
-        root = await publisher.PublishDIDDocument(document, "DIDTEST", 14)
+        root = await publisher.PublishDIDDocument(document, "DIDTEST", 9)
         expect(root).to.not.be.undefined;
     });
 
@@ -166,7 +165,7 @@ describe('DID Document with ECDSA', function() {
 
     it('Should update the DIDDocument correctly and contain a ServiceEndpoint', async function() {
         this.timeout(40000);	
-        await publisher.PublishDIDDocument(document, "DIDTEST", 14);
+        await publisher.PublishDIDDocument(document, "DIDTEST", 9);
         documentFromTangle = await DIDDocument.readDIDDocument(provider, root);
         expect(documentFromTangle.GetJSONDIDDocument()).to.deep.equal(document.GetJSONDIDDocument());
         expect(documentFromTangle.GetService("test").EncodeToJSON()).to.deep.equal(service.EncodeToJSON());

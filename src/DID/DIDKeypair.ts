@@ -1,7 +1,5 @@
 import { BaseKeypair } from './../Encryption/BaseKeypair';
 import { DID } from './DID';
-import { json } from 'body-parser';
-
 /**
  * This class handles keypairs for the DID Document, storing DID Document variables that are not relevant for the keypairs themselves.
  * The class is not ment to be used outside of this package and is not part of the API.

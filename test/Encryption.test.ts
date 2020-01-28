@@ -13,7 +13,7 @@ describe('RSA Encryption', function () {
         keypair = await GenerateRSAKeypair();
         expect(keypair).to.not.be.undefined;
     });
-
+    
     it('Should encrypt->decrypt to reveal the same message', async function () {
         let encryptedMsg: Buffer = keypair.PublicEncrypt(msg);
         expect(keypair.PrivateDecrypt(encryptedMsg)).to.deep.equal(msg);

@@ -41,7 +41,7 @@ export class DIDDocument {
                         if(publicKeys[i].type == "RsaVerificationKey2018") {
                             keypair = new RSAKeypair(publicKeys[i].publicKeyPem);
                         }
-                        if(publicKeys[i].type == "ECDSAVerificationKey2019") {
+                        if(publicKeys[i].type == "EcdsaSecp256k1VerificationKey2019") {
                             keypair = new ECDSAKeypair(publicKeys[i].publicKeyBase58);
                         }
 

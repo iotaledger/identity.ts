@@ -129,7 +129,7 @@ describe('ECDSA Verifiable Credentials', async function() {
     let presentationProof : Proof;
 
     before(async function() {
-        this.timeout(30000);
+        this.timeout(80000);
         issuerSeed = GenerateSeed();
         IssuerDIDDocument = CreateRandomDID(issuerSeed);
         let keypair : ECDSAKeypair = await GenerateECDSAKeypair();
@@ -144,7 +144,7 @@ describe('ECDSA Verifiable Credentials', async function() {
         SubjectDIDDocument.AddKeypair(keypair2, "keys-1");
         let publisher2 : DIDPublisher = new DIDPublisher(provider, subjectSeed);
         await publisher2.PublishDIDDocument(SubjectDIDDocument, "DIDTEST", 14);
-        proofMethod = ProofTypeManager.GetInstance().GetProofBuilder("ECDSASignature2019");
+        proofMethod = ProofTypeManager.GetInstance().GetProofBuilder("EcdsaSecp256k1Signature2019");
     });
 
     it('Should be able to a credential', function() {
@@ -173,8 +173,8 @@ describe('ECDSA Verifiable Credentials', async function() {
     });
 
     it('Should be able to Encode / Decode a Verifiable Credential and still verify', async function() {
-        this.timeout(30000);
-        await delay(2000);
+        this.timeout(80000);
+        await delay(30000);
         let proofParameters : ProofParameters = await DecodeProofDocument(verifiableCredential.EncodeToJSON().proof, provider);
         let importedVerifiableCredential : VerifiableCredential = VerifiableCredential.DecodeFromJSON(verifiableCredential.EncodeToJSON(), proofParameters);
         expect(importedVerifiableCredential.Verify()).to.deep.equal(VerificationErrorCodes.SUCCES);

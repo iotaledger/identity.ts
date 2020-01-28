@@ -40,6 +40,6 @@ export class ECDSAKeypair extends BaseKeypair {
     }
 
     public GetKeyType(): string {
-        return "ECDSAVerificationKey2019";
+        return "EcdsaSecp256k1VerificationKey2019";
     };
 }

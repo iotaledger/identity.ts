@@ -9,7 +9,7 @@ export class ProofTypeManager {
     private constructor() {
         this.proofTypes = new Map<string, ProofBuildingMethod>();
         this.AddProof("RsaSignature2018", BuildRSAProof);
-        this.AddProof("ECDSASignature2019", BuildECDSAProof);
+        this.AddProof("EcdsaSecp256k1Signature2019", BuildECDSAProof);
     }
 
     public AddProof(name : string, proof : ProofBuildingMethod) {

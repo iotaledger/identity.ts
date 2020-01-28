@@ -28,9 +28,9 @@ export class DIDKeypair {
 
         const keyDict :  {[key: string]: string} = {
             "RsaVerificationKey2018":"publicKeyPem",
-            "ECDSAVerificationKey2019": "publicKeyBase58"
+            "EcdsaSecp256k1VerificationKey2019": "publicKeyBase58"
         }
-        
+
         let authJSON : {[key: string]: string} =  {
             "id" : this.GetFullId(),
             "type" : this.encryptionKeypair.GetKeyType(),

@@ -1,5 +1,6 @@
 import { BaseKeypair } from './../Encryption/BaseKeypair';
 import { DID } from './DID';
+import { json } from 'body-parser';
 
 /**
  * This class handles keypairs for the DID Document, storing DID Document variables that are not relevant for the keypairs themselves.
@@ -24,12 +25,21 @@ export class DIDKeypair {
      * Converts the class into a valid JSON that is conform with the DID standard.
      */
     public GetJSON() {
-        return {
+
+        const keyDict :  {[key: string]: string} = {
+            "RsaVerificationKey2018":"publicKeyPem",
+            "ECDSAVerificationKey2019": "publicKeyBase58"
+        }
+        
+        let authJSON : {[key: string]: string} =  {
             "id" : this.GetFullId(),
             "type" : this.encryptionKeypair.GetKeyType(),
-            "controller" : this.keyController.GetDID(),
-            "publicKeyPem" : this.encryptionKeypair.GetPublicKey()
+            "controller" : this.keyController.GetDID()
         }
+
+        const keyType = keyDict[this.encryptionKeypair.GetKeyType()]
+        authJSON[keyType] = this.encryptionKeypair.GetPublicKey()
+        return authJSON;
     }
 
     public GetEncryptionKeypair() : BaseKeypair {

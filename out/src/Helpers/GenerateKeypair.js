@@ -1,7 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var RSAKeypair_1 = require("../Encryption/RSAKeypair");
+var ECDSAKeypair_1 = require("../Encryption/ECDSAKeypair");
 var crypto = require("crypto");
+var secp256k1 = require("secp256k1");
 function GenerateRSAKeypair() {
     return new Promise(function (resolve, reject) {
         crypto.generateKeyPair('rsa', {
@@ -27,4 +29,17 @@ function GenerateRSAKeypair() {
     });
 }
 exports.GenerateRSAKeypair = GenerateRSAKeypair;
+function GenerateECDSAKeypair() {
+    return new Promise(function (resolve, reject) {
+        try {
+            var privateKey = crypto.randomBytes(32);
+            var publicKey = secp256k1.publicKeyCreate(privateKey);
+            resolve(new ECDSAKeypair_1.ECDSAKeypair(publicKey.toString('base64'), privateKey.toString('base64')));
+        }
+        catch (err) {
+            reject(err);
+        }
+    });
+}
+exports.GenerateECDSAKeypair = GenerateECDSAKeypair;
 //# sourceMappingURL=GenerateKeypair.js.map

@@ -1,9 +1,8 @@
 import { expect } from 'chai';
 import 'mocha';
+import { delay, provider } from './test.settings';
 import { MAMPublisher, MAMState, MAM_MODE, ReadMAMStream, MAMSettings } from "./../src/IOTA/mam";
 import { GenerateSeed } from "./../src/Helpers/GenerateSeed";
-
-const provider : string = "https://nodes.devnet.iota.org:443";
 
 describe('Masked Autenticated Messaging', function() {
     let firstPublisher : MAMPublisher;
@@ -61,7 +60,3 @@ describe('Masked Autenticated Messaging', function() {
         expect(messages[2]).to.deep.equal("Third Message");
     });
 });
-
-function delay(ms: number) {
-    return new Promise( resolve => setTimeout(resolve, ms) );
-}

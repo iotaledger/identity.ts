@@ -14,7 +14,7 @@ export const BuildECDSAProof : ProofBuildingMethod = function(proofParameter : P
         let documentToSign : string = JSON.stringify( RecursiveSort(JSONToSign) );
 
         let proof : ECDSAProofDocument = {
-            type: "EcdsaSecp256k1Signature2019",
+            type: "EcdsaSecp256k1VerificationKey2019",
             verificationMethod : keypair.GetFullId(),
             signatureValue : encryptionKeypair.Sign(documentToSign).toString("base64")
         };

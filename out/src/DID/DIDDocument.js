@@ -39,6 +39,7 @@ var DID_1 = require("./DID");
 var DIDKeypair_1 = require("./DIDKeypair");
 var mam_1 = require("./../IOTA/mam");
 var RSAKeypair_1 = require("../Encryption/RSAKeypair");
+var ECDSAKeypair_1 = require("../Encryption/ECDSAKeypair");
 var Service_1 = require("./Service");
 /**
  * @module DID
@@ -63,6 +64,14 @@ var DIDDocument = /** @class */ (function () {
                             .then(function (messages) {
                             var latestDIDDocument = messages[messages.length - 1];
                             var JSONDocument = JSON.parse(latestDIDDocument);
+                            //Verify if it contains a valid JSON
+                            try {
+                                JSONDocument = JSON.parse(latestDIDDocument);
+                            }
+                            catch (err) {
+                                reject("JSON Parse Error: " + err);
+                            }
+                            ;
                             //Parse the DID Document
                             var document = new DIDDocument(JSONDocument["@context"], new DID_1.DID(JSONDocument.id));
                             //Public keys
@@ -72,6 +81,9 @@ var DIDDocument = /** @class */ (function () {
                                     var keypair = void 0;
                                     if (publicKeys[i].type == "RsaVerificationKey2018") {
                                         keypair = new RSAKeypair_1.RSAKeypair(publicKeys[i].publicKeyPem);
+                                    }
+                                    if (publicKeys[i].type == "EcdsaSecp256k1VerificationKey2019") {
+                                        keypair = new ECDSAKeypair_1.ECDSAKeypair(publicKeys[i].publicKeyBase58);
                                     }
                                     document.AddKeypair(keypair, publicKeys[i].id.substr(publicKeys[i].id.lastIndexOf("#") + 1), new DID_1.DID(publicKeys[i].id.substr(0, publicKeys[i].id.lastIndexOf("#"))), new DID_1.DID(publicKeys[i].controller));
                                 }

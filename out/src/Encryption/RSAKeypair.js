@@ -64,6 +64,9 @@ var RSAKeypair = /** @class */ (function (_super) {
         return "RsaVerificationKey2018";
     };
     ;
+    RSAKeypair.prototype.GetPublicKeyFormat = function () {
+        return "publicKeyPem";
+    };
     return RSAKeypair;
 }(BaseKeypair_1.BaseKeypair));
 exports.RSAKeypair = RSAKeypair;

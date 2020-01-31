@@ -14,10 +14,7 @@ export declare class DIDKeypair {
      * Converts the class into a valid JSON that is conform with the DID standard.
      */
     GetJSON(): {
-        "id": string;
-        "type": string;
-        "controller": string;
-        "publicKeyPem": string;
+        [key: string]: string;
     };
     GetEncryptionKeypair(): BaseKeypair;
     GetKeyId(): string;

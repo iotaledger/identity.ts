@@ -1,7 +1,6 @@
 /// <reference types="node" />
 import { BaseKeypair } from './BaseKeypair';
-export declare const passphrase: string;
-export declare class RSAKeypair extends BaseKeypair {
+export declare class ECDSAKeypair extends BaseKeypair {
     constructor(publicKey: string, privateKey?: string);
     PublicEncrypt(message: string): Buffer;
     PrivateDecrypt(input: Buffer): string;

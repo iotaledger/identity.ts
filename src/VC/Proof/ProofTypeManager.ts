@@ -8,8 +8,8 @@ export class ProofTypeManager {
 
     private constructor() {
         this.proofTypes = new Map<string, ProofBuildingMethod>();
-        this.AddProof("RsaSignature2018", BuildRSAProof);
-        this.AddProof("EcdsaSecp256k1Signature2019", BuildECDSAProof);
+        this.AddProof("RsaVerificationKey2018", BuildRSAProof);
+        this.AddProof("EcdsaSecp256k1VerificationKey2019", BuildECDSAProof);
     }
 
     public AddProof(name : string, proof : ProofBuildingMethod) {

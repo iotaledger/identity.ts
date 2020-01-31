@@ -37,9 +37,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var chai_1 = require("chai");
 require("mocha");
+var test_settings_1 = require("./test.settings");
 var mam_1 = require("./../src/IOTA/mam");
 var GenerateSeed_1 = require("./../src/Helpers/GenerateSeed");
-var provider = "https://nodes.devnet.iota.org:443";
 describe('Masked Autenticated Messaging', function () {
     var firstPublisher;
     var secondPublisher;
@@ -51,7 +51,7 @@ describe('Masked Autenticated Messaging', function () {
                 switch (_a.label) {
                     case 0:
                         this.timeout(20000);
-                        firstPublisher = new mam_1.MAMPublisher(provider, GenerateSeed_1.GenerateSeed());
+                        firstPublisher = new mam_1.MAMPublisher(test_settings_1.provider, GenerateSeed_1.GenerateSeed());
                         return [4 /*yield*/, firstPublisher.PublishMessage("First Message", undefined, 9)];
                     case 1:
                         rootOfFirstMessage = _a.sent();
@@ -68,10 +68,10 @@ describe('Masked Autenticated Messaging', function () {
                 switch (_a.label) {
                     case 0:
                         this.timeout(20000);
-                        return [4 /*yield*/, delay(2000)];
+                        return [4 /*yield*/, test_settings_1.delay(2000)];
                     case 1:
                         _a.sent(); //Sleep prevents the node to not know about the first tx yet, failing the test.
-                        return [4 /*yield*/, mam_1.ReadMAMStream(provider, rootOfFirstMessage)];
+                        return [4 /*yield*/, mam_1.ReadMAMStream(test_settings_1.provider, rootOfFirstMessage)];
                     case 2:
                         messages = _a.sent();
                         chai_1.expect(messages[0]).to.deep.equal("First Message");
@@ -101,7 +101,7 @@ describe('Masked Autenticated Messaging', function () {
             var messages;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, mam_1.ReadMAMStream(provider, rootOfFirstMessage)];
+                    case 0: return [4 /*yield*/, mam_1.ReadMAMStream(test_settings_1.provider, rootOfFirstMessage)];
                     case 1:
                         messages = _a.sent();
                         chai_1.expect(messages[0]).to.deep.equal("First Message");
@@ -126,7 +126,7 @@ describe('Masked Autenticated Messaging', function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        secondPublisher = new mam_1.MAMPublisher(provider, state.seed, new mam_1.MAMSettings(state.mode, state.sideKey, state.securityLevel));
+                        secondPublisher = new mam_1.MAMPublisher(test_settings_1.provider, state.seed, new mam_1.MAMSettings(state.mode, state.sideKey, state.securityLevel));
                         secondPublisher.UpdateMAMState(state.nextRoot, state.channelStart);
                         return [4 /*yield*/, secondPublisher.PublishMessage("Third Message", undefined, 9)];
                     case 1:
@@ -142,7 +142,7 @@ describe('Masked Autenticated Messaging', function () {
             var messages;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, mam_1.ReadMAMStream(provider, rootOfFirstMessage)];
+                    case 0: return [4 /*yield*/, mam_1.ReadMAMStream(test_settings_1.provider, rootOfFirstMessage)];
                     case 1:
                         messages = _a.sent();
                         chai_1.expect(messages[0]).to.deep.equal("First Message");
@@ -154,7 +154,4 @@ describe('Masked Autenticated Messaging', function () {
         });
     });
 });
-function delay(ms) {
-    return new Promise(function (resolve) { return setTimeout(resolve, ms); });
-}
 //# sourceMappingURL=MAM.test.js.map

@@ -8,6 +8,7 @@ export declare abstract class BaseKeypair {
     abstract Sign(dataToSign: string): Buffer;
     abstract Verify(dataToCheck: string, signatureToVerify: Buffer): boolean;
     abstract GetKeyType(): string;
+    abstract GetPublicKeyFormat(): string;
     GetPublicKey(): string;
     SetPrivateKey(privateKey: string): void;
     GetPrivateKey(): string;

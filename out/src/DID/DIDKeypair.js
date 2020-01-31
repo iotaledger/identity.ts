@@ -16,12 +16,14 @@ var DIDKeypair = /** @class */ (function () {
      * Converts the class into a valid JSON that is conform with the DID standard.
      */
     DIDKeypair.prototype.GetJSON = function () {
-        return {
+        var authJSON = {
             "id": this.GetFullId(),
             "type": this.encryptionKeypair.GetKeyType(),
-            "controller": this.keyController.GetDID(),
-            "publicKeyPem": this.encryptionKeypair.GetPublicKey()
+            "controller": this.keyController.GetDID()
         };
+        var keyType = this.encryptionKeypair.GetPublicKeyFormat();
+        authJSON[keyType] = this.encryptionKeypair.GetPublicKey();
+        return authJSON;
     };
     DIDKeypair.prototype.GetEncryptionKeypair = function () {
         return this.encryptionKeypair;

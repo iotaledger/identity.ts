@@ -42,5 +42,9 @@ export class ECDSAKeypair extends BaseKeypair {
 
     public GetKeyType(): string {
         return "EcdsaSecp256k1VerificationKey2019";
-    };
+    }
+
+    public GetPublicKeyFormat() : string {
+        return "publicKeyBase58";
+    }
 }

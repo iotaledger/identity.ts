@@ -1,5 +1,6 @@
 import { ProofBuildingMethod, Proof, ProofParameters, ExtendedProofDocument } from './Proof';
-import { BuildRSAProof } from './RSAProof';
+import { BuildRSAProof} from './RSAProof';
+import { BuildECDSAProof } from './ECDSAProof';
 
 export class ProofTypeManager {
     private static instance : ProofTypeManager;
@@ -7,9 +8,8 @@ export class ProofTypeManager {
 
     private constructor() {
         this.proofTypes = new Map<string, ProofBuildingMethod>();
-
-        //Add default Proofs
-        this.AddProof("RsaSignature2018", BuildRSAProof);
+        this.AddProof("RsaVerificationKey2018", BuildRSAProof);
+        this.AddProof("EcdsaSecp256k1VerificationKey2019", BuildECDSAProof);
     }
 
     public AddProof(name : string, proof : ProofBuildingMethod) {

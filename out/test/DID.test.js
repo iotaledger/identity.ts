@@ -37,177 +37,169 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var chai_1 = require("chai");
 require("mocha");
+var test_settings_1 = require("./test.settings");
 var CreateRandomDID_1 = require("../src/Helpers/CreateRandomDID");
-var GenerateKeypair_1 = require("../src/Helpers/GenerateKeypair");
 var DID_1 = require("../src/DID/DID");
 var Hash_1 = require("../src/Encryption/Hash");
 var DIDDocument_1 = require("../src/DID/DIDDocument");
 var DIDPublisher_1 = require("../src/IOTA/DIDPublisher");
 var GenerateSeed_1 = require("../src/Helpers/GenerateSeed");
 var Service_1 = require("../src/DID/Service");
-var provider = "https://nodes.devnet.iota.org:443";
-describe('DID Functionalities', function () {
-    var uuid;
-    it('Should create a valid DID from a UUID', function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var keypair;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, GenerateKeypair_1.GenerateRSAKeypair()];
-                    case 1:
-                        keypair = _a.sent();
-                        uuid = Hash_1.Hash(keypair.GetPublicKey());
-                        chai_1.expect("did:iota:main:" + uuid, new DID_1.DID(uuid).GetSpecificDID());
-                        return [2 /*return*/];
-                }
+var _loop_1 = function (i) {
+    describe('DID Functionalities with ' + test_settings_1.TestProofTypes[i].name, function () {
+        var uuid;
+        it('Should create a valid DID from a UUID', function () {
+            return __awaiter(this, void 0, void 0, function () {
+                var keypair;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, test_settings_1.TestProofTypes[i].keyGenFunc()];
+                        case 1:
+                            keypair = _a.sent();
+                            uuid = Hash_1.Hash(keypair.GetPublicKey());
+                            chai_1.expect("did:iota:main:" + uuid, new DID_1.DID(uuid).GetSpecificDID());
+                            return [2 /*return*/];
+                    }
+                });
+            });
+        });
+        it('Should create a valid DID from a did:method:uuid', function () {
+            return __awaiter(this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    chai_1.expect("did:iota:main:" + uuid, new DID_1.DID("did:iota:" + uuid).GetSpecificDID());
+                    return [2 /*return*/];
+                });
+            });
+        });
+        it('Should create a valid DID from a did:method:network:uuid', function () {
+            return __awaiter(this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    chai_1.expect("did:iota:dev:" + uuid, new DID_1.DID("did:iota:dev:" + uuid).GetSpecificDID());
+                    return [2 /*return*/];
+                });
+            });
+        });
+        it('Should create a valid DID from a did:method:network:uuid#fragment', function () {
+            return __awaiter(this, void 0, void 0, function () {
+                var did;
+                return __generator(this, function (_a) {
+                    did = new DID_1.DID("did:iota:dev:" + uuid + "#fragment");
+                    chai_1.expect("did:iota:dev:" + uuid, did.GetSpecificDID());
+                    chai_1.expect("fragment", did.GetFragment());
+                    return [2 /*return*/];
+                });
             });
         });
     });
-    it('Should create a valid DID from a did:method:uuid', function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                chai_1.expect("did:iota:main:" + uuid, new DID_1.DID("did:iota:" + uuid).GetSpecificDID());
-                return [2 /*return*/];
+    describe('DID Document with ' + test_settings_1.TestProofTypes[i].name, function () {
+        var document;
+        var seed = GenerateSeed_1.GenerateSeed();
+        var root;
+        var documentFromTangle;
+        var publisher;
+        var service;
+        it('Should create and output a valid DID Document', function () {
+            return __awaiter(this, void 0, void 0, function () {
+                var keypair;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, CreateRandomDID_1.CreateRandomDID(seed)];
+                        case 1:
+                            document = _a.sent();
+                            return [4 /*yield*/, test_settings_1.TestProofTypes[i].keyGenFunc()];
+                        case 2:
+                            keypair = _a.sent();
+                            document.AddKeypair(keypair, "keys-1");
+                            chai_1.expect(document.GetJSONDIDDocument()).to.not.be.undefined;
+                            return [2 /*return*/];
+                    }
+                });
+            });
+        });
+        it('Should publish the DID Document', function () {
+            return __awaiter(this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            this.timeout(60000);
+                            publisher = new DIDPublisher_1.DIDPublisher(test_settings_1.provider, seed);
+                            return [4 /*yield*/, publisher.PublishDIDDocument(document, "DIDTEST", 9)];
+                        case 1:
+                            root = _a.sent();
+                            chai_1.expect(root).to.not.be.undefined;
+                            return [2 /*return*/];
+                    }
+                });
+            });
+        });
+        it('Should read the same document from the Tangle', function () {
+            return __awaiter(this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            this.timeout(60000);
+                            return [4 /*yield*/, test_settings_1.delay(2000)];
+                        case 1:
+                            _a.sent(); //Sleep prevents the node to not know about the first tx yet, failing the test.
+                            return [4 /*yield*/, DIDDocument_1.DIDDocument.readDIDDocument(test_settings_1.provider, root)];
+                        case 2:
+                            documentFromTangle = _a.sent();
+                            chai_1.expect(documentFromTangle.GetJSONDIDDocument()).to.deep.equal(document.GetJSONDIDDocument());
+                            return [2 /*return*/];
+                    }
+                });
+            });
+        });
+        //Known poorly implemented test
+        /*it('Should handle empty DID Documents', async function() {
+            const result = await DIDDocument.readDIDDocument(provider, GenerateSeed(81));
+        });*/
+        it('Should Sign locally and Verify from loaded DID Document', function () {
+            return __awaiter(this, void 0, void 0, function () {
+                var msg, signature, _a;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0:
+                            msg = "Hello World";
+                            return [4 /*yield*/, document.GetKeypair("keys-1").GetEncryptionKeypair().Sign(msg)];
+                        case 1:
+                            signature = _b.sent();
+                            _a = chai_1.expect;
+                            return [4 /*yield*/, documentFromTangle.GetKeypair("keys-1").GetEncryptionKeypair().Verify(msg, signature)];
+                        case 2:
+                            _a.apply(void 0, [_b.sent()]).to.be.true;
+                            return [2 /*return*/];
+                    }
+                });
+            });
+        });
+        it('Should add a ServiceEndpoint', function () {
+            service = new Service_1.Service(document.GetDID(), "test", "TestService", GenerateSeed_1.GenerateSeed());
+            document.AddServiceEndpoint(service);
+            chai_1.expect(document.GetService("test")).to.not.be.null;
+        });
+        it('Should update the DIDDocument correctly and contain a ServiceEndpoint', function () {
+            return __awaiter(this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            this.timeout(60000);
+                            return [4 /*yield*/, publisher.PublishDIDDocument(document, "DIDTEST", 9)];
+                        case 1:
+                            _a.sent();
+                            return [4 /*yield*/, DIDDocument_1.DIDDocument.readDIDDocument(test_settings_1.provider, root)];
+                        case 2:
+                            documentFromTangle = _a.sent();
+                            chai_1.expect(documentFromTangle.GetJSONDIDDocument()).to.deep.equal(document.GetJSONDIDDocument());
+                            chai_1.expect(documentFromTangle.GetService("test").EncodeToJSON()).to.deep.equal(service.EncodeToJSON());
+                            return [2 /*return*/];
+                    }
+                });
             });
         });
     });
-    it('Should create a valid DID from a did:method:network:uuid', function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                chai_1.expect("did:iota:dev:" + uuid, new DID_1.DID("did:iota:dev:" + uuid).GetSpecificDID());
-                return [2 /*return*/];
-            });
-        });
-    });
-    it('Should create a valid DID from a did:method:network:uuid#fragment', function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var did;
-            return __generator(this, function (_a) {
-                did = new DID_1.DID("did:iota:dev:" + uuid + "#fragment");
-                chai_1.expect("did:iota:dev:" + uuid, did.GetSpecificDID());
-                chai_1.expect("fragment", did.GetFragment());
-                return [2 /*return*/];
-            });
-        });
-    });
-});
-describe('DID Document', function () {
-    var document;
-    var seed = GenerateSeed_1.GenerateSeed();
-    var root;
-    var documentFromTangle;
-    var publisher;
-    var service;
-    it('Should create and output a valid DID Document', function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var keypair;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, CreateRandomDID_1.CreateRandomDID(seed)];
-                    case 1:
-                        document = _a.sent();
-                        return [4 /*yield*/, GenerateKeypair_1.GenerateRSAKeypair()];
-                    case 2:
-                        keypair = _a.sent();
-                        document.AddKeypair(keypair, "keys-1");
-                        chai_1.expect(document.GetJSONDIDDocument()).to.not.be.undefined;
-                        return [2 /*return*/];
-                }
-            });
-        });
-    });
-    it('Should publish the DID Document', function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        this.timeout(20000);
-                        publisher = new DIDPublisher_1.DIDPublisher(provider, seed);
-                        return [4 /*yield*/, publisher.PublishDIDDocument(document, "DIDTEST", 9)];
-                    case 1:
-                        root = _a.sent();
-                        chai_1.expect(root).to.not.be.undefined;
-                        return [2 /*return*/];
-                }
-            });
-        });
-    });
-    it('Should read the same document from the Tangle', function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        this.timeout(20000);
-                        return [4 /*yield*/, delay(2000)];
-                    case 1:
-                        _a.sent(); //Sleep prevents the node to not know about the first tx yet, failing the test.
-                        return [4 /*yield*/, DIDDocument_1.DIDDocument.readDIDDocument(provider, root)];
-                    case 2:
-                        documentFromTangle = _a.sent();
-                        chai_1.expect(documentFromTangle.GetJSONDIDDocument()).to.deep.equal(document.GetJSONDIDDocument());
-                        return [2 /*return*/];
-                }
-            });
-        });
-    });
-    it('Should handle empty DID Documents', function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var result;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, DIDDocument_1.DIDDocument.readDIDDocument(provider, GenerateSeed_1.GenerateSeed(81))];
-                    case 1:
-                        result = _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        });
-    });
-    it('Should Sign locally and Verify from loaded DID Document', function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var msg, signature, _a;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        msg = "Hello World";
-                        return [4 /*yield*/, document.GetKeypair("keys-1").GetEncryptionKeypair().Sign(msg)];
-                    case 1:
-                        signature = _b.sent();
-                        _a = chai_1.expect;
-                        return [4 /*yield*/, documentFromTangle.GetKeypair("keys-1").GetEncryptionKeypair().Verify(msg, signature)];
-                    case 2:
-                        _a.apply(void 0, [_b.sent()]).to.be.true;
-                        return [2 /*return*/];
-                }
-            });
-        });
-    });
-    it('Should add a ServiceEndpoint', function () {
-        service = new Service_1.Service(document.GetDID(), "test", "TestService", GenerateSeed_1.GenerateSeed());
-        document.AddServiceEndpoint(service);
-        chai_1.expect(document.GetService("test")).to.not.be.null;
-    });
-    it('Should update the DIDDocument correctly and contain a ServiceEndpoint', function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        this.timeout(20000);
-                        return [4 /*yield*/, publisher.PublishDIDDocument(document, "DIDTEST", 9)];
-                    case 1:
-                        _a.sent();
-                        return [4 /*yield*/, DIDDocument_1.DIDDocument.readDIDDocument(provider, root)];
-                    case 2:
-                        documentFromTangle = _a.sent();
-                        chai_1.expect(documentFromTangle.GetJSONDIDDocument()).to.deep.equal(document.GetJSONDIDDocument());
-                        chai_1.expect(documentFromTangle.GetService("test").EncodeToJSON()).to.deep.equal(service.EncodeToJSON());
-                        return [2 /*return*/];
-                }
-            });
-        });
-    });
-});
-function delay(ms) {
-    return new Promise(function (resolve) { return setTimeout(resolve, ms); });
+};
+for (var i = 0; i < test_settings_1.TestProofTypes.length; i++) {
+    _loop_1(i);
 }
 //# sourceMappingURL=DID.test.js.map

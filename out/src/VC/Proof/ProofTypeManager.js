@@ -1,11 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var RSAProof_1 = require("./RSAProof");
+var ECDSAProof_1 = require("./ECDSAProof");
 var ProofTypeManager = /** @class */ (function () {
     function ProofTypeManager() {
         this.proofTypes = new Map();
-        //Add default Proofs
-        this.AddProof("RsaSignature2018", RSAProof_1.BuildRSAProof);
+        this.AddProof("RsaVerificationKey2018", RSAProof_1.BuildRSAProof);
+        this.AddProof("EcdsaSecp256k1VerificationKey2019", ECDSAProof_1.BuildECDSAProof);
     }
     ProofTypeManager.prototype.AddProof = function (name, proof) {
         this.proofTypes.set(name, proof);

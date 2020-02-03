@@ -3,6 +3,7 @@ import { DIDKeypair } from './DIDKeypair';
 import { BaseKeypair } from '../Encryption/BaseKeypair';
 import { MAMSettings, ReadMAMStream } from './../IOTA/mam';
 import { RSAKeypair } from '../Encryption/RSAKeypair';
+import { ECDSAKeypair } from '../Encryption/ECDSAKeypair';
 import { Service, ServiceDataModel } from './Service';
 
 /**
@@ -43,6 +44,10 @@ export class DIDDocument {
                         if(publicKeys[i].type == "RsaVerificationKey2018") {
                             keypair = new RSAKeypair(publicKeys[i].publicKeyPem);
                         }
+                        if(publicKeys[i].type == "EcdsaSecp256k1VerificationKey2019") {
+                            keypair = new ECDSAKeypair(publicKeys[i].publicKeyBase58);
+                        }
+
                         document.AddKeypair(keypair, publicKeys[i].id.substr(publicKeys[i].id.lastIndexOf("#")+1), new DID(publicKeys[i].id.substr(0, publicKeys[i].id.lastIndexOf("#"))), new DID(publicKeys[i].controller));
                     }
                 }

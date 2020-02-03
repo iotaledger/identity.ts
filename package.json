@@ -1,12 +1,12 @@
 {
   "name": "identity_ts",
-  "version": "0.1.12",
+  "version": "0.2.0",
   "description": "Digital Identity implementation",
   "main": "./out/src/index.js",
   "typings": "typings/src",
   "scripts": {
     "build": "copyfiles -V \"./src/VC/Schemas/*.json\" \"./out\" && tsc",
-    "test": "mocha -r ts-node/register test/**.ts",
+    "test": "mocha -r ts-node/register test/*.test.ts",
     "testVC": "mocha -r ts-node/register test/VC.test.ts",
     "doc": "jsdoc2md --template README_tpl.hbs --files ./src/**/*.ts --configure ./jsdoc2md.json > ./README.md"
   },
@@ -23,7 +23,10 @@
     "@iota/converter": "^1.0.0-beta.21",
     "@iota/core": "^1.0.0-beta.21",
     "@iota/mam": "^0.7.3",
+    "@types/secp256k1": "3.5.0",
     "@types/tv4": "^1.2.29",
+    "eciesjs": "^0.3.4",
+    "secp256k1": "^3.5.2",
     "tv4": "^1.3.0"
   },
   "devDependencies": {

@@ -13,7 +13,7 @@ export const BuildRSAProof : ProofBuildingMethod = function(proofParameter : Pro
         let documentToSign : string = JSON.stringify( RecursiveSort(JSONToSign) );
 
         let proof : RSAProofDocument = {
-            type: "RsaSignature2018",
+            type: "RsaVerificationKey2018",
             verificationMethod : keypair.GetFullId(),
             signatureValue : encryptionKeypair.Sign(documentToSign).toString("base64")
         };

@@ -57,4 +57,8 @@ export class RSAKeypair extends BaseKeypair {
     public GetKeyType(): string {
         return "RsaVerificationKey2018";
     };
+
+    public GetPublicKeyFormat() : string {
+        return "publicKeyPem";
+    }
 }

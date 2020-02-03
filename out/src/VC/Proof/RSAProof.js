@@ -7,7 +7,7 @@ exports.BuildRSAProof = function (proofParameter, proofDocument) {
         var encryptionKeypair = keypair.GetEncryptionKeypair();
         var documentToSign = JSON.stringify(RecursiveSort_1.RecursiveSort(JSONToSign));
         var proof = {
-            type: "RsaSignature2018",
+            type: "RsaVerificationKey2018",
             verificationMethod: keypair.GetFullId(),
             signatureValue: encryptionKeypair.Sign(documentToSign).toString("base64")
         };

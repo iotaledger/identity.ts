@@ -76,7 +76,7 @@ export class Proof {
         return new Promise<void>((resolve, reject) => {
             const revocationAddress = credential.GetRevocationAddress();
             if(!revocationAddress) {
-                return;
+                reject("No Revocation Address");
             }
             const RevocationSignature = this.revocationMethod(this.keypair, this.proofDocument);
             PublishData(revocationAddress, JSON.stringify(RevocationSignature), provider, mwm)

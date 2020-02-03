@@ -18,6 +18,14 @@ exports.BuildECDSAProof = function (proofParameter, proofDocument) {
         var ECDSAproofDocument = proofDocument;
         return keypair.GetEncryptionKeypair().Verify(documentToVerify, Buffer.from(ECDSAproofDocument.signatureValue, "base64"));
     };
-    return new Proof_1.Proof(SigningMethod, VerifySignatureMethod, proofParameter, proofDocument);
+    var RevocationMethod = function (keypair, proofDocument) {
+        var originalSignature = proofDocument.signatureValue;
+        return {
+            "keyId": keypair.GetFullId(),
+            "originalSignature": originalSignature,
+            "revocationSignature": keypair.GetEncryptionKeypair().Sign(originalSignature).toString("base64")
+        };
+    };
+    return new Proof_1.Proof(SigningMethod, VerifySignatureMethod, RevocationMethod, proofParameter, proofDocument);
 };
 //# sourceMappingURL=ECDSAProof.js.map

@@ -61,7 +61,7 @@ export class VerifiableCredential extends VerifiableObject {
                     if(!jsonObject["keyId"] || !jsonObject["originalSignature"] || !jsonObject["revocationSignature"]) {
                         continue;
                     }
-
+                    
                     //Verify if it is the correct Issuer
                     let issuerDID : DID = new DID(jsonObject["keyId"]);
                     if( issuerDID.GetDID() != this.proof.GetIssuer().GetDID().GetDID() ) {
@@ -75,7 +75,6 @@ export class VerifiableCredential extends VerifiableObject {
                     }
 
                     //TODO: Check if the originalSignature matches the proof signature
-
                     if( keypair.GetEncryptionKeypair().Verify(jsonObject["originalSignature"], Buffer.from(jsonObject["revocationSignature"], "base64")) ) {
                         reject("Verification failed: Claim has been revoked");
                     }

@@ -40,7 +40,7 @@ var Proof = /** @class */ (function () {
         return new Promise(function (resolve, reject) {
             var revocationAddress = credential.GetRevocationAddress();
             if (!revocationAddress) {
-                return;
+                reject("No Revocation Address");
             }
             var RevocationSignature = _this.revocationMethod(_this.keypair, _this.proofDocument);
             iota_1.PublishData(revocationAddress, JSON.stringify(RevocationSignature), provider, mwm)

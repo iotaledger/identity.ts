@@ -12,8 +12,6 @@ var BaseKeypair_1 = require("./Encryption/BaseKeypair");
 exports.BaseKeypair = BaseKeypair_1.BaseKeypair;
 var Hash_1 = require("./Encryption/Hash");
 exports.Hash = Hash_1.Hash;
-var RSAKeypair_1 = require("./Encryption/RSAKeypair");
-exports.RSAKeypair = RSAKeypair_1.RSAKeypair;
 //Helpers
 var CreateRandomDID_1 = require("./Helpers/CreateRandomDID");
 exports.CreateRandomDID = CreateRandomDID_1.CreateRandomDID;
@@ -25,6 +23,7 @@ exports.SignDIDAuthentication = DIDAuthentication_1.SignDIDAuthentication;
 exports.VerifyDIDAuthentication = DIDAuthentication_1.VerifyDIDAuthentication;
 var GenerateKeypair_1 = require("./Helpers/GenerateKeypair");
 exports.GenerateRSAKeypair = GenerateKeypair_1.GenerateRSAKeypair;
+exports.GenerateECDSAKeypair = GenerateKeypair_1.GenerateECDSAKeypair;
 var GenerateSeed_1 = require("./Helpers/GenerateSeed");
 exports.GenerateSeed = GenerateSeed_1.GenerateSeed;
 //IOTA
@@ -38,8 +37,6 @@ var Proof_1 = require("./VC/Proof/Proof");
 exports.Proof = Proof_1.Proof;
 var ProofTypeManager_1 = require("./VC/Proof/ProofTypeManager");
 exports.ProofTypeManager = ProofTypeManager_1.ProofTypeManager;
-var RSAProof_1 = require("./VC/Proof/RSAProof");
-exports.BuildRSAProof = RSAProof_1.BuildRSAProof;
 //VC
 var Credential_1 = require("./VC/Credential");
 exports.Credential = Credential_1.Credential;

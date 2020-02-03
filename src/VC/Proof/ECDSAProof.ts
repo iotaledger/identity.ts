@@ -1,8 +1,7 @@
-import { Proof, ProofDocument, SigningMethod, VerifySignatureMethod, ProofBuildingMethod, ProofParameters, ExtendedProofDocument } from "./Proof";
+import { Proof, ProofDocument, SigningMethod, VerifySignatureMethod, ProofBuildingMethod, ProofParameters, ExtendedProofDocument, RevocationMethod, RevocationSignature } from "./Proof";
 import { RecursiveSort } from "../../Helpers/RecursiveSort";
 import { ECDSAKeypair } from "../../Encryption/ECDSAKeypair";
 import { DIDKeypair } from "../../DID/DIDKeypair";
-
 
 export interface ECDSAProofDocument extends ProofDocument {
     signatureValue : string
@@ -26,5 +25,14 @@ export const BuildECDSAProof : ProofBuildingMethod = function(proofParameter : P
         let ECDSAproofDocument : ECDSAProofDocument = <ECDSAProofDocument>proofDocument;
         return keypair.GetEncryptionKeypair().Verify( documentToVerify, Buffer.from(ECDSAproofDocument.signatureValue, "base64"));
     };
-    return new Proof(SigningMethod, VerifySignatureMethod, proofParameter, proofDocument);
+
+    let RevocationMethod : RevocationMethod = function(keypair : DIDKeypair, proofDocument : ProofDocument) : RevocationSignature {
+        const originalSignature = (<ECDSAProofDocument>proofDocument).signatureValue;
+        return {
+            "keyId" : keypair.GetFullId(),
+            "originalSignature" : originalSignature,
+            "revocationSignature" : keypair.GetEncryptionKeypair().Sign(originalSignature).toString("base64")
+        };
+    };
+    return new Proof(SigningMethod, VerifySignatureMethod,RevocationMethod, proofParameter, proofDocument);
 }

@@ -1,23 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var fs = require("fs");
 var Schema_1 = require("./Schema");
+var DIDAuthenticationCredential = require('./Schemas/DIDAuthenticationCredential.json');
+var DomainValidatedCertificate = require('./Schemas/DomainValidatedCertificate.json');
+var WhiteListedCredential = require('./Schemas/WhiteListedCredential.json');
+var UserDataCredential = require('./Schemas/UserDataCredential.json');
 //TODO: Add DID's to trust
 var SchemaManager = /** @class */ (function () {
     function SchemaManager() {
         this.schemas = [];
         //Load all default Schemas
-        var folderPath = __dirname + "/Schemas";
-        var filePaths = fs.readdirSync(folderPath);
-        for (var i = 0; i < filePaths.length; i++) {
-            var fileName = filePaths[i].substr(0, filePaths[i].lastIndexOf('.'));
-            this.AddSchemaFromFile(fileName, folderPath + "/" + filePaths[i]);
-        }
+        this.AddSchema('DIDAuthenticationCredential', DIDAuthenticationCredential);
+        this.AddSchema('DomainValidatedCertificate', DomainValidatedCertificate);
+        this.AddSchema('WhiteListedCredential', WhiteListedCredential);
+        this.AddSchema('UserDataCredential', UserDataCredential);
     }
-    SchemaManager.prototype.AddSchemaFromFile = function (name, path, trustedDIDs) {
-        var fileData = fs.readFileSync(path, "utf8");
-        this.schemas.push(new Schema_1.Schema(name, JSON.parse(fileData), trustedDIDs));
-    };
     SchemaManager.prototype.AddSchema = function (name, layout, trustedDIDs) {
         this.schemas.push(new Schema_1.Schema(name, layout, trustedDIDs));
     };

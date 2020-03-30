@@ -18,7 +18,7 @@ var DIDPublisher = /** @class */ (function () {
     function DIDPublisher(provider, seed, channelState, settings) {
         this.publisher = new mam_1.MAMPublisher(provider, seed, settings);
         if (channelState) {
-            this.publisher.UpdateMAMState(channelState.nextRoot, channelState.channelStart);
+            this.publisher.ChannelState = channelState;
         }
     }
     /**
@@ -34,7 +34,7 @@ var DIDPublisher = /** @class */ (function () {
     };
     /**
      * Exports the full state of the MAM channel. Used for local storage of the State, which allows for reusing the MAM channel at a later time.
-     * @return {MAMState} An object containing every variable needed to reinitialize the MAM channel at a later time.
+     * @return {IMamChannelState} An object containing every variable needed to reinitialize the MAM channel at a later time.
      */
     DIDPublisher.prototype.ExportMAMChannelState = function () {
         return this.publisher.ExportState();

@@ -30,9 +30,9 @@ export class DIDDocument {
                 if(!latestDIDDocument) {
                     resolve();
                 }
-                let JSONDocument : { "@context" : string[], id : string,  [key: string]: any} = JSON.parse(latestDIDDocument);
+                let JSONDocument : { "@context" : string[], id : string,  [key: string]: any} = JSON.parse(latestDIDDocument as any as string);
                 //Verify if it contains a valid JSON
-                try { JSONDocument = JSON.parse(latestDIDDocument); } catch(err) { reject("JSON Parse Error: " + err) };
+                try { JSONDocument = JSON.parse(latestDIDDocument as any as string); } catch(err) { reject("JSON Parse Error: " + err) };
 
                 //Parse the DID Document
                 let document : DIDDocument = new DIDDocument(JSONDocument["@context"], new DID(JSONDocument.id));

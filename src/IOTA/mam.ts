@@ -12,15 +12,22 @@ import {
 import { composeAPI } from '@iota/core';
 import { asciiToTrytes, trytesToAscii } from '@iota/converter';
 
+//An enumerator for the different MAM Modes. Prevents typos in regards to the different modes.
+export enum MAM_MODE {
+    PRIVATE = 'private',
+    PUBLIC = 'public',
+    RESTRICTED = 'restricted'
+}
+
 //Settings for a MAM stream. 
 export class MAMSettings {
-    public mode: MamMode;
+    public mode: (MAM_MODE | MamMode);
     public sideKey: string;
     public securityLevel: number;
 
-    constructor(mode: MamMode = 'private', sideKey?: string, securityLevel: number = 2) {
+    constructor(mode: (MAM_MODE | MamMode) = MAM_MODE.PRIVATE, sideKey?: string, securityLevel: number = 2) {
         this.mode = mode;
-        this.sideKey = (this.mode == 'restricted') ? sideKey : undefined;
+        this.sideKey = (this.mode == MAM_MODE.RESTRICTED) ? sideKey : undefined;
         this.securityLevel = securityLevel;
     }
 }

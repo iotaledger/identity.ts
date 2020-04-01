@@ -4,7 +4,7 @@ import {
 import { expect } from 'chai';
 import 'mocha';
 import { delay, provider } from './test.settings';
-import { MAMPublisher, ReadMAMStream, MAMSettings } from "./../src/IOTA/mam";
+import { MAMPublisher, ReadMAMStream, MAMSettings, MAM_MODE } from "./../src/IOTA/mam";
 import { GenerateSeed } from "./../src/Helpers/GenerateSeed";
 
 describe('Masked Autenticated Messaging', function() {
@@ -45,7 +45,7 @@ describe('Masked Autenticated Messaging', function() {
         state = firstPublisher.ExportState();
 
         expect(state.start).to.deep.equal(2);
-        expect(state.mode).to.deep.equal('private');
+        expect(state.mode).to.deep.equal(MAM_MODE.PRIVATE);
         expect(state.nextRoot).to.not.be.undefined;
         expect(state.security).to.deep.equal(2);
         expect(state.seed).to.not.be.undefined;

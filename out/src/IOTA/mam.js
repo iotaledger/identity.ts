@@ -3,13 +3,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var mam_js_1 = require("@iota/mam.js");
 var core_1 = require("@iota/core");
 var converter_1 = require("@iota/converter");
+//An enumerator for the different MAM Modes. Prevents typos in regards to the different modes.
+var MAM_MODE;
+(function (MAM_MODE) {
+    MAM_MODE["PRIVATE"] = "private";
+    MAM_MODE["PUBLIC"] = "public";
+    MAM_MODE["RESTRICTED"] = "restricted";
+})(MAM_MODE = exports.MAM_MODE || (exports.MAM_MODE = {}));
 //Settings for a MAM stream. 
 var MAMSettings = /** @class */ (function () {
     function MAMSettings(mode, sideKey, securityLevel) {
-        if (mode === void 0) { mode = 'private'; }
+        if (mode === void 0) { mode = MAM_MODE.PRIVATE; }
         if (securityLevel === void 0) { securityLevel = 2; }
         this.mode = mode;
-        this.sideKey = (this.mode == 'restricted') ? sideKey : undefined;
+        this.sideKey = (this.mode == MAM_MODE.RESTRICTED) ? sideKey : undefined;
         this.securityLevel = securityLevel;
     }
     return MAMSettings;

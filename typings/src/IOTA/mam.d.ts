@@ -1,9 +1,14 @@
 import { MamMode, IMamChannelState } from '@iota/mam.js';
+export declare enum MAM_MODE {
+    PRIVATE = "private",
+    PUBLIC = "public",
+    RESTRICTED = "restricted"
+}
 export declare class MAMSettings {
-    mode: MamMode;
+    mode: (MAM_MODE | MamMode);
     sideKey: string;
     securityLevel: number;
-    constructor(mode?: MamMode, sideKey?: string, securityLevel?: number);
+    constructor(mode?: (MAM_MODE | MamMode), sideKey?: string, securityLevel?: number);
 }
 export declare class MAMPublisher {
     private settings;

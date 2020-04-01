@@ -116,7 +116,7 @@ describe('Masked Autenticated Messaging', function () {
     it('Should export the correct state', function () {
         state = firstPublisher.ExportState();
         chai_1.expect(state.start).to.deep.equal(2);
-        chai_1.expect(state.mode).to.deep.equal('private');
+        chai_1.expect(state.mode).to.deep.equal(mam_1.MAM_MODE.PRIVATE);
         chai_1.expect(state.nextRoot).to.not.be.undefined;
         chai_1.expect(state.security).to.deep.equal(2);
         chai_1.expect(state.seed).to.not.be.undefined;

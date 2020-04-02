@@ -1,4 +1,5 @@
-import { MAMSettings, MAMState } from './mam';
+import { IMamChannelState } from '@iota/mam.js';
+import { MAMSettings } from './mam';
 import { DIDDocument } from './../DID/DIDDocument';
 /**
  * @module IOTA
@@ -15,10 +16,7 @@ export declare class DIDPublisher {
      * @param {{nextRoot:string, channelState:number}} [channelState] The state of the MAM channel. Used when continueing an existing MAM channel, with locally stored progress.
      * @param {MAMSettings} [settings] The settings of a MAM channel. Defaults to private with securitylevel 2.
      */
-    constructor(provider: string, seed: string, channelState?: {
-        nextRoot: string;
-        channelStart: number;
-    }, settings?: MAMSettings);
+    constructor(provider: string, seed: string, channelState?: IMamChannelState, settings?: MAMSettings);
     /**
      * Publishes a DID Document to the MAM channel in JSON format. WARNING: Do not upload people's DID Documents as these fall under GDPR & other privacy laws protection!
      * @param {DIDDocument} document The DID Document to upload to the MAM stream.
@@ -29,7 +27,7 @@ export declare class DIDPublisher {
     PublishDIDDocument(document: DIDDocument, tag?: string, mwm?: number): Promise<string>;
     /**
      * Exports the full state of the MAM channel. Used for local storage of the State, which allows for reusing the MAM channel at a later time.
-     * @return {MAMState} An object containing every variable needed to reinitialize the MAM channel at a later time.
+     * @return {IMamChannelState} An object containing every variable needed to reinitialize the MAM channel at a later time.
      */
-    ExportMAMChannelState(): MAMState;
+    ExportMAMChannelState(): IMamChannelState;
 }

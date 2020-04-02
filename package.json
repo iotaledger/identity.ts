@@ -21,8 +21,8 @@
   "homepage": "https://github.com/iotaledger/identity.ts#readme",
   "dependencies": {
     "@iota/converter": "^1.0.0-beta.21",
-    "@iota/core": "^1.0.0-beta.21",
-    "@iota/mam": "^0.7.3",
+    "@iota/core": "^1.0.0-beta.29",
+    "@iota/mam.js": "github:iotaledger/mam.js",
     "@types/secp256k1": "3.5.0",
     "@types/tv4": "^1.2.29",
     "eciesjs": "^0.3.4",

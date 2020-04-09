@@ -114,7 +114,7 @@ export class MerkleTree {
         return data.toString('hex');
     }
 
-    public getHashedRootForLeaves(indexArray: number[]): Array<any> {
+    public getRootFromLeaf(indexArray: number[]): Array<any> {
         const proofs = this.GetHashesForProofComputation(indexArray)
         let roots: Array<any> = []
         indexArray.forEach((value, index) => {

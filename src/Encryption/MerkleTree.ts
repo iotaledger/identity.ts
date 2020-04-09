@@ -1,15 +1,19 @@
-//Maybe place functions again 
+import { HashWrapper } from '../Encryption/Hash'
 
 export class MerkleTree {
 
-    private concat: any
-    public leaves: Buffer[] | Array<any>
-    public layers: Array<any>
+    public publicLeaves: string[]
+    public secretLeaves?: Buffer[]
+    public secretLeavePositions?: number[]
+    public leaves: Buffer[]
+    public layers: Array<Buffer[]>
     public layerIndex: Number
 
-    constructor(leaves: Buffer[] | Array<any>, concat: any) {
-        this.leaves = leaves
-        this.concat = concat
+    constructor(publicLeaves: string[], secretLeaves?: Buffer[], secretLeavePositions?: number[]) {
+        this.publicLeaves = publicLeaves
+        this.secretLeaves = secretLeaves
+        this.secretLeavePositions = secretLeavePositions
+        this.leaves = this.PrepareLeaves()
         this.layers = [this.leaves]
         this.BuildTree(this.leaves)
     }
@@ -18,53 +22,118 @@ export class MerkleTree {
         return this.layers[this.layers.length - 1][0]
     }
 
-    private BuildTree(nodes: Buffer[] | Array<any>) {
+    private PrepareLeaves(): Buffer[] {
+        let leaves: Buffer[] = []
+        this.publicLeaves.forEach((leaf) => {
+            leaves.push(HashWrapper(leaf))
+        })
+
+        //Combine leaves into one array
+        for (let index in this.secretLeavePositions) {
+            leaves.splice(this.secretLeavePositions[index], 0, this.secretLeaves[index]);
+        }
+        return leaves;
+    }
+
+    private BuildTree(nodes: Buffer[]) {
+
         while (nodes.length > 1) {
             const layerIndex = this.layers.length
             this.layers.push([])
             for (let i = 0; i < nodes.length; i += 2) {
-                //If last node in layer, keep hash 
-                //Concatenate it with itself and hash it !!!!
-                if (i + 1 === nodes.length) {
-                    if (nodes.length % 2 === 1) {
-                        this.layers[layerIndex].push(nodes[i])
-                        continue
-                    }
+                let left
+                let right
+                //hash last node in uneven tree with itself 
+                if (i + 1 === nodes.length && nodes.length % 2 === 1) {
+                    left = nodes[i]
+                    right = nodes[i]
+                } else {
+                    left = nodes[i]
+                    right = i + 1 == nodes.length ? left : nodes[i + 1];
                 }
-                const left = nodes[i]
-                const right = i + 1 == nodes.length ? left : nodes[i + 1];
-                const hash = this.concat(left, right)
-
+                const hash = this.concatHash(left, right)
                 this.layers[layerIndex].push(hash)
             }
             nodes = this.layers[layerIndex]
         }
     }
 
-    //CHANGEEE get proof change name more descriptive getrequiredhashesforproof
-    //CHANGEEE Allow index array 
-    public GetProof(index: number): Array<any> {
-        var proof = []
-        //Check if index is on left side: even left, uneven right 
-        //When idx on left side, push idx of right side into proof 
-        //When idx on right side, push idx of left side into proof 
-        for (let i = 0; i < this.layers.length; i++) {
-            const layer = this.layers[i]
+    private concatHash(left: Buffer, right: Buffer) {
+        if (!left) throw new Error("The concat function expects two hash arguments, the first was not receieved.");
+        if (!right) throw new Error("The concat function expects two hash arguments, the second was not receieved.");
+        return HashWrapper(Buffer.concat([Buffer.from(left), Buffer.from(right)]))
+    }
 
-            //CHANGEEE convert to boolean, avoid true : false below 
-            const isRightNode = index % 2
-            //When on left side add one to index to get pair from right side 
-            //Und andersrum 
-            const pairIndex = (isRightNode ? index - 1 : index + 1)
-            if (pairIndex < layer.length) {
-                proof.push({
-                    data: layer[pairIndex],
-                    left: isRightNode ? true : false
-                })
+
+    //Check if index is on left side: even left, uneven right 
+    //When idx on left side, push idx of right side into proof 
+    //When idx on right side, push idx of left side into proof 
+    public GetHashesForProofComputation(indexArray: number[]): Array<any> {
+        let proof = []
+        for (let i = 0; i < indexArray.length; i++) {
+            let index: number = indexArray[i]
+            let singleProof = []
+            for (let j = 0; j < this.layers.length; j++) {
+                const layer = this.layers[j]
+
+                let isRightNode = index % 2
+                //When on left side add one to index to get pair from right side ; vice versa
+                let pairIndex = (isRightNode ? index - 1 : index + 1)
+
+                if (pairIndex < layer.length) {
+                    singleProof.push({
+                        data: layer[pairIndex],
+                        left: !!isRightNode
+                    })
+                }
+                //hash last node in uneven tree with itself 
+                if (!!isRightNode === false && pairIndex === layer.length && j < (this.layers.length - 1)) {
+                    pairIndex = pairIndex - 1
+
+                    singleProof.push({
+                        data: layer[pairIndex],
+                        left: !!isRightNode
+                    })
+                }
+                // set index to parent index
+                index = (index / 2) | 0
             }
-            // set index to parent index
-            index = (index / 2) | 0
+            proof.push(singleProof)
         }
         return proof
     }
+
+    public hashProof(node: Buffer | string, proof: { data: Buffer, left: boolean }[]) {
+        //check for partial revealing
+        let data: Buffer = typeof (node) === 'string' ? HashWrapper(node) : node
+        for (let i = 0; i < proof.length; i++) {
+            //to position in correct order and hash
+            const buffers = proof[i].left ? [Buffer.from(proof[i].data), data] : [data, Buffer.from(proof[i].data)]
+            data = Buffer.from(HashWrapper(Buffer.concat(buffers)))
+        }
+        return data.toString('hex');
+    }
+
+    public getHashedRootForLeaves(indexArray: number[]): Array<any> {
+        const proofs = this.GetHashesForProofComputation(indexArray)
+        let roots: Array<any> = []
+        indexArray.forEach((value, index) => {
+            let node = this.leaves[value]
+            let singleRoot = this.hashProof(node, proofs[index])
+            roots.push(singleRoot)
+        })
+        return roots
+    }
+
+    // Verifies a proof with a certain root
+    public verify(proof: Array<{ data: Buffer, left: boolean }[]>, node: Buffer[] | string[], root: any[]) {
+        let result: boolean[] = []
+        for (let i = 0; i < proof.length; i++) {
+            let data = this.hashProof(node[i], proof[i])
+            result.push(data.toString() === root[i] ? true : false)
+        }
+        return result;
+    }
+
+
 }

@@ -26,7 +26,7 @@ export class SchemaManager {
 
     public GetSchema(name : string) : Schema {
         for(let i=0; i < this.schemas.length; i++) {
-            if (this.schemas[i].GetName() == name ) {
+            if (this.schemas[i].GetName() === name ) {
                 return this.schemas[i];
             }
         }

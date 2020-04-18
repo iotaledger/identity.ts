@@ -26,7 +26,7 @@ var Schema = /** @class */ (function () {
     };
     Schema.prototype.IsDIDTrusted = function (did) {
         for (var i = 0; i < this.trustedDIDs.length; i++) {
-            if (this.trustedDIDs[i].GetDID() == did.GetDID()) {
+            if (this.trustedDIDs[i].GetDID() === did.GetDID()) {
                 return true;
             }
         }

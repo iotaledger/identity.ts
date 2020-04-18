@@ -20,13 +20,13 @@ var DID = /** @class */ (function () {
         /** The network and optionally the shard of the network, where the DID Document is uploaded */
         this.network = "main";
         var parts = (did.match(/:/g) || []).length + 1;
-        if (parts == 1) {
+        if (parts === 1) {
             this.uuid = did;
         }
-        else if (parts == 3) {
+        else if (parts === 3) {
             this.uuid = did.substr(did.lastIndexOf(":") + 1);
         }
-        else if (parts == 4) {
+        else if (parts === 4) {
             this.network = did.substr(0, did.lastIndexOf(":"));
             this.network = this.network.substr(this.network.lastIndexOf(":") + 1);
             this.uuid = did.substr(did.lastIndexOf(":") + 1);

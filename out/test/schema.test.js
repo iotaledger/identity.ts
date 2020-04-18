@@ -54,7 +54,7 @@ describe('Schemas', function () {
         chai_1.expect(schema.DoesObjectFollowSchema(testObject)).to.be.true;
     });
     it('Should validate with extra fields', function () {
-        var testObject2 = __assign({}, testObject, { "ExtraField": "Hello World" });
+        var testObject2 = __assign(__assign({}, testObject), { "ExtraField": "Hello World" });
         chai_1.expect(schema.DoesObjectFollowSchema(testObject2)).to.be.true;
     });
     it('Should fail with a missing field', function () {

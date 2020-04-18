@@ -30,6 +30,7 @@ var ECDSAKeypair = /** @class */ (function (_super) {
     };
     ECDSAKeypair.prototype.PrivateDecrypt = function (input) {
         if (!this.privateKey) {
+            // tslint:disable-next-line:no-console
             console.log("Warning: Decryption with private key called, without a private key accessible\n");
             return "";
         }
@@ -38,15 +39,13 @@ var ECDSAKeypair = /** @class */ (function (_super) {
     ECDSAKeypair.prototype.Sign = function (dataToSign) {
         if (!this.privateKey)
             return undefined;
-        var dataToSignBuffer = Buffer.from(Hash_1.Hash(dataToSign), 'base64');
         var privateKeyBuffer = Buffer.from(this.privateKey, 'base64');
-        var signature = secp256k1.sign(dataToSignBuffer, privateKeyBuffer);
-        return signature.signature;
+        var signature = secp256k1.ecdsaSign(Hash_1.Uint8ArrayHash(dataToSign), new Uint8Array(privateKeyBuffer));
+        return Buffer.from(signature.signature);
     };
     ECDSAKeypair.prototype.Verify = function (dataToCheck, signatureToVerify) {
-        var dataToCheckBuffer = Buffer.from(Hash_1.Hash(dataToCheck), 'base64');
         var publicKeyBuffer = Buffer.from(this.publicKey, 'base64');
-        return secp256k1.verify(dataToCheckBuffer, signatureToVerify, publicKeyBuffer);
+        return secp256k1.ecdsaVerify(signatureToVerify, Hash_1.Uint8ArrayHash(dataToCheck), new Uint8Array(publicKeyBuffer));
     };
     ECDSAKeypair.prototype.GetKeyType = function () {
         return "EcdsaSecp256k1VerificationKey2019";

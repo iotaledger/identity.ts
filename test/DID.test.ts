@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { delay, provider, TestProofTypes } from './test.settings';
+import { delay, provider, depth, mwm, TestProofTypes } from './test.settings';
 import { CreateRandomDID } from '../src/Helpers/CreateRandomDID';
 import { BaseKeypair } from '../src/Encryption/BaseKeypair';
 import { DID } from '../src/DID/DID';
@@ -52,7 +52,7 @@ for(let i=0; i<TestProofTypes.length;i++) {
         it('Should publish the DID Document', async function() {
             this.timeout(60000);
             publisher = new DIDPublisher(provider, seed);
-            root = await publisher.PublishDIDDocument(document, "DIDTEST", 9)
+            root = await publisher.PublishDIDDocument(document, "DIDTEST", mwm, depth)
             expect(root).to.not.be.undefined;
         });
     
@@ -82,7 +82,7 @@ for(let i=0; i<TestProofTypes.length;i++) {
     
         it('Should update the DIDDocument correctly and contain a ServiceEndpoint', async function() {
             this.timeout(60000);	
-            await publisher.PublishDIDDocument(document, "DIDTEST", 9);
+            await publisher.PublishDIDDocument(document, "DIDTEST", mwm, depth);
             documentFromTangle = await DIDDocument.readDIDDocument(provider, root);
             expect(documentFromTangle.GetJSONDIDDocument()).to.deep.equal(document.GetJSONDIDDocument());
             expect(documentFromTangle.GetService("test").EncodeToJSON()).to.deep.equal(service.EncodeToJSON());

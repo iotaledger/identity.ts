@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { delay, provider, TestProofTypes } from './test.settings';
+import { delay, provider, depth, mwm, TestProofTypes } from './test.settings';
 import { Credential } from '../src/VC/Credential';
 import { VerifiableCredential } from '../src/VC/VerifiableCredential';
 import { SchemaManager } from '../src/VC/SchemaManager';
@@ -39,7 +39,7 @@ for (let i = 0; i < TestProofTypes.length; i++) {
             issuerPrivateKey = keypair.GetPrivateKey();
             IssuerDIDDocument.AddKeypair(keypair, "keys-1");
             let publisher: DIDPublisher = new DIDPublisher(provider, issuerSeed);
-            await publisher.PublishDIDDocument(IssuerDIDDocument, "DIDTEST", 9);
+            await publisher.PublishDIDDocument(IssuerDIDDocument, "DIDTEST", mwm, depth);
             SchemaManager.GetInstance().GetSchema("DomainValidatedCertificate").AddTrustedDID(IssuerDIDDocument.GetDID());
             //Generate a Subject
             subjectSeed = GenerateSeed();
@@ -47,7 +47,7 @@ for (let i = 0; i < TestProofTypes.length; i++) {
             let keypair2: BaseKeypair = await TestProofTypes[i].keyGenFunc();
             SubjectDIDDocument.AddKeypair(keypair2, "keys-1");
             let publisher2: DIDPublisher = new DIDPublisher(provider, subjectSeed);
-            await publisher2.PublishDIDDocument(SubjectDIDDocument, "DIDTEST", 9);
+            await publisher2.PublishDIDDocument(SubjectDIDDocument, "DIDTEST", mwm, depth);
             proofMethod = ProofTypeManager.GetInstance().GetProofBuilder(TestProofTypes[i].name);
         });
 
@@ -118,9 +118,8 @@ for (let i = 0; i < TestProofTypes.length; i++) {
             this.timeout(30000);
             await verifiableCredential.GetProof().Revoke(verifiableCredential.GetCredential(), provider);
             await delay(2000);
-            let result;
             try {
-                result = await verifiablePresentation.Verify(provider);
+                await verifiablePresentation.Verify(provider);
             } catch (err) {
                 expect(err).to.deep.equal("Verification failed: Claim has been revoked");
             }
@@ -129,8 +128,8 @@ for (let i = 0; i < TestProofTypes.length; i++) {
         let DIDAuth: VerifiablePresentation;
         it('Should create a DID Authentication Verifiable Presentation', async function () {
             const DIDAuthVC = SignDIDAuthentication(SubjectDIDDocument, "keys-1", GenerateSeed(12));
-            const presentation = Presentation.Create([DIDAuthVC]);
-            const presentationProof = ProofTypeManager.GetInstance().CreateProofWithBuilder(TestProofTypes[i].name, { issuer: SubjectDIDDocument, issuerKeyId: "keys-1", challengeNonce: GenerateSeed(12) });
+            const presentation: Presentation = Presentation.Create([DIDAuthVC]);
+            const presentationProof: Proof = ProofTypeManager.GetInstance().CreateProofWithBuilder(TestProofTypes[i].name, { issuer: SubjectDIDDocument, issuerKeyId: "keys-1", challengeNonce: GenerateSeed(12) });
             presentationProof.Sign(presentation.EncodeToJSON());
             DIDAuth = VerifiablePresentation.Create(presentation, presentationProof);
             SchemaManager.GetInstance().GetSchema("DIDAuthenticationCredential").AddTrustedDID(SubjectDIDDocument.GetDID());

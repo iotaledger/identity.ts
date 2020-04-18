@@ -124,7 +124,7 @@ var _loop_1 = function (i) {
                         case 0:
                             this.timeout(60000);
                             publisher = new DIDPublisher_1.DIDPublisher(test_settings_1.provider, seed);
-                            return [4 /*yield*/, publisher.PublishDIDDocument(document, "DIDTEST", 9)];
+                            return [4 /*yield*/, publisher.PublishDIDDocument(document, "DIDTEST", test_settings_1.mwm, test_settings_1.depth)];
                         case 1:
                             root = _a.sent();
                             chai_1.expect(root).to.not.be.undefined;
@@ -185,7 +185,7 @@ var _loop_1 = function (i) {
                     switch (_a.label) {
                         case 0:
                             this.timeout(60000);
-                            return [4 /*yield*/, publisher.PublishDIDDocument(document, "DIDTEST", 9)];
+                            return [4 /*yield*/, publisher.PublishDIDDocument(document, "DIDTEST", test_settings_1.mwm, test_settings_1.depth)];
                         case 1:
                             _a.sent();
                             return [4 /*yield*/, DIDDocument_1.DIDDocument.readDIDDocument(test_settings_1.provider, root)];

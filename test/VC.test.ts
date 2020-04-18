@@ -118,9 +118,8 @@ for (let i = 0; i < TestProofTypes.length; i++) {
             this.timeout(30000);
             await verifiableCredential.GetProof().Revoke(verifiableCredential.GetCredential(), provider);
             await delay(2000);
-            let result;
             try {
-                result = await verifiablePresentation.Verify(provider);
+                await verifiablePresentation.Verify(provider);
             } catch (err) {
                 expect(err).to.deep.equal("Verification failed: Claim has been revoked");
             }

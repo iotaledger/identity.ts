@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { delay, provider, TestProofTypes } from './test.settings';
+import { delay, provider, depth, mwm, TestProofTypes } from './test.settings';
 import { Credential } from '../src/VC/Credential';
 import { VerifiableCredential } from '../src/VC/VerifiableCredential';
 import { SchemaManager } from '../src/VC/SchemaManager';
@@ -39,7 +39,7 @@ for (let i = 0; i < TestProofTypes.length; i++) {
             issuerPrivateKey = keypair.GetPrivateKey();
             IssuerDIDDocument.AddKeypair(keypair, "keys-1");
             let publisher: DIDPublisher = new DIDPublisher(provider, issuerSeed);
-            await publisher.PublishDIDDocument(IssuerDIDDocument, "DIDTEST", 9);
+            await publisher.PublishDIDDocument(IssuerDIDDocument, "DIDTEST", mwm, depth);
             SchemaManager.GetInstance().GetSchema("DomainValidatedCertificate").AddTrustedDID(IssuerDIDDocument.GetDID());
             //Generate a Subject
             subjectSeed = GenerateSeed();
@@ -47,7 +47,7 @@ for (let i = 0; i < TestProofTypes.length; i++) {
             let keypair2: BaseKeypair = await TestProofTypes[i].keyGenFunc();
             SubjectDIDDocument.AddKeypair(keypair2, "keys-1");
             let publisher2: DIDPublisher = new DIDPublisher(provider, subjectSeed);
-            await publisher2.PublishDIDDocument(SubjectDIDDocument, "DIDTEST", 9);
+            await publisher2.PublishDIDDocument(SubjectDIDDocument, "DIDTEST", mwm, depth);
             proofMethod = ProofTypeManager.GetInstance().GetProofBuilder(TestProofTypes[i].name);
         });
 

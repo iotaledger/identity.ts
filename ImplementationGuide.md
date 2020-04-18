@@ -100,7 +100,7 @@ let verifiableCredentials : VerifiableCredential[] = [didAuthenticationCredentia
 
 //Create the Verifiable Presentation
 let presentation : Presentation = Presentation.Create(verifiableCredentials);
-let presentationProof : Proof = ProofTypeManager.GetInstance().CreateProofWithBuilder("EcdsaSecp256k1VerificationKey2019", {issuer:subjectDocument, issuerKeyId:KeyId, challengeNone:challenge});
+let presentationProof : Proof = ProofTypeManager.GetInstance().CreateProofWithBuilder("EcdsaSecp256k1VerificationKey2019", {issuer: subjectDocument, issuerKeyId: keyId, challengeNonce: challenge});
 presentationProof.Sign(presentation.EncodeToJSON());
 let verifiablePresentation : VerifiablePresentation = VerifiablePresentation.Create(presentation, presentationProof);
 ```

@@ -101,7 +101,9 @@ describe('Masked Autenticated Messaging', function () {
             var messages;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, mam_1.ReadMAMStream(test_settings_1.provider, rootOfFirstMessage)];
+                    case 0:
+                        this.timeout(20000);
+                        return [4 /*yield*/, mam_1.ReadMAMStream(test_settings_1.provider, rootOfFirstMessage)];
                     case 1:
                         messages = _a.sent();
                         chai_1.expect(messages[0]).to.deep.equal("First Message");
@@ -113,10 +115,10 @@ describe('Masked Autenticated Messaging', function () {
     });
     it('Should export the correct state', function () {
         state = firstPublisher.ExportState();
-        chai_1.expect(state.channelStart).to.deep.equal(2);
+        chai_1.expect(state.start).to.deep.equal(2);
         chai_1.expect(state.mode).to.deep.equal(mam_1.MAM_MODE.PRIVATE);
         chai_1.expect(state.nextRoot).to.not.be.undefined;
-        chai_1.expect(state.securityLevel).to.deep.equal(2);
+        chai_1.expect(state.security).to.deep.equal(2);
         chai_1.expect(state.seed).to.not.be.undefined;
         chai_1.expect(state.sideKey).to.be.undefined;
     });
@@ -126,8 +128,9 @@ describe('Masked Autenticated Messaging', function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        secondPublisher = new mam_1.MAMPublisher(test_settings_1.provider, state.seed, new mam_1.MAMSettings(state.mode, state.sideKey, state.securityLevel));
-                        secondPublisher.UpdateMAMState(state.nextRoot, state.channelStart);
+                        this.timeout(20000);
+                        secondPublisher = new mam_1.MAMPublisher(test_settings_1.provider, state.seed, new mam_1.MAMSettings(state.mode, state.sideKey, state.security));
+                        secondPublisher.ChannelState = state;
                         return [4 /*yield*/, secondPublisher.PublishMessage("Third Message", undefined, 9)];
                     case 1:
                         root3 = _a.sent();
@@ -142,7 +145,9 @@ describe('Masked Autenticated Messaging', function () {
             var messages;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, mam_1.ReadMAMStream(test_settings_1.provider, rootOfFirstMessage)];
+                    case 0:
+                        this.timeout(20000);
+                        return [4 /*yield*/, mam_1.ReadMAMStream(test_settings_1.provider, rootOfFirstMessage)];
                     case 1:
                         messages = _a.sent();
                         chai_1.expect(messages[0]).to.deep.equal("First Message");

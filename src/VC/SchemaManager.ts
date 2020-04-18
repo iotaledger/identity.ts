@@ -1,6 +1,9 @@
-import * as fs from 'fs';
 import { Schema } from './Schema';
 import { DID } from '../DID/DID';
+const DIDAuthenticationCredential = require('./Schemas/DIDAuthenticationCredential.json');
+const DomainValidatedCertificate = require('./Schemas/DomainValidatedCertificate.json');
+const WhiteListedCredential = require('./Schemas/WhiteListedCredential.json');
+const UserDataCredential = require('./Schemas/UserDataCredential.json');
 
 //TODO: Add DID's to trust
 export class SchemaManager {
@@ -11,17 +14,10 @@ export class SchemaManager {
         this.schemas = [];
 
         //Load all default Schemas
-        let folderPath : string = __dirname +"/Schemas";
-        let filePaths : string[] = fs.readdirSync(folderPath);
-        for(let i=0; i < filePaths.length; i++) {
-            let fileName : string = filePaths[i].substr(0, filePaths[i].lastIndexOf('.'));
-            this.AddSchemaFromFile(fileName, folderPath+"/"+filePaths[i]);
-        }
-    }
-
-    public AddSchemaFromFile(name : string, path : string, trustedDIDs ?: DID[]) {
-        let fileData : string = fs.readFileSync(path, "utf8");
-        this.schemas.push( new Schema(name, JSON.parse(fileData), trustedDIDs) );
+        this.AddSchema('DIDAuthenticationCredential', DIDAuthenticationCredential);
+        this.AddSchema('DomainValidatedCertificate', DomainValidatedCertificate);
+        this.AddSchema('WhiteListedCredential', WhiteListedCredential);
+        this.AddSchema('UserDataCredential', UserDataCredential);
     }
 
     public AddSchema(name : string, layout : {}, trustedDIDs ?: DID[]) {

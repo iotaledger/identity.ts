@@ -16,7 +16,7 @@ export { GenerateSeed } from './Helpers/GenerateSeed';
 
 //IOTA
 export { DIDPublisher } from './IOTA/DIDPublisher';
-export { MAMSettings, MAMState, MAM_MODE} from './IOTA/mam';
+export { MAMSettings, MAM_MODE } from './IOTA/mam';
 
 //VC - Proofs
 export { Proof, ExtendedProofDocument, ProofBuildingMethod, SigningMethod, VerifySignatureMethod, ProofParameters } from './VC/Proof/Proof';

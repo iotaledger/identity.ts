@@ -1,6 +1,9 @@
 import { GenerateRSAKeypair, GenerateECDSAKeypair } from '../src/Helpers/GenerateKeypair';
 
 export const provider : string = "https://nodes.devnet.iota.org:443";
+export const mwm : number = 9;
+export const depth : number = 3;
+export const security : number = 2;
 
 export const TestProofTypes = [{
     name: "RsaVerificationKey2018",

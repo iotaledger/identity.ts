@@ -129,8 +129,8 @@ for (let i = 0; i < TestProofTypes.length; i++) {
         let DIDAuth: VerifiablePresentation;
         it('Should create a DID Authentication Verifiable Presentation', async function () {
             const DIDAuthVC = SignDIDAuthentication(SubjectDIDDocument, "keys-1", GenerateSeed(12));
-            const presentation = Presentation.Create([DIDAuthVC]);
-            const presentationProof = ProofTypeManager.GetInstance().CreateProofWithBuilder(TestProofTypes[i].name, { issuer: SubjectDIDDocument, issuerKeyId: "keys-1", challengeNonce: GenerateSeed(12) });
+            const presentation: Presentation = Presentation.Create([DIDAuthVC]);
+            const presentationProof: Proof = ProofTypeManager.GetInstance().CreateProofWithBuilder(TestProofTypes[i].name, { issuer: SubjectDIDDocument, issuerKeyId: "keys-1", challengeNonce: GenerateSeed(12) });
             presentationProof.Sign(presentation.EncodeToJSON());
             DIDAuth = VerifiablePresentation.Create(presentation, presentationProof);
             SchemaManager.GetInstance().GetSchema("DIDAuthenticationCredential").AddTrustedDID(SubjectDIDDocument.GetDID());

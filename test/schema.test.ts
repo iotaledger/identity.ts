@@ -9,8 +9,8 @@ let RandomDID : DID = new DID("did:iota:main:ABCABCABC");
 describe('Schemas', function() {
     let schema : Schema;
     let testObject : {};
-    
-    let SchemaList : string[] = ['DIDAuthenticationCredential', 'DomainValidatedCertificate', 'WhiteListedCredential'];
+
+    let SchemaList : string[] = ['DIDAuthenticationCredential', 'DomainValidatedCertificate', 'WhiteListedCredential', 'UserDataCredential'];
     it('Should contain a list of default schemas', function() {
         expect(SchemaManager.GetInstance().GetSchemaNames()).to.deep.equal(SchemaList);
     });

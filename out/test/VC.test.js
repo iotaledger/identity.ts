@@ -155,7 +155,9 @@ var _loop_1 = function (i) {
                         var importPresentation;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
-                                case 0: return [4 /*yield*/, Presentation_1.Presentation.DecodeFromJSON(presentation.EncodeToJSON(), test_settings_1.provider)];
+                                case 0:
+                                    this.timeout(30000);
+                                    return [4 /*yield*/, Presentation_1.Presentation.DecodeFromJSON(presentation.EncodeToJSON(), test_settings_1.provider)];
                                 case 1:
                                     importPresentation = _a.sent();
                                     chai_1.expect(importPresentation.EncodeToJSON()).to.deep.equal(presentation.EncodeToJSON());
@@ -186,7 +188,9 @@ var _loop_1 = function (i) {
                         var proofParameters, importVerifiablePresentation;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
-                                case 0: return [4 /*yield*/, DecodeProofDocument_1.DecodeProofDocument(verifiablePresentation.EncodeToJSON().proof, test_settings_1.provider)];
+                                case 0:
+                                    this.timeout(30000);
+                                    return [4 /*yield*/, DecodeProofDocument_1.DecodeProofDocument(verifiablePresentation.EncodeToJSON().proof, test_settings_1.provider)];
                                 case 1:
                                     proofParameters = _a.sent();
                                     return [4 /*yield*/, VerifiablePresentation_1.VerifiablePresentation.DecodeFromJSON(verifiablePresentation.EncodeToJSON(), test_settings_1.provider, proofParameters)];
@@ -256,7 +260,9 @@ var _loop_1 = function (i) {
                     return __awaiter(this, void 0, void 0, function () {
                         return __generator(this, function (_a) {
                             switch (_a.label) {
-                                case 0: return [4 /*yield*/, src_1.VerifyDIDAuthentication(DIDAuth.EncodeToJSON(), test_settings_1.provider)];
+                                case 0:
+                                    this.timeout(30000);
+                                    return [4 /*yield*/, src_1.VerifyDIDAuthentication(DIDAuth.EncodeToJSON(), test_settings_1.provider)];
                                 case 1:
                                     _a.sent();
                                     return [2 /*return*/];

@@ -1,9 +1,10 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -70,7 +71,7 @@ var _loop_1 = function (i) {
                                     issuerPrivateKey = keypair.GetPrivateKey();
                                     IssuerDIDDocument.AddKeypair(keypair, "keys-1");
                                     publisher = new DIDPublisher_1.DIDPublisher(test_settings_1.provider, issuerSeed);
-                                    return [4 /*yield*/, publisher.PublishDIDDocument(IssuerDIDDocument, "DIDTEST", 9)];
+                                    return [4 /*yield*/, publisher.PublishDIDDocument(IssuerDIDDocument, "DIDTEST", test_settings_1.mwm, test_settings_1.depth)];
                                 case 2:
                                     _a.sent();
                                     SchemaManager_1.SchemaManager.GetInstance().GetSchema("DomainValidatedCertificate").AddTrustedDID(IssuerDIDDocument.GetDID());
@@ -82,7 +83,7 @@ var _loop_1 = function (i) {
                                     keypair2 = _a.sent();
                                     SubjectDIDDocument.AddKeypair(keypair2, "keys-1");
                                     publisher2 = new DIDPublisher_1.DIDPublisher(test_settings_1.provider, subjectSeed);
-                                    return [4 /*yield*/, publisher2.PublishDIDDocument(SubjectDIDDocument, "DIDTEST", 9)];
+                                    return [4 /*yield*/, publisher2.PublishDIDDocument(SubjectDIDDocument, "DIDTEST", test_settings_1.mwm, test_settings_1.depth)];
                                 case 4:
                                     _a.sent();
                                     proofMethod = ProofTypeManager_1.ProofTypeManager.GetInstance().GetProofBuilder(test_settings_1.TestProofTypes[i].name);
@@ -207,7 +208,7 @@ var _loop_1 = function (i) {
                 });
                 it('Should throw an error due to revocation', function () {
                     return __awaiter(this, void 0, void 0, function () {
-                        var result, err_1;
+                        var err_1;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0:
@@ -223,7 +224,7 @@ var _loop_1 = function (i) {
                                     _a.trys.push([3, 5, , 6]);
                                     return [4 /*yield*/, verifiablePresentation.Verify(test_settings_1.provider)];
                                 case 4:
-                                    result = _a.sent();
+                                    _a.sent();
                                     return [3 /*break*/, 6];
                                 case 5:
                                     err_1 = _a.sent();

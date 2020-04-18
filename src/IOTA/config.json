@@ -1,0 +1,6 @@
+{
+    "provider": "https://iri01.bare01.devnet.iota.cafe",
+    "defaultSecurity": 2,
+    "defaultDepth": 3,
+    "defaultMwm": 9
+}

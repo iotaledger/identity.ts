@@ -1,9 +1,10 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -40,6 +41,7 @@ require("mocha");
 var test_settings_1 = require("./test.settings");
 var mam_1 = require("./../src/IOTA/mam");
 var GenerateSeed_1 = require("./../src/Helpers/GenerateSeed");
+var _a = require('./../src/IOTA/config.json'), defaultMwm = _a.defaultMwm, defaultDepth = _a.defaultDepth, defaultSecurity = _a.defaultSecurity;
 describe('Masked Autenticated Messaging', function () {
     var firstPublisher;
     var secondPublisher;
@@ -52,7 +54,7 @@ describe('Masked Autenticated Messaging', function () {
                     case 0:
                         this.timeout(20000);
                         firstPublisher = new mam_1.MAMPublisher(test_settings_1.provider, GenerateSeed_1.GenerateSeed());
-                        return [4 /*yield*/, firstPublisher.PublishMessage("First Message", undefined, 9)];
+                        return [4 /*yield*/, firstPublisher.PublishMessage("First Message", undefined, defaultMwm, defaultDepth)];
                     case 1:
                         rootOfFirstMessage = _a.sent();
                         chai_1.expect(rootOfFirstMessage).to.not.be.undefined;
@@ -87,7 +89,7 @@ describe('Masked Autenticated Messaging', function () {
                 switch (_a.label) {
                     case 0:
                         this.timeout(20000);
-                        return [4 /*yield*/, firstPublisher.PublishMessage("Second Message", undefined, 9)];
+                        return [4 /*yield*/, firstPublisher.PublishMessage("Second Message", undefined, defaultMwm, defaultDepth)];
                     case 1:
                         root2 = _a.sent();
                         chai_1.expect(root2).to.not.be.undefined;
@@ -118,7 +120,7 @@ describe('Masked Autenticated Messaging', function () {
         chai_1.expect(state.start).to.deep.equal(2);
         chai_1.expect(state.mode).to.deep.equal(mam_1.MAM_MODE.PRIVATE);
         chai_1.expect(state.nextRoot).to.not.be.undefined;
-        chai_1.expect(state.security).to.deep.equal(2);
+        chai_1.expect(state.security).to.deep.equal(defaultSecurity);
         chai_1.expect(state.seed).to.not.be.undefined;
         chai_1.expect(state.sideKey).to.be.undefined;
     });
@@ -131,7 +133,7 @@ describe('Masked Autenticated Messaging', function () {
                         this.timeout(20000);
                         secondPublisher = new mam_1.MAMPublisher(test_settings_1.provider, state.seed, new mam_1.MAMSettings(state.mode, state.sideKey, state.security));
                         secondPublisher.ChannelState = state;
-                        return [4 /*yield*/, secondPublisher.PublishMessage("Third Message", undefined, 9)];
+                        return [4 /*yield*/, secondPublisher.PublishMessage("Third Message", undefined, defaultMwm, defaultDepth)];
                     case 1:
                         root3 = _a.sent();
                         chai_1.expect(root3).to.not.be.undefined;

@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var mam_js_1 = require("@iota/mam.js");
 var core_1 = require("@iota/core");
 var converter_1 = require("@iota/converter");
+var _a = require('./config.json'), defaultMwm = _a.defaultMwm, defaultDepth = _a.defaultDepth, defaultSecurity = _a.defaultSecurity;
 //An enumerator for the different MAM Modes. Prevents typos in regards to the different modes.
 var MAM_MODE;
 (function (MAM_MODE) {
@@ -14,9 +15,9 @@ var MAM_MODE;
 var MAMSettings = /** @class */ (function () {
     function MAMSettings(mode, sideKey, securityLevel) {
         if (mode === void 0) { mode = MAM_MODE.PRIVATE; }
-        if (securityLevel === void 0) { securityLevel = 2; }
+        if (securityLevel === void 0) { securityLevel = defaultSecurity; }
         this.mode = mode;
-        this.sideKey = (this.mode == MAM_MODE.RESTRICTED) ? sideKey : undefined;
+        this.sideKey = (this.mode === MAM_MODE.RESTRICTED) ? sideKey : undefined;
         this.securityLevel = securityLevel;
     }
     return MAMSettings;
@@ -43,11 +44,12 @@ var MAMPublisher = /** @class */ (function () {
      * @param {number} [mwm] The difficulty of the Proof-of-Work for the Transaction. Default to 14, 9 is recommended for DevNet.
      * @return {Promise<string>} A promise for the root of the MAM transaction. On failure, returns an Error.
      */
-    MAMPublisher.prototype.PublishMessage = function (message, tag, mwm) {
-        if (mwm === void 0) { mwm = 14; }
+    MAMPublisher.prototype.PublishMessage = function (message, tag, mwm, depth) {
+        if (mwm === void 0) { mwm = defaultMwm; }
+        if (depth === void 0) { depth = defaultDepth; }
         var mamMessage = mam_js_1.createMessage(this.channelState, converter_1.asciiToTrytes(message));
         var api = core_1.composeAPI({ provider: this.provider });
-        return mam_js_1.mamAttach(api, mamMessage, 3, mwm, tag).then(function () { return mamMessage.root; });
+        return mam_js_1.mamAttach(api, mamMessage, depth, mwm, tag).then(function () { return mamMessage.root; });
     };
     Object.defineProperty(MAMPublisher.prototype, "ChannelState", {
         /**

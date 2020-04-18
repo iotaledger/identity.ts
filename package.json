@@ -5,7 +5,7 @@
   "main": "./out/src/index.js",
   "typings": "typings/src",
   "scripts": {
-    "build": "npm run requirements-check && copyfiles -V \"./src/VC/Schemas/*.json\" \"./out\" && tsc",
+    "build": "npm run requirements-check && copyfiles -V \"./src/VC/Schemas/*.json\" \"./out\" && copyfiles -V \"./src/IOTA/*.json\" \"./out\" && tsc",
     "lint": "tslint --project .",
     "test": "npm run requirements-check && mocha -r ts-node/register test/*.test.ts",
     "testVC": "npm run requirements-check && mocha -r ts-node/register test/VC.test.ts",

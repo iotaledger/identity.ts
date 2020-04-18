@@ -11,6 +11,7 @@ import {
 } from '@iota/mam.js';
 import { composeAPI } from '@iota/core';
 import { asciiToTrytes, trytesToAscii } from '@iota/converter';
+const { defaultMwm, defaultDepth, defaultSecurity } = require('./config.json');
 
 //An enumerator for the different MAM Modes. Prevents typos in regards to the different modes.
 export enum MAM_MODE {
@@ -25,9 +26,9 @@ export class MAMSettings {
     public sideKey: string;
     public securityLevel: number;
 
-    constructor(mode: (MAM_MODE | MamMode) = MAM_MODE.PRIVATE, sideKey?: string, securityLevel: number = 2) {
+    constructor(mode: (MAM_MODE | MamMode) = MAM_MODE.PRIVATE, sideKey?: string, securityLevel: number = defaultSecurity) {
         this.mode = mode;
-        this.sideKey = (this.mode == MAM_MODE.RESTRICTED) ? sideKey : undefined;
+        this.sideKey = (this.mode === MAM_MODE.RESTRICTED) ? sideKey : undefined;
         this.securityLevel = securityLevel;
     }
 }
@@ -58,7 +59,7 @@ export class MAMPublisher {
      * @param {number} [mwm] The difficulty of the Proof-of-Work for the Transaction. Default to 14, 9 is recommended for DevNet. 
      * @return {Promise<string>} A promise for the root of the MAM transaction. On failure, returns an Error.
      */
-    public PublishMessage(message: string, tag?: string, mwm: number = 14): Promise<string> {
+    public PublishMessage(message: string, tag?: string, mwm: number = defaultMwm, depth: number = defaultDepth): Promise<string> {
         const mamMessage: IMamMessage = createMessage(this.channelState, asciiToTrytes(message));
 
         const api = composeAPI({ provider: this.provider });
@@ -66,7 +67,7 @@ export class MAMPublisher {
         return mamAttach(
             api,
             mamMessage,
-            3,
+            depth,
             mwm,
             tag
         ).then(() => mamMessage.root)

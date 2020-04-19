@@ -15,14 +15,14 @@ export interface CredentialDataModel {
     "type" : string[],
     "issuer" : string,
     "issuanceDate" : string,
-    "credentialSubject" : {},
+    "credentialSubject" : object,
     "credentialStatus" ?: CredentialStatus
 }
 
 export class Credential extends BaseValidationObject {
     private issuerDID : DID;
     private issuanceData : string;
-    private credentialSubjects : [{}] | {};
+    private credentialSubjects : [object] | object;
     private credentialStatus : CredentialStatus | undefined;
 
     public static Create(credentialSchema : Schema, issuerDID : DID, credentialData : [{}] | {}, revocationAddress ?: string, issuanceData : Date = new Date(), context : string = "iota.org") : Credential {

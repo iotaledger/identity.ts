@@ -64,7 +64,7 @@ export class VerifiableCredential extends VerifiableObject {
                     
                     //Verify if it is the correct Issuer
                     let issuerDID : DID = new DID(jsonObject["keyId"]);
-                    if( issuerDID.GetDID() != this.proof.GetIssuer().GetDID().GetDID() ) {
+                    if( issuerDID.GetDID() !== this.proof.GetIssuer().GetDID().GetDID() ) {
                         continue;
                     }
 

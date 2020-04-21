@@ -212,25 +212,23 @@ var _loop_1 = function (i) {
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0:
-                                    this.timeout(30000);
+                                    _a.trys.push([0, 4, , 5]);
+                                    this.timeout(60000);
                                     return [4 /*yield*/, verifiableCredential.GetProof().Revoke(verifiableCredential.GetCredential(), test_settings_1.provider)];
                                 case 1:
                                     _a.sent();
-                                    return [4 /*yield*/, test_settings_1.delay(2000)];
+                                    return [4 /*yield*/, test_settings_1.delay(10000)];
                                 case 2:
                                     _a.sent();
-                                    _a.label = 3;
-                                case 3:
-                                    _a.trys.push([3, 5, , 6]);
                                     return [4 /*yield*/, verifiablePresentation.Verify(test_settings_1.provider)];
-                                case 4:
+                                case 3:
                                     _a.sent();
-                                    return [3 /*break*/, 6];
-                                case 5:
+                                    return [3 /*break*/, 5];
+                                case 4:
                                     err_1 = _a.sent();
                                     chai_1.expect(err_1).to.deep.equal("Verification failed: Claim has been revoked");
-                                    return [3 /*break*/, 6];
-                                case 6: return [2 /*return*/];
+                                    return [3 /*break*/, 5];
+                                case 5: return [2 /*return*/];
                             }
                         });
                     });

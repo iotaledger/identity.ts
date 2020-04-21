@@ -2,6 +2,8 @@ export { DID } from './DID/DID';
 export { DIDDocument } from './DID/DIDDocument';
 export { Service, ServiceDataModel } from './DID/Service';
 export { BaseKeypair } from './Encryption/BaseKeypair';
+export { RSAKeypair } from './Encryption/RSAKeypair';
+export { ECDSAKeypair } from './Encryption/ECDSAKeypair';
 export { Hash } from './Encryption/Hash';
 export { CreateRandomDID, CreateRandomDIDFromPublicKey } from './Helpers/CreateRandomDID';
 export { DecodeProofDocument } from './Helpers/DecodeProofDocument';

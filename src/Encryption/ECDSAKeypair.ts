@@ -1,9 +1,7 @@
 import { BaseKeypair } from './BaseKeypair';
 import * as secp256k1 from 'secp256k1';
-import { Hash } from './Hash';
+import { Uint8ArrayHash } from './Hash';
 import { encrypt, decrypt } from 'eciesjs';
-
-
 
 export class ECDSAKeypair extends BaseKeypair {
     constructor(publicKey: string, privateKey?: string) {
@@ -18,6 +16,7 @@ export class ECDSAKeypair extends BaseKeypair {
 
     public PrivateDecrypt(input: Buffer): string {
         if(!this.privateKey) {
+            // tslint:disable-next-line:no-console
             console.log("Warning: Decryption with private key called, without a private key accessible\n");
             return "";
         }
@@ -27,17 +26,15 @@ export class ECDSAKeypair extends BaseKeypair {
     public Sign(dataToSign: string): Buffer {
         if (!this.privateKey)
             return undefined;
-        const dataToSignBuffer: Buffer = Buffer.from(Hash(dataToSign), 'base64')
         const privateKeyBuffer: Buffer = Buffer.from(this.privateKey, 'base64')
-        const signature = secp256k1.sign(dataToSignBuffer, privateKeyBuffer)
-        return signature.signature
+        const signature = secp256k1.ecdsaSign(Uint8ArrayHash(dataToSign), new Uint8Array(privateKeyBuffer));
+        return Buffer.from(signature.signature)
     }
 
 
     public Verify(dataToCheck: string, signatureToVerify: Buffer): boolean {
-        const dataToCheckBuffer: Buffer = Buffer.from(Hash(dataToCheck), 'base64')
         const publicKeyBuffer: Buffer = Buffer.from(this.publicKey, 'base64')
-        return secp256k1.verify(dataToCheckBuffer, signatureToVerify, publicKeyBuffer)
+        return secp256k1.ecdsaVerify(signatureToVerify, Uint8ArrayHash(dataToCheck), new Uint8Array(publicKeyBuffer))
     }
 
     public GetKeyType(): string {

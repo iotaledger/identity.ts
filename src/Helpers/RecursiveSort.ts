@@ -1,6 +1,6 @@
 //TODO: No side effects
 export function RecursiveSort( data : any ) {
-    if(!Array.isArray(data) && typeof(data) == "object") {
+    if(!Array.isArray(data) && typeof(data) === "object") {
         let ordered : any = {};
         Object.keys(data).sort().forEach( function(key) {
             ordered[key] = RecursiveSort(data[key]);

@@ -1,9 +1,10 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -82,10 +83,10 @@ var DIDDocument = /** @class */ (function () {
                             if (publicKeys) {
                                 for (var i = 0; i < publicKeys.length; i++) {
                                     var keypair = void 0;
-                                    if (publicKeys[i].type == "RsaVerificationKey2018") {
+                                    if (publicKeys[i].type === "RsaVerificationKey2018") {
                                         keypair = new RSAKeypair_1.RSAKeypair(publicKeys[i].publicKeyPem);
                                     }
-                                    if (publicKeys[i].type == "EcdsaSecp256k1VerificationKey2019") {
+                                    if (publicKeys[i].type === "EcdsaSecp256k1VerificationKey2019") {
                                         keypair = new ECDSAKeypair_1.ECDSAKeypair(publicKeys[i].publicKeyBase58);
                                     }
                                     document.AddKeypair(keypair, publicKeys[i].id.substr(publicKeys[i].id.lastIndexOf("#") + 1), new DID_1.DID(publicKeys[i].id.substr(0, publicKeys[i].id.lastIndexOf("#"))), new DID_1.DID(publicKeys[i].controller));
@@ -166,7 +167,7 @@ var DIDDocument = /** @class */ (function () {
     };
     DIDDocument.prototype.GetKeypair = function (keyId) {
         for (var i = 0; i < this.publicKeys.length; i++) {
-            if (this.publicKeys[i].GetKeyId() == keyId) {
+            if (this.publicKeys[i].GetKeyId() === keyId) {
                 return this.publicKeys[i];
             }
         }
@@ -174,7 +175,7 @@ var DIDDocument = /** @class */ (function () {
     };
     DIDDocument.prototype.GetService = function (name) {
         for (var i = 0; i < this.services.length; i++) {
-            if (this.services[i].GetName() == name || this.services[i].GetType() == name) {
+            if (this.services[i].GetName() === name || this.services[i].GetType() === name) {
                 return this.services[i];
             }
         }

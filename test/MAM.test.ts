@@ -3,7 +3,7 @@ import {
 } from '@iota/mam.js';
 import { expect } from 'chai';
 import 'mocha';
-import { delay, provider } from './test.settings';
+import { delay, provider, mwm, depth, security } from './test.settings';
 import { MAMPublisher, ReadMAMStream, MAMSettings, MAM_MODE } from "./../src/IOTA/mam";
 import { GenerateSeed } from "./../src/Helpers/GenerateSeed";
 
@@ -16,7 +16,7 @@ describe('Masked Autenticated Messaging', function() {
     it('Should send a valid first transaction', async function(){
         this.timeout(20000);
         firstPublisher = new MAMPublisher(provider, GenerateSeed());
-        rootOfFirstMessage = await firstPublisher.PublishMessage("First Message", undefined, 9);
+        rootOfFirstMessage = await firstPublisher.PublishMessage("First Message", undefined, mwm, depth);
         expect(rootOfFirstMessage).to.not.be.undefined;
     });
 
@@ -29,7 +29,7 @@ describe('Masked Autenticated Messaging', function() {
 
     it('Should send a valid second transaction', async function(){
         this.timeout(20000);
-        let root2 = await firstPublisher.PublishMessage("Second Message", undefined, 9);
+        let root2 = await firstPublisher.PublishMessage("Second Message", undefined, mwm, depth);
         expect(root2).to.not.be.undefined;
     });
 
@@ -47,7 +47,7 @@ describe('Masked Autenticated Messaging', function() {
         expect(state.start).to.deep.equal(2);
         expect(state.mode).to.deep.equal(MAM_MODE.PRIVATE);
         expect(state.nextRoot).to.not.be.undefined;
-        expect(state.security).to.deep.equal(2);
+        expect(state.security).to.deep.equal(security);
         expect(state.seed).to.not.be.undefined;
         expect(state.sideKey).to.be.undefined;
     });
@@ -58,7 +58,7 @@ describe('Masked Autenticated Messaging', function() {
         secondPublisher = new MAMPublisher(provider, state.seed, new MAMSettings(state.mode, state.sideKey, state.security));
         secondPublisher.ChannelState = state;
 
-        let root3 = await secondPublisher.PublishMessage("Third Message", undefined, 9);
+        let root3 = await secondPublisher.PublishMessage("Third Message", undefined, mwm, depth);
         expect(root3).to.not.be.undefined;
     });
 

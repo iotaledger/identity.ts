@@ -24,7 +24,7 @@ export declare class DIDPublisher {
      * @param {number} [mwm] The difficulty of the Proof-of-Work for the Transaction. Default to 14, 9 is recommended for DevNet.
      * @return {Promise<string>} The root of the latest transaction of the MAM stream transaction.
      */
-    PublishDIDDocument(document: DIDDocument, tag?: string, mwm?: number): Promise<string>;
+    PublishDIDDocument(document: DIDDocument, tag?: string, mwm?: number, depth?: number): Promise<string>;
     /**
      * Exports the full state of the MAM channel. Used for local storage of the State, which allows for reusing the MAM channel at a later time.
      * @return {IMamChannelState} An object containing every variable needed to reinitialize the MAM channel at a later time.

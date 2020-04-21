@@ -1,0 +1,6 @@
+{
+    "provider": "https://comnet.iota.works",
+    "defaultSecurity": 2,
+    "defaultDepth": 3,
+    "defaultMwm": 10
+}

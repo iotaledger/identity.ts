@@ -27,12 +27,12 @@ export declare class MAMPublisher {
      * @param {number} [mwm] The difficulty of the Proof-of-Work for the Transaction. Default to 14, 9 is recommended for DevNet.
      * @return {Promise<string>} A promise for the root of the MAM transaction. On failure, returns an Error.
      */
-    PublishMessage(message: string, tag?: string, mwm?: number): Promise<string>;
+    PublishMessage(message: string, tag?: string, mwm?: number, depth?: number): Promise<string>;
     /**
      * Updates the state of the MAM channel towards the provided input. Useful for synching MAM streams.
      * @param {IMamChannelState} state
      */
-    ChannelState: IMamChannelState;
+    set ChannelState(state: IMamChannelState);
     /**
      * Exports the state of the MAM channel for local storage. Allows later synching back without network overhead.
      * @return {IMamChannelState} The state of the MAM channel. All you need to store for later synching.

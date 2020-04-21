@@ -3,6 +3,7 @@ import {
 } from '@iota/mam.js';
 import { MAMPublisher, MAMSettings } from './mam';
 import { DIDDocument } from './../DID/DIDDocument';
+const { defaultMwm, defaultDepth } = require('./config.json');
 
 /**
  * @module IOTA
@@ -36,8 +37,8 @@ export class DIDPublisher {
      * @param {number} [mwm] The difficulty of the Proof-of-Work for the Transaction. Default to 14, 9 is recommended for DevNet. 
      * @return {Promise<string>} The root of the latest transaction of the MAM stream transaction.
      */
-    public PublishDIDDocument(document: DIDDocument, tag?: string, mwm: number = 14): Promise<string> {
-        return this.publisher.PublishMessage(document.GetJSONDIDDocument(), tag, mwm);
+    public PublishDIDDocument(document: DIDDocument, tag?: string, mwm: number = defaultMwm, depth: number = defaultDepth): Promise<string> {
+        return this.publisher.PublishMessage(document.GetJSONDIDDocument(), tag, mwm, depth);
     }
 
     /**

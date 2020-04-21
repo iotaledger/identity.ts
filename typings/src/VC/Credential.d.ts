@@ -10,7 +10,7 @@ export interface CredentialDataModel {
     "type": string[];
     "issuer": string;
     "issuanceDate": string;
-    "credentialSubject": {};
+    "credentialSubject": object;
     "credentialStatus"?: CredentialStatus;
 }
 export declare class Credential extends BaseValidationObject {

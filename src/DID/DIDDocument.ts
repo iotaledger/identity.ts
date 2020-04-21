@@ -41,10 +41,10 @@ export class DIDDocument {
                 if(publicKeys) {
                     for(let i=0; i < publicKeys.length; i++) {
                         let keypair : BaseKeypair;
-                        if(publicKeys[i].type == "RsaVerificationKey2018") {
+                        if(publicKeys[i].type === "RsaVerificationKey2018") {
                             keypair = new RSAKeypair(publicKeys[i].publicKeyPem);
                         }
-                        if(publicKeys[i].type == "EcdsaSecp256k1VerificationKey2019") {
+                        if(publicKeys[i].type === "EcdsaSecp256k1VerificationKey2019") {
                             keypair = new ECDSAKeypair(publicKeys[i].publicKeyBase58);
                         }
 
@@ -138,7 +138,7 @@ export class DIDDocument {
 
     public GetKeypair(keyId : string) : DIDKeypair {
         for(let i=0; i < this.publicKeys.length; i++) {
-            if(this.publicKeys[i].GetKeyId() == keyId) {
+            if(this.publicKeys[i].GetKeyId() === keyId) {
                 return this.publicKeys[i];
             }
         }
@@ -147,7 +147,7 @@ export class DIDDocument {
 
     public GetService(name : string) : Service {
         for(let i=0; i < this.services.length; i++) {
-            if(this.services[i].GetName() == name || this.services[i].GetType() == name) {
+            if(this.services[i].GetName() === name || this.services[i].GetType() === name) {
                 return this.services[i];
             }
         }

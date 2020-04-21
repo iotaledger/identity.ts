@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var mam_1 = require("./mam");
+var _a = require('./config.json'), defaultMwm = _a.defaultMwm, defaultDepth = _a.defaultDepth;
 /**
  * @module IOTA
  */
@@ -28,9 +29,10 @@ var DIDPublisher = /** @class */ (function () {
      * @param {number} [mwm] The difficulty of the Proof-of-Work for the Transaction. Default to 14, 9 is recommended for DevNet.
      * @return {Promise<string>} The root of the latest transaction of the MAM stream transaction.
      */
-    DIDPublisher.prototype.PublishDIDDocument = function (document, tag, mwm) {
-        if (mwm === void 0) { mwm = 14; }
-        return this.publisher.PublishMessage(document.GetJSONDIDDocument(), tag, mwm);
+    DIDPublisher.prototype.PublishDIDDocument = function (document, tag, mwm, depth) {
+        if (mwm === void 0) { mwm = defaultMwm; }
+        if (depth === void 0) { depth = defaultDepth; }
+        return this.publisher.PublishMessage(document.GetJSONDIDDocument(), tag, mwm, depth);
     };
     /**
      * Exports the full state of the MAM channel. Used for local storage of the State, which allows for reusing the MAM channel at a later time.

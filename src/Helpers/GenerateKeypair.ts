@@ -15,7 +15,7 @@ export function GenerateRSAKeypair(): Promise<RSAKeypair> {
                 type: 'pkcs8',
                 format: 'pem',
                 cipher: 'aes-256-cbc',
-                passphrase: passphrase
+                passphrase
             }
         }, (err, publicKey, privateKey) => {
             if (err) {
@@ -30,8 +30,12 @@ export function GenerateRSAKeypair(): Promise<RSAKeypair> {
 export function GenerateECDSAKeypair(): Promise<ECDSAKeypair> {
     return new Promise<ECDSAKeypair>((resolve, reject) => {
         try {
-            const privateKey = crypto.randomBytes(32)
-            const publicKey = secp256k1.publicKeyCreate(privateKey)
+            let privateKey;
+            do {
+                privateKey = crypto.randomBytes(32);
+            } while (!secp256k1.privateKeyVerify(privateKey));
+
+            const publicKey = Buffer.from(secp256k1.publicKeyCreate(privateKey));
             resolve(new ECDSAKeypair(publicKey.toString('base64'), privateKey.toString('base64')));
         } catch (err) {
             reject(err);

@@ -33,7 +33,7 @@ export class Schema {
 
     public IsDIDTrusted( did : DID ) : boolean {
         for(let i=0; i < this.trustedDIDs.length; i++) {
-            if(this.trustedDIDs[i].GetDID() == did.GetDID()) {
+            if(this.trustedDIDs[i].GetDID() === did.GetDID()) {
                 return true;
             }
         }

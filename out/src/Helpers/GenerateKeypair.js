@@ -32,8 +32,11 @@ exports.GenerateRSAKeypair = GenerateRSAKeypair;
 function GenerateECDSAKeypair() {
     return new Promise(function (resolve, reject) {
         try {
-            var privateKey = crypto.randomBytes(32);
-            var publicKey = secp256k1.publicKeyCreate(privateKey);
+            var privateKey = void 0;
+            do {
+                privateKey = crypto.randomBytes(32);
+            } while (!secp256k1.privateKeyVerify(privateKey));
+            var publicKey = Buffer.from(secp256k1.publicKeyCreate(privateKey));
             resolve(new ECDSAKeypair_1.ECDSAKeypair(publicKey.toString('base64'), privateKey.toString('base64')));
         }
         catch (err) {

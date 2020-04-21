@@ -24,10 +24,11 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -126,7 +127,7 @@ var VerifiableCredential = /** @class */ (function (_super) {
                                             continue;
                                         }
                                         issuerDID = new DID_1.DID(jsonObject["keyId"]);
-                                        if (issuerDID.GetDID() != this.proof.GetIssuer().GetDID().GetDID()) {
+                                        if (issuerDID.GetDID() !== this.proof.GetIssuer().GetDID().GetDID()) {
                                             continue;
                                         }
                                         keypair = this.proof.GetIssuer().GetKeypair(issuerDID.GetFragment());
@@ -149,7 +150,7 @@ var VerifiableCredential = /** @class */ (function (_super) {
         });
     };
     VerifiableCredential.prototype.EncodeToJSON = function () {
-        return __assign({}, this.credential.EncodeToJSON(), { proof: this.proof.EncodeToJSON() });
+        return __assign(__assign({}, this.credential.EncodeToJSON()), { proof: this.proof.EncodeToJSON() });
     };
     VerifiableCredential.prototype.GetCredential = function () {
         return this.credential;

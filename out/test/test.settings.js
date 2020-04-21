@@ -1,7 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var GenerateKeypair_1 = require("../src/Helpers/GenerateKeypair");
-exports.provider = "https://nodes.devnet.iota.org:443";
+exports.provider = "https://comnet.iota.works";
+exports.mwm = 10;
+exports.depth = 3;
+exports.security = 2;
 exports.TestProofTypes = [{
         name: "RsaVerificationKey2018",
         keyGenFunc: GenerateKeypair_1.GenerateRSAKeypair

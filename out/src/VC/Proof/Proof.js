@@ -25,10 +25,10 @@ var Proof = /** @class */ (function () {
     Proof.prototype.Sign = function (JSONToSign) {
         var finalJSON = JSONToSign;
         if (this.challengeNonce) {
-            finalJSON = __assign({}, finalJSON, { "nonce": this.challengeNonce });
+            finalJSON = __assign(__assign({}, finalJSON), { "nonce": this.challengeNonce });
         }
         var document = this.signMethod(finalJSON, this.keypair);
-        this.proofDocument = __assign({}, document, {
+        this.proofDocument = __assign(__assign({}, document), {
             created: new Date().toUTCString(),
             creator: this.issuer.GetDID().GetDID(),
             nonce: this.challengeNonce
@@ -53,7 +53,7 @@ var Proof = /** @class */ (function () {
     Proof.prototype.VerifySignature = function (JSONToVerify) {
         var finalJSON = JSONToVerify;
         if (this.challengeNonce) {
-            finalJSON = __assign({}, finalJSON, { "nonce": this.challengeNonce });
+            finalJSON = __assign(__assign({}, finalJSON), { "nonce": this.challengeNonce });
         }
         return this.verifySignatureMethod(finalJSON, this.keypair, this.proofDocument);
     };

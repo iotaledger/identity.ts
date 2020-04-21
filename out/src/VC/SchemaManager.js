@@ -20,7 +20,7 @@ var SchemaManager = /** @class */ (function () {
     };
     SchemaManager.prototype.GetSchema = function (name) {
         for (var i = 0; i < this.schemas.length; i++) {
-            if (this.schemas[i].GetName() == name) {
+            if (this.schemas[i].GetName() === name) {
                 return this.schemas[i];
             }
         }

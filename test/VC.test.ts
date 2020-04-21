@@ -115,10 +115,10 @@ for (let i = 0; i < TestProofTypes.length; i++) {
         });
 
         it('Should throw an error due to revocation', async function () {
-            this.timeout(30000);
-            await verifiableCredential.GetProof().Revoke(verifiableCredential.GetCredential(), provider);
-            await delay(2000);
             try {
+                this.timeout(60000);
+                await verifiableCredential.GetProof().Revoke(verifiableCredential.GetCredential(), provider);
+                await delay(10000);
                 await verifiablePresentation.Verify(provider);
             } catch (err) {
                 expect(err).to.deep.equal("Verification failed: Claim has been revoked");

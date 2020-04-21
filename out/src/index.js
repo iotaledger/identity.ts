@@ -10,6 +10,10 @@ exports.Service = Service_1.Service;
 //Encryption
 var BaseKeypair_1 = require("./Encryption/BaseKeypair");
 exports.BaseKeypair = BaseKeypair_1.BaseKeypair;
+var RSAKeypair_1 = require("./Encryption/RSAKeypair");
+exports.RSAKeypair = RSAKeypair_1.RSAKeypair;
+var ECDSAKeypair_1 = require("./Encryption/ECDSAKeypair");
+exports.ECDSAKeypair = ECDSAKeypair_1.ECDSAKeypair;
 var Hash_1 = require("./Encryption/Hash");
 exports.Hash = Hash_1.Hash;
 //Helpers

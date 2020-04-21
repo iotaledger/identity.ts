@@ -127,7 +127,7 @@ var VerifiableCredential = /** @class */ (function (_super) {
                                             continue;
                                         }
                                         issuerDID = new DID_1.DID(jsonObject["keyId"]);
-                                        if (issuerDID.GetDID() != this.proof.GetIssuer().GetDID().GetDID()) {
+                                        if (issuerDID.GetDID() !== this.proof.GetIssuer().GetDID().GetDID()) {
                                             continue;
                                         }
                                         keypair = this.proof.GetIssuer().GetKeypair(issuerDID.GetFragment());

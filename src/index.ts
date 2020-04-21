@@ -5,6 +5,8 @@ export { Service, ServiceDataModel } from './DID/Service';
 
 //Encryption
 export { BaseKeypair } from './Encryption/BaseKeypair';
+export { RSAKeypair } from './Encryption/RSAKeypair';
+export { ECDSAKeypair } from './Encryption/ECDSAKeypair';
 export { Hash } from './Encryption/Hash';
 
 //Helpers

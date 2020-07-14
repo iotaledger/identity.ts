@@ -11,7 +11,7 @@ import { Service, ServiceDataModel } from './Service';
  */
 
 /**
- * Handles the DID Document standard. Allows CRUD operations on DID Documents and publishing it too the Tangle.
+ * Handles the DID Document standard. Allows CRUD operations on DID Documents and publishing it to the Tangle.
  * Any CRUD operations that are not published will be lost once the program exits. 
  */
 export class DIDDocument {
